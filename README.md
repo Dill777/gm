@@ -21,15 +21,3 @@ It’s simple, social, and powered by smart contracts with built-in referral pay
 - **Database:** Optional for faster leaderboard queries
 
 ---
-
-## 📦 Installation
-```bash
-# Clone the repo
-git clone https://github.com/YourUsername/CheapGM.git
-
-# Install dependencies
-cd CheapGM
-npm install
-
-# Run locally
-npm run dev
