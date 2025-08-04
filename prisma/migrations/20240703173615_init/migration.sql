@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "Domain" ALTER COLUMN "website_url" DROP NOT NULL,
+ALTER COLUMN "discord_url" DROP NOT NULL,
+ALTER COLUMN "youtube_url" DROP NOT NULL,
+ALTER COLUMN "twitter_url" DROP NOT NULL,
+ALTER COLUMN "telegram_url" DROP NOT NULL,
+ALTER COLUMN "instagram_url" DROP NOT NULL,
+ALTER COLUMN "linkedin_url" DROP NOT NULL;

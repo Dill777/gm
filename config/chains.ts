@@ -1,0 +1,1363 @@
+import { Chain as PrismaChain } from "@prisma/client";
+import { memoize } from "lodash";
+import { Chain } from "viem";
+
+export enum NETWORKS {
+  DEFAULT = 57073,
+  INKMAINNET = 57073,
+  UNICHAIN = 130,
+  SONEIUMMAINNET = 1868,
+  XRPLMAINNET = 1440000,
+  COTI = 2632500,
+  // ZORA = 7777777,
+  PLUMEMAINNET = 98866,
+  HYPE = 999,
+  KAIA = 8217,
+  // APE = 33139,
+  CZ = 56,
+  BASE = 8453,
+  SONICMAINNET = 146,
+  // FORM = 478,
+  SCROLL = 534352,
+  BLAST = 81457,
+  TAIKO = 167000,
+  POLY = 137,
+  HEMI = 43111,
+  UNIT0 = 88811,
+  ABSTRACTMAINNET = 2741,
+  BERA = 80094,
+  // MORPH = 2818,
+  // MINT = 185,
+  // XLAYER = 196,
+  CREATOR_CHAIN = 66665,
+  MONAD = 10143,
+  NEXUS = 393,
+  SOMNIA = 50312,
+  KITE = 2368,
+  ZENCHAIN = 8408,
+  HELIOS = 42000,
+  // MEGA = 6342,
+  // BARTIO = 80084,
+  TABI_V2 = 9788,
+  // STORY = 1516,
+  ATHENE = 281123,
+  // XRP = 1440002,
+  // XRPL = 1449000,
+  SAHARA = 313313,
+  // BOBA = 288,
+  // ARTHERA = 10242,
+  // ZKLINK = 810180,
+  // TABI = 9789,
+  // ZIRCUIT = 48900,
+  // SONIC = 64165,
+  // NEOX = 12227331,
+  // ZKCANDY = 302,
+  // FIRE = 997,
+  // SONEIUM = 1946,
+  // PLUME = 161221135,
+  // ABSTRACT = 11124,
+}
+
+export const rpcs: { [key in NETWORKS]: string } = {
+  [NETWORKS.BERA]: process.env.NEXT_PUBLIC_RPC_BERA!,
+  [NETWORKS.CZ]: process.env.NEXT_PUBLIC_RPC_CZ!,
+  [NETWORKS.INKMAINNET]: process.env.NEXT_PUBLIC_RPC_INK!,
+  // [NETWORKS.ZORA]: process.env.NEXT_PUBLIC_RPC_ZORA!,
+  [NETWORKS.BASE]: process.env.NEXT_PUBLIC_RPC_BASE!,
+  [NETWORKS.SONICMAINNET]: process.env.NEXT_PUBLIC_RPC_SONIC!,
+  [NETWORKS.XRPLMAINNET]: process.env.NEXT_PUBLIC_RPC_XRPL!,
+  [NETWORKS.ABSTRACTMAINNET]: process.env.NEXT_PUBLIC_RPC_ABSTRACT!,
+  [NETWORKS.SONEIUMMAINNET]: process.env.NEXT_PUBLIC_RPC_SONEIUM!,
+  [NETWORKS.PLUMEMAINNET]: process.env.NEXT_PUBLIC_RPC_PLUME!,
+  [NETWORKS.HYPE]: process.env.NEXT_PUBLIC_RPC_HYPE!,
+  // [NETWORKS.FORM]: process.env.NEXT_PUBLIC_RPC_FORM!,
+  [NETWORKS.SCROLL]: process.env.NEXT_PUBLIC_RPC_SCROLL!,
+  [NETWORKS.BLAST]: process.env.NEXT_PUBLIC_RPC_BLAST!,
+  [NETWORKS.TAIKO]: process.env.NEXT_PUBLIC_RPC_TAIKO!,
+  // [NETWORKS.MORPH]: process.env.NEXT_PUBLIC_RPC_MORPH!,
+  [NETWORKS.POLY]: process.env.NEXT_PUBLIC_RPC_POLY!,
+  [NETWORKS.UNICHAIN]: process.env.NEXT_PUBLIC_RPC_UNICHAIN!,
+  [NETWORKS.COTI]: process.env.NEXT_PUBLIC_RPC_COTI!,
+  // [NETWORKS.APE]: process.env.NEXT_PUBLIC_RPC_APE!,
+  [NETWORKS.HEMI]: process.env.NEXT_PUBLIC_RPC_HEMI!,
+  [NETWORKS.UNIT0]: process.env.NEXT_PUBLIC_RPC_UNIT0!,
+  // [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
+  // [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
+  [NETWORKS.CREATOR_CHAIN]: process.env.NEXT_PUBLIC_RPC_CREATOR_CHAIN!,
+  [NETWORKS.MONAD]: process.env.NEXT_PUBLIC_RPC_MONAD!,
+  [NETWORKS.NEXUS]: process.env.NEXT_PUBLIC_RPC_NEXUS!,
+  // [NETWORKS.MEGA]: process.env.NEXT_PUBLIC_RPC_MEGA!,
+  // [NETWORKS.BARTIO]: process.env.NEXT_PUBLIC_RPC_BARTIO!,
+  [NETWORKS.TABI_V2]: process.env.NEXT_PUBLIC_RPC_TABI_V2!,
+  // [NETWORKS.STORY]: process.env.NEXT_PUBLIC_RPC_STORY!,
+  [NETWORKS.ATHENE]: process.env.NEXT_PUBLIC_RPC_ATHENE!,
+  // [NETWORKS.XRPL]: process.env.NEXT_PUBLIC_RPC_XRPL!,
+  [NETWORKS.SAHARA]: process.env.NEXT_PUBLIC_RPC_SAHARA!,
+  [NETWORKS.SOMNIA]: process.env.NEXT_PUBLIC_RPC_SOMNIA!,
+  [NETWORKS.KAIA]: process.env.NEXT_PUBLIC_RPC_KAIA!,
+  [NETWORKS.KITE]: process.env.NEXT_PUBLIC_RPC_KITE!,
+  [NETWORKS.ZENCHAIN]: process.env.NEXT_PUBLIC_RPC_ZENCHAIN!,
+  [NETWORKS.HELIOS]: process.env.NEXT_PUBLIC_RPC_HELIOS!,
+  // [NETWORKS.BOBA]: process.env.NEXT_PUBLIC_RPC_BOBA!,
+  // [NETWORKS.ZKLINK]: process.env.NEXT_PUBLIC_RPC_ZKLINK!,
+  // [NETWORKS.ARTHERA]: process.env.NEXT_PUBLIC_RPC_ARTHERA!,
+  // [NETWORKS.NEOX]: process.env.NEXT_PUBLIC_RPC_NEOX!,
+  // [NETWORKS.TABI]: process.env.NEXT_PUBLIC_RPC_TABI!,
+  // [NETWORKS.ZIRCUIT]: process.env.NEXT_PUBLIC_RPC_ZIRCUIT!,
+};
+
+export interface NETWORK_TYPE extends Chain {
+  chain: PrismaChain;
+  shortName?: string;
+  color?: string;
+  sellMarket?: string;
+  iconUrl?: string;
+}
+
+export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
+  [NETWORKS.BERA]: "#FD7108",
+  [NETWORKS.CZ]: "#f0b90b",
+  [NETWORKS.INKMAINNET]: "#7132f4",
+  // [NETWORKS.ZORA]: "#72E1EA",
+  [NETWORKS.BASE]: "#1653f0",
+  [NETWORKS.SONICMAINNET]: "#274363",
+  [NETWORKS.XRPLMAINNET]: "#FEFEFE",
+  [NETWORKS.ABSTRACTMAINNET]: "#08ce6e",
+  [NETWORKS.SONEIUMMAINNET]: "#5FDEF3",
+  [NETWORKS.PLUMEMAINNET]: "#f53a39",
+  [NETWORKS.HYPE]: "#97fce4",
+  // [NETWORKS.FORM]: "#fff",
+  [NETWORKS.SCROLL]: "#FFDBB3",
+  [NETWORKS.BLAST]: "#F4F53A",
+  [NETWORKS.TAIKO]: "#E81899",
+  // [NETWORKS.MORPH]: "#fff",
+  [NETWORKS.POLY]: "#8247E5",
+  [NETWORKS.UNICHAIN]: "#f60cb2",
+  [NETWORKS.COTI]: "#207ec3",
+  // [NETWORKS.APE]: "#0052f0",
+  [NETWORKS.HEMI]: "#ff6c15",
+  [NETWORKS.UNIT0]: "#a1e0c2",
+  // [NETWORKS.MINT]: "#30BF54",
+  // [NETWORKS.XLAYER]: "#fff",
+  [NETWORKS.CREATOR_CHAIN]: "#F4F53A",
+  [NETWORKS.MONAD]: "#826df9",
+  [NETWORKS.NEXUS]: "#5c5c5e",
+  // [NETWORKS.MEGA]: "#fff",
+  // [NETWORKS.BARTIO]: "#FD7108",
+  [NETWORKS.TABI_V2]: "#FF8311",
+  // [NETWORKS.STORY]: "#fff",
+  [NETWORKS.ATHENE]: "#04D693",
+  // [NETWORKS.XRPL]: "#FEFEFE",
+  [NETWORKS.SAHARA]: "#f7ff98",
+  [NETWORKS.SOMNIA]: "#db045a",
+  [NETWORKS.KAIA]: "#01b8a6",
+  [NETWORKS.KITE]: "#00C853",
+  [NETWORKS.ZENCHAIN]: "#bbf14b",
+  [NETWORKS.HELIOS]: "#002DCB",
+  // [NETWORKS.BOBA]: "#CCFE3F",
+  // [NETWORKS.ZKLINK]: "#04D693",
+  // [NETWORKS.ARTHERA]: "#B10C90",
+  // [NETWORKS.TABI]: "#FF8311",
+  // [NETWORKS.ZIRCUIT]: "#277E29",
+  // [NETWORKS.NEOX]: "#00E599",
+  // [NETWORKS.ZKCANDY]: "#D125D6",
+  // [NETWORKS.MORPHHOLESKY]: "#00AB00",
+  // [NETWORKS.FIRE]: "#4848AC",
+};
+
+export const getChainColor = (id: NETWORKS) => CHAIN_COLOR[id];
+
+export const CHAINS: NETWORK_TYPE[] = [
+  {
+    id: NETWORKS.INKMAINNET,
+    name: "Ink Mainnet",
+    shortName: "Ink",
+    chain: PrismaChain.INKMAINNET,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/ink.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.INKMAINNET]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "ETH",
+        url: "https://explorer.inkonchain.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  {
+    id: NETWORKS.UNICHAIN,
+    name: "Unichain Mainnet",
+    shortName: "Unichain",
+    chain: PrismaChain.UNICHAIN,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/unichain.png",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.UNICHAIN]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "ETH",
+        url: "https://uniscan.xyz",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  {
+    id: NETWORKS.SONEIUMMAINNET,
+    name: "Soneium Mainnet",
+    shortName: "Soneium",
+    chain: PrismaChain.SONEIUMMAINNET,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/soneium.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.SONEIUMMAINNET]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "ETH",
+        url: "https://soneium.blockscout.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  {
+    id: NETWORKS.XRPLMAINNET,
+    name: "XRPL EVM",
+    shortName: "XRPL",
+    chain: PrismaChain.XRPLMAINNET,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "XRP", symbol: "XRP", decimals: 18 },
+    iconUrl: "/img/chainLogos/xrp.jpeg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.XRPLMAINNET]] },
+    },
+    blockExplorers: {
+      default: { name: "XRP", url: "https://explorer.xrplevm.org/" },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xA7f3d2dEa7a53E7A9FEbBdE5Cf7C69d39D065030",
+      },
+    },
+  },
+  {
+    id: NETWORKS.COTI,
+    name: "COTI Mainnet",
+    shortName: "COTI",
+    chain: PrismaChain.COTI,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "COTI", symbol: "COTI", decimals: 18 },
+    iconUrl: "/img/chainLogos/coti.png",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.COTI]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "COTI",
+        url: "https://mainnet.cotiscan.io",
+      },
+    },
+  },
+  // {
+  //   id: NETWORKS.ZORA,
+  //   name: "Zora",
+  //   shortName: "Zora",
+  //   chain: PrismaChain.GOLD,
+  //   sellMarket: "https://element.market",
+  //   iconUrl: "/img/chainLogos/zora.png",
+  //   nativeCurrency: {
+  //     decimals: 18,
+  //     name: "Ether",
+  //     symbol: "ETH",
+  //   },
+  //   rpcUrls: {
+  //     default: {
+  //       http: [rpcs[NETWORKS.ZORA]],
+  //       webSocket: ["wss://rpc.zora.energy"],
+  //     },
+  //   },
+  //   blockExplorers: {
+  //     default: {
+  //       name: "Explorer",
+  //       url: "https://explorer.zora.energy",
+  //       apiUrl: "https://explorer.zora.energy/api",
+  //     },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //     },
+  //   },
+  // },
+  {
+    id: NETWORKS.PLUMEMAINNET,
+    name: "Plume Mainnet",
+    shortName: "Plume",
+    chain: PrismaChain.PLUMEMAINNET,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "PLUME", symbol: "PLUME", decimals: 18 },
+    iconUrl: "/img/chainLogos/plume.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.PLUMEMAINNET]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "PLUME",
+        url: "https://explorer.plume.org",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  {
+    id: NETWORKS.HYPE,
+    name: "Hyperliquid",
+    shortName: "Hyperliquid",
+    chain: PrismaChain.HYPE,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "HYPE", symbol: "HYPE", decimals: 18 },
+    iconUrl: "/img/chainLogos/hype.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.HYPE]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "HYPE",
+        url: "https://www.hyperscan.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  {
+    id: NETWORKS.KAIA,
+    name: "Kaia",
+    shortName: "Kaia",
+    chain: PrismaChain.KAIA,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "KAIA", symbol: "KAIA", decimals: 18 },
+    iconUrl: "/img/chainLogos/kaia.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.KAIA]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "KAIA",
+        url: "https://kaiascan.io",
+      },
+    },
+  },
+  // {
+  //   id: NETWORKS.APE,
+  //   name: "ApeChain",
+  //   shortName: "Apechain",
+  //   chain: PrismaChain.APE,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "APE", symbol: "APE", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/ape.jpg",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.APE]] },
+  //   },
+  //   blockExplorers: {
+  //     default: {
+  //       name: "APE",
+  //       url: "https://apechain.calderaexplorer.xyz/",
+  //     },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //     },
+  //   },
+  // },
+  {
+    id: NETWORKS.HEMI,
+    name: "Hemi Mainnet",
+    shortName: "Hemi",
+    chain: PrismaChain.HEMI,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/hemi.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.HEMI]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "ETH",
+        url: "https://explorer.hemi.xyz",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  {
+    id: NETWORKS.UNIT0,
+    name: "Unit Zero Mainnet",
+    shortName: "Unit Zero",
+    chain: PrismaChain.UNIT0,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "UNIT0", symbol: "UNIT0", decimals: 18 },
+    iconUrl: "/img/chainLogos/unit0.png",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.UNIT0]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "UNIT0",
+        url: "https://explorer.unit0.dev/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  {
+    id: NETWORKS.ABSTRACTMAINNET,
+    name: "Abstract",
+    shortName: "Abstract",
+    chain: PrismaChain.ABSTRACTMAINNET,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/abstract.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.ABSTRACTMAINNET]] },
+    },
+    blockExplorers: {
+      default: { name: "ETH", url: "https://abscan.org/" },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xAa4De41dba0Ca5dCBb288b7cC6b708F3aaC759E7",
+      },
+    },
+  },
+  {
+    id: NETWORKS.BERA,
+    name: "Berachain Mainnet",
+    shortName: "Berachain",
+    chain: PrismaChain.BERAMAINNET,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "BERA", symbol: "BERA", decimals: 18 },
+    iconUrl: "/img/chainLogos/berachain.png",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.BERA]] },
+    },
+    blockExplorers: {
+      default: { name: "BERA", url: "https://berascan.com/" },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+        // blockCreated: 109269,
+      },
+    },
+  },
+  {
+    id: NETWORKS.CZ,
+    name: "BNB Smart Chain Mainnet",
+    shortName: "BSC",
+    chain: PrismaChain.CZ,
+    sellMarket: "https://element.market/collections/zns-connect-bnb",
+    nativeCurrency: {
+      decimals: 18,
+      name: "BNB",
+      symbol: "BNB",
+    },
+    iconUrl: "/img/chainLogos/bnbchain.png",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.CZ]],
+        webSocket: ["wss://bsc-rpc.publicnode.com"],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "BscScan",
+        url: "https://bscscan.com",
+        apiUrl: "https://api.bscscan.com/api",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+        blockCreated: 15921452,
+      },
+    },
+  },
+  {
+    id: NETWORKS.BASE,
+    name: "Base",
+    shortName: "Base",
+    chain: PrismaChain.BASE,
+    sellMarket: "https://element.market/collections/zns-connect-base",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/base.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.BASE]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "ETH",
+        url: "https://basescan.org/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  {
+    id: NETWORKS.SONICMAINNET,
+    name: "Sonic Mainnet",
+    shortName: "Sonic",
+    chain: PrismaChain.SONICMAINNET,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "S", symbol: "S", decimals: 18 },
+    iconUrl: "/img/chainLogos/sonic.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.SONICMAINNET]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "S",
+        url: "https://sonicscan.org/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  // {
+  //   id: NETWORKS.FORM,
+  //   name: "Form",
+  //   shortName: "Form",
+  //   chain: PrismaChain.FORM,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/form.png",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.FORM]] },
+  //   },
+  //   blockExplorers: {
+  //     default: {
+  //       name: "ETH",
+  //       url: "https://explorer.form.network/",
+  //     },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //     },
+  //   },
+  // },
+  {
+    id: NETWORKS.SCROLL,
+    name: "Scroll",
+    shortName: "Scroll",
+    chain: PrismaChain.SCROLL,
+    sellMarket: "https://element.market/collections/zns-connect-scroll",
+    iconUrl: "/img/chainLogos/scroll.png",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.SCROLL]],
+        webSocket: ["wss://wss-rpc.scroll.io/ws"],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Scrollscan",
+        url: "https://scrollscan.com",
+        apiUrl: "https://api.scrollscan.com/api",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+        blockCreated: 14,
+      },
+    },
+  },
+  {
+    id: NETWORKS.BLAST,
+    name: "Blast",
+    shortName: "Blast",
+    chain: PrismaChain.BLAST,
+    sellMarket: "https://element.market/collections/zns-connect-blast",
+    iconUrl: "/img/chainLogos/blast.jpeg",
+    nativeCurrency: {
+      decimals: 18,
+      name: "Ether",
+      symbol: "ETH",
+    },
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.BLAST]] },
+    },
+    blockExplorers: {
+      default: { name: "Blastscan", url: "https://blastscan.io" },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+        blockCreated: 212929,
+      },
+    },
+  },
+  {
+    id: NETWORKS.TAIKO,
+    name: "Taiko Mainnet",
+    shortName: "Taiko",
+    chain: PrismaChain.TAIKO,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/taiko.png",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.TAIKO]],
+      },
+    },
+    blockExplorers: {
+      default: { name: "Taiko Mainnet", url: "https://taikoscan.io" },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+        blockCreated: 11269,
+      },
+    },
+  },
+  // {
+  //   id: NETWORKS.MORPH,
+  //   name: "Morhph Mainnet",
+  //   shortName: "Morph",
+  //   chain: PrismaChain.MORPH,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/morph.png",
+  //   rpcUrls: {
+  //     default: {
+  //       http: [rpcs[NETWORKS.MORPH]],
+  //     },
+  //   },
+  //   blockExplorers: {
+  //     default: {
+  //       name: "ETH",
+  //       url: "https://explorer.morphl2.io/",
+  //     },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0x35f965903A85e7528437C3Ce0b4bdfbc4E5Fc27c",
+  //     },
+  //   },
+  // },
+  {
+    id: NETWORKS.POLY,
+    name: "Polygon",
+    shortName: "Polygon",
+    chain: PrismaChain.POLY,
+    sellMarket: "https://element.market/collections/zns-connect-poly",
+    nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
+    iconUrl: "/img/chainLogos/polygon.svg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.POLY]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "PolygonScan",
+        url: "https://polygonscan.com",
+        apiUrl: "https://api.polygonscan.com/api",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+        blockCreated: 25770160,
+      },
+    },
+  },
+  // {
+  //   id: NETWORKS.MINT,
+  //   name: "Mint Mainnet",
+  //   shortName: "Mint",
+  //   chain: PrismaChain.MINT,
+  //   sellMarket: "https://element.market",
+  //   iconUrl: "/img/chainLogos/mintchain.png",
+  //   nativeCurrency: { name: "Mint", symbol: "ETH", decimals: 18 },
+  //   rpcUrls: {
+  //     default: {
+  //       http: [rpcs[NETWORKS.MINT]],
+  //     },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "Mint", url: "https://explorer.mintchain.io/" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xf8ac4BEB2F75d2cFFb588c63251347fdD629B92c",
+  //       blockCreated: 467880,
+  //     },
+  //   },
+  // },
+  // {
+  //   id: NETWORKS.XLAYER,
+  //   name: "X Layer",
+  //   shortName: "XLayer",
+  //   chain: PrismaChain.XLAYER,
+  //   sellMarket: "https://element.market",
+  //   iconUrl: "/img/chainLogos/xLayer.webp",
+  //   nativeCurrency: { name: "xLayer", symbol: "OKB", decimals: 18 },
+  //   rpcUrls: {
+  //     default: {
+  //       http: [rpcs[NETWORKS.XLAYER]],
+  //     },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "xLayer", url: "https://www.oklink.com/xlayer" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //       blockCreated: 47416,
+  //     },
+  //   },
+  // },
+  // {
+  //   id: NETWORKS.BOBA,
+  //   name: "Boba",
+  //   shortName: "Boba",
+  //   chain: PrismaChain.BOBA,
+  //   sellMarket: "https://element.market",
+  //   iconUrl: "/img/chainLogos/boba.svg",
+  //   nativeCurrency: {
+  //     decimals: 18,
+  //     name: "Ether",
+  //     symbol: "ETH",
+  //   },
+  //   rpcUrls: {
+  //     default: {
+  //       http: [rpcs[NETWORKS.BOBA]],
+  //     },
+  //   },
+  //   blockExplorers: {
+  //     default: {
+  //       name: "BOBAScan",
+  //       url: "https://bobascan.com",
+  //     },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xca11bde05977b3631167028862be2a173976ca11",
+  //       blockCreated: 446859,
+  //     },
+  //   },
+  // },
+  // {
+  //   id: NETWORKS.ARTHERA,
+  //   name: "Arthera Mainnet",
+  //   shortName: "Arthera",
+  //   chain: PrismaChain.ARTHERA,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "Arthera", symbol: "AA", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/arthera.png",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.ARTHERA]] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "Arthera", url: "https://explorer.arthera.net/" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //       blockCreated: 4502791,
+  //     },
+  //   },
+  // },
+  // {
+  //   id: NETWORKS.INK,
+  //   name: "Ink Sepolia Testnet",
+  //   shortName: "Ink Sepolia",
+  //   chain: PrismaChain.INK,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/ink.jpg",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.INK]] },
+  //   },
+  //   blockExplorers: {
+  //     default: {
+  //       name: "ETH",
+  //       url: "https://explorer-sepolia.inkonchain.com/",
+  //     },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  {
+    id: NETWORKS.CREATOR_CHAIN,
+    name: "Creator Testnet",
+    shortName: "Creator",
+    chain: PrismaChain.CREATOR_CHAIN,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/creatorchain.png",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.CREATOR_CHAIN]] },
+    },
+    blockExplorers: {
+      default: { name: "ETH", url: "https://explorer.creatorchain.io" },
+    },
+    contracts: {
+      multicall3: {
+        address: "0x9062BfAdE2AA883361F02C87E831e0fcB15a833B",
+      },
+    },
+    testnet: true,
+  },
+  {
+    id: NETWORKS.MONAD,
+    name: "Monad Testnet",
+    shortName: "Monad",
+    chain: PrismaChain.MONAD,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "MON", symbol: "MON", decimals: 18 },
+    iconUrl: "/img/chainLogos/monad.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.MONAD]] },
+    },
+    blockExplorers: {
+      default: { name: "MON", url: "http://testnet.monadexplorer.com/" },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    testnet: true,
+  },
+  {
+    id: NETWORKS.NEXUS,
+    name: "Nexus Testnet",
+    shortName: "Nexus",
+    chain: PrismaChain.NEXUS,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "NEX", symbol: "NEX", decimals: 18 },
+    iconUrl: "/img/chainLogos/nexus.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.NEXUS]] },
+    },
+    blockExplorers: {
+      default: { name: "NEX", url: "https://explorer.nexus.xyz/" },
+    },
+    testnet: true,
+  },
+  {
+    id: NETWORKS.SOMNIA,
+    name: "Somnia Testnet",
+    shortName: "Somnia",
+    chain: PrismaChain.SOMNIA,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "STT", symbol: "STT", decimals: 18 },
+    iconUrl: "/img/chainLogos/somnia.png",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.SOMNIA]] },
+    },
+    blockExplorers: {
+      default: { name: "STT", url: "https://shannon-explorer.somnia.network/" },
+    },
+    testnet: true,
+  },
+  {
+    id: NETWORKS.KITE,
+    name: "KiteAI Testnet",
+    shortName: "KiteAI",
+    chain: PrismaChain.KITE,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "Kite", symbol: "KITE", decimals: 18 },
+    iconUrl: "/img/chainLogos/kite.jpeg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.KITE]] },
+    },
+    blockExplorers: {
+      default: { name: "KiteAI", url: "https://testnet.kitescan.ai/" },
+    },
+    // contracts: {
+    //   multicall3: {
+    //     address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+    //   },
+    // },
+    testnet: true,
+  },
+  {
+    id: NETWORKS.ZENCHAIN,
+    name: "ZenChain Testnet",
+    shortName: "ZenChain",
+    chain: PrismaChain.ZENCHAIN,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ZTC", symbol: "ZTC", decimals: 18 },
+    iconUrl: "/img/chainLogos/zenchain.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.ZENCHAIN]] },
+    },
+    blockExplorers: {
+      default: { name: "ZTC", url: "https://zentrace.io/" },
+    },
+    testnet: true,
+  },
+  {
+    id: NETWORKS.HELIOS,
+    name: "Helios Testnet",
+    shortName: "Helios",
+    chain: PrismaChain.HELIOS,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "HELIOS", symbol: "HELIOS", decimals: 18 },
+    iconUrl: "/img/chainLogos/helios.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.HELIOS]] },
+    },
+    blockExplorers: {
+      default: { name: "HELIOS", url: "https://explorer.helioschainlabs.org/" },
+    },
+    testnet: true,
+  },
+  // {
+  //   id: NETWORKS.MEGA,
+  //   name: "MEGA Testnet",
+  //   shortName: "MEGA",
+  //   chain: PrismaChain.MEGAETH,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/mega.svg",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.MEGA]] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "ETH", url: "https://megaexplorer.xyz" },
+  //   },
+  //   testnet: true,
+  // },
+  // {
+  //   id: NETWORKS.BARTIO,
+  //   name: "Bartio Testnet",
+  //   shortName: "Bartio",
+  //   chain: PrismaChain.BERA,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "BERA", symbol: "BERA", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/berachain.png",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.BARTIO]] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "BERA", url: "https://bartio.beratrail.io/" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //       blockCreated: 109269,
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  {
+    id: NETWORKS.TABI_V2,
+    name: "Tabi Testnet V2",
+    shortName: "Tabi",
+    chain: PrismaChain.TABI_V2,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "Tabi", symbol: "TABI", decimals: 18 },
+    iconUrl: "/img/chainLogos/tabi.jpeg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.TABI_V2]] },
+    },
+    blockExplorers: {
+      default: { name: "Tabi", url: "https://testnetv2.tabiscan.com/" },
+    },
+    contracts: {
+      multicall3: {
+        address: "0x237B529ABD68C4b2DedCc644F9772b46007be441",
+      },
+    },
+    testnet: true,
+  },
+  // {
+  //   id: NETWORKS.PLUME,
+  //   name: "Plume Testnet",
+  //   shortName: "Plume",
+  //   chain: PrismaChain.PLUME,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/plume.jpg",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.PLUME]] },
+  //   },
+  //   blockExplorers: {
+  //     default: {
+  //       name: "ETH",
+  //       url: "https://testnet-explorer.plumenetwork.xyz/",
+  //     },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  // {
+  //   id: NETWORKS.SONEIUM,
+  //   name: "Soneium Testnet",
+  //   shortName: "Soneium Minato",
+  //   chain: PrismaChain.SONEIUM,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/soneium.jpg",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.SONEIUM]] },
+  //   },
+  //   blockExplorers: {
+  //     default: {
+  //       name: "ETH",
+  //       url: "https://explorer-testnet.soneium.org",
+  //     },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  // {
+  //   id: NETWORKS.STORY,
+  //   name: "Story Odyssey Testnet",
+  //   shortName: "Story Testnet",
+  //   chain: PrismaChain.STORY,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "IP", symbol: "IP", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/story.jpg",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.STORY]] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "IP", url: "https://odyssey.storyscan.xyz/" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  {
+    id: NETWORKS.ATHENE,
+    name: "Athene Parthenon",
+    shortName: "Athene",
+    chain: PrismaChain.ATHENE,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/athene.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.ATHENE]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "ETH",
+        url: "https://athenescan.io/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    testnet: true,
+  },
+  // {
+  //   id: NETWORKS.XRPL,
+  //   name: "XRPL EVM Sidechain Testnet",
+  //   shortName: "XRPL",
+  //   chain: PrismaChain.XRPL,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "XRP", symbol: "XRP", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/xrp.jpeg",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.XRPL]] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "XRP", url: "https://explorer.testnet.xrplevm.org/" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0x82Cc144D7d0AD4B1c27cb41420e82b82Ad6e9B31",
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  {
+    id: NETWORKS.SAHARA,
+    name: "SaharaAI Testnet",
+    shortName: "SaharaAI",
+    chain: PrismaChain.SAHARA,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "SAHARA", symbol: "SAHARA", decimals: 18 },
+    iconUrl: "/img/chainLogos/sahara.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.SAHARA]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "SAHARA",
+        url: "https://testnet-explorer.saharalabs.ai/",
+      },
+    },
+    testnet: true,
+  },
+  // {
+  //   id: NETWORKS.NEOX,
+  //   name: "NEOX",
+  //   shortName: "NEOX",
+  //   chain: PrismaChain.NEOX,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "Neox", symbol: "GAS", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/neox.png",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.NEOX]] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "Neox", url: "https://xt3scan.ngd.network" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xc29a971a547f8a62e4ea8A37fD8465fdec54C60F",
+  //       blockCreated: 45296,
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  // {
+  //   id: NETWORKS.MORPHHOLESKY,
+  //   name: "Morph Holesky",
+  //   shortName: "Morph",
+  //   chain: PrismaChain.MORPH,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "Morph", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/morphHolesky.png",
+  //   rpcUrls: {
+  //     default: { http: ["https://rpc-holesky.morphl2.io"] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "Morph", url: "https://explorer-holesky.morphl2.io/" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0x0658417F1Af705a20333Ac1b1B01A2Bf0c139eB3",
+  //       blockCreated: 253900,
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  // {
+  //   id: NETWORKS.FIRE,
+  //   name: "5ire Testnet",
+  //   shortName: "5ire",
+  //   chain: PrismaChain.FIRE,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "5ire", symbol: "5ire", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/5ire.png",
+  //   rpcUrls: {
+  //     default: { http: ["https://rpc.ga.5ire.network"] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "5ire", url: "https://explorer.ga.5ire.network/" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0x9Cb7dB97f84c66C2a662890Ab8056c796F3ED9Ab",
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  // {
+  //   id: NETWORKS.TABI,
+  //   name: "Tabi Testnet",
+  //   shortName: "Tabi",
+  //   chain: PrismaChain.TABI,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "Tabi", symbol: "TABI", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/tabi.jpeg",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.TABI]] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "Tabi", url: "https://testnet.tabiscan.com/" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xEBdB92A9d94cACF58F3D5A85AC71a8F3ba035E2C",
+  //       blockCreated: 2360834,
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  // {
+  //   id: NETWORKS.ZKLINK,
+  //   name: "zkLink Nova",
+  //   shortName: "zkLink",
+  //   chain: PrismaChain.ZKLINK,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/zkLink.png",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.ZKLINK]] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "ETH", url: "https://explorer.zklink.io" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0x825267E0fA5CAe92F98540828a54198dcB3Eaeb5",
+  //     },
+  //   },
+  // },
+  // {
+  //   id: NETWORKS.ZIRCUIT,
+  //   name: "Zircuit Mainnet",
+  //   shortName: "Zircuit",
+  //   chain: PrismaChain.ZIRCUIT,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/zircuit.png",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.ZIRCUIT]] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "ETH", url: "https://explorer.zklink.io" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //     },
+  //   },
+  // },
+  // {
+  //   id: NETWORKS.SONIC,
+  //   name: "Sonic Testnet",
+  //   shortName: "Sonic",
+  //   chain: PrismaChain.SONIC,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "S", symbol: "S", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/sonic.jpg",
+  //   rpcUrls: {
+  //     default: { http: [rpcs[NETWORKS.SONIC]] },
+  //   },
+  //   blockExplorers: {
+  //     default: {
+  //       name: "S",
+  //       url: "https://testnet.soniclabs.com",
+  //     },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+  //     },
+  //   },
+  //   testnet: true,
+  // },
+  // {
+  //   id: NETWORKS.ZKCANDY,
+  //   name: "ZkCandy Testnet",
+  //   shortName: "ZkCandy",
+  //   chain: PrismaChain.CANDY,
+  //   sellMarket: "https://element.market",
+  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+  //   iconUrl: "/img/chainLogos/zkCandy.jpeg",
+  //   rpcUrls: {
+  //     default: { http: ["https://sepolia.rpc.zkcandy.io"] },
+  //   },
+  //   blockExplorers: {
+  //     default: { name: "zkCandy", url: "https://sepolia.explorer.zkcandy.io" },
+  //   },
+  //   contracts: {
+  //     multicall3: {
+  //       address: "_",
+  //     },
+  //   },
+  // },
+];
+
+export const getChainByID = (id?: NETWORKS) =>
+  CHAINS.find((item) => item.id === id) ?? CHAINS[0];
+
+export const getChainByChain = (chain: PrismaChain) =>
+  CHAINS.find((item) => item.chain === chain) ?? CHAINS[0];
+
+export const chains = CHAINS as unknown as [NETWORK_TYPE, ...NETWORK_TYPE[]];
+
+export const CHAIN_IDS = chains.map((c) => c.id);
+
+export const mainnets = chains.filter((c) => !c.testnet).map((c) => c.id);
+export const testnets = chains.filter((c) => c.testnet).map((c) => c.id);
+
+// Define hot chains (INK, Unichain, Somnia, Plume, Hype) - higher priority
+export const hotChains = [
+  NETWORKS.INKMAINNET,
+  NETWORKS.UNICHAIN,
+  NETWORKS.SOMNIA,
+  NETWORKS.PLUMEMAINNET,
+  NETWORKS.HYPE,
+];
+
+// Define new chains (last 5 chains from migration history) - excluding hot chains to avoid duplication
+export const newChains = [
+  NETWORKS.XRPLMAINNET, // Added 2025-07-01
+  NETWORKS.KAIA, // Added 2025-06-30
+  NETWORKS.UNIT0, // Added 2025-05-27
+  NETWORKS.KITE, // Added 2025-05-02
+];
+
+export const isChainSupported = memoize((chainId: number) =>
+  (CHAIN_IDS as number[]).includes(chainId)
+);
+
+export const isSvgSupported = memoize((chainId: number) =>
+  [NETWORKS.CZ, NETWORKS.SCROLL, NETWORKS.POLY, NETWORKS.BLAST].includes(
+    chainId
+  )
+);

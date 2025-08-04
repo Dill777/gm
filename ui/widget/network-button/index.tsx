@@ -1,0 +1,67 @@
+import React from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Image from "@/ui/components/image";
+import { LuSettings2 } from "react-icons/lu";
+import { SwitchNetworkIcon } from "@/ui/components/icon/SwitchNetworkIcon";
+
+export const NetworkButton = () => {
+  return (
+    <ConnectButton.Custom>
+      {({ chain, openChainModal }) => {
+        return (
+          <div className="w-full">
+            {(() => {
+              if (chain?.unsupported) {
+                return (
+                  <div
+                    onClick={openChainModal}
+                    className="flex items-center justify-between px-4 py-3 bg-black/40 rounded-xl space-x-3 cursor-pointer hover:text-primary"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <LuSettings2 className="w-6 h-6" />
+                      <p className="text-sm font-medium text-error">
+                        Wrong Network
+                      </p>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <div
+                  onClick={openChainModal}
+                  className="flex items-center justify-between px-5 h-[42px] bg-bg3 rounded-xl space-x-3 cursor-pointer text-text_normal hover:text-primary group"
+                >
+                  <div className="flex items-center space-x-2.5">
+                    <SwitchNetworkIcon />
+                    <span className="text-sm">{chain?.name}</span>
+                  </div>
+                  {chain?.hasIcon && (
+                    <div
+                      style={{
+                        background: chain?.iconBackground,
+                        width: 25,
+                        height: 25,
+                        borderRadius: 999,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {chain.iconUrl && (
+                        <Image
+                          width={25}
+                          height={25}
+                          alt={chain.name ?? "Chain icon"}
+                          src={chain.iconUrl}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+        );
+      }}
+    </ConnectButton.Custom>
+  );
+};
+export default NetworkButton;

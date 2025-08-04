@@ -1,0 +1,227 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id            String     @unique @default(uuid())
+  walletAddress String     @unique
+  dateJoined    DateTime   @default(now())
+  email         String?    @default("")
+  verified      Boolean    @default(false)
+  refer         String?
+  referralCode  String?    @unique
+  badges        Badges[]
+  Referral      Referral[]
+}
+
+model HIP {
+  id               String  @unique @default(uuid())
+  walletAddress    String  @unique
+  mainImgUrl       String? @default("")
+  name             String?
+  bio              String? @default("")
+  position         String? @default("")
+  totalEarnings    Float
+  totalPoints      Float
+  referralPoints   Float   @default(0)
+  domainPoints     Float   @default(0)
+  nftPoints        Float   @default(0)
+  twitter          String? @default("") @map(name: "twitter_url")
+  telegram         String? @default("") @map(name: "telegram_url")
+  linkedin         String? @default("") @map(name: "linkedin_url")
+  discord          String? @default("") @map(name: "discord_url")
+  wrapcast         String? @default("") @map(name: "wrapcast_url")
+  twitterVerified  Boolean @default(false)
+  telegramVerified Boolean @default(false)
+  linkedinVerified Boolean @default(false)
+  discordVerified  Boolean @default(false)
+  wrapcastVerified Boolean @default(false)
+}
+
+model Domain {
+  id         String   @unique @default(uuid())
+  chain      Chain
+  domainName String
+  dId        String   @default("")
+  mainImgUrl String?  @default("")
+  bannerURL  String?  @default("")
+  location   String?
+  bio        String?  @default("")
+  name       String?
+  category   Category @default(DigitalCreator)
+  createdAt  DateTime @default(now())
+
+  twitter             String?  @default("") @map(name: "twitter_url")
+  telegram            String?  @default("") @map(name: "telegram_url")
+  linkedin            String?  @default("") @map(name: "linkedin_url")
+  discord             String?  @default("") @map(name: "discord_url")
+  website             String?  @default("") @map(name: "website_url")
+  application         String?  @default("") @map(name: "application_url")
+  medium              String?  @default("") @map(name: "medium_url")
+  mirror              String?  @default("") @map(name: "mirror_url")
+  youtube             String?  @default("") @map(name: "youtube_url")
+  wrapcast            String?  @default("") @map(name: "wrapcast_url")
+  link1               String?  @default("")
+  linkTitle1          String?  @default("")
+  link2               String?  @default("")
+  linkTitle2          String?  @default("")
+  twitterVerified     Boolean  @default(false)
+  telegramVerified    Boolean  @default(false)
+  linkedinVerified    Boolean  @default(false)
+  discordVerified     Boolean  @default(false)
+  websiteVerified     Boolean  @default(false)
+  applicationVerified Boolean  @default(false)
+  mediumVerified      Boolean  @default(false)
+  mirrorVerified      Boolean  @default(false)
+  youtubeVerified     Boolean  @default(false)
+  wrapcastVerified    Boolean  @default(false)
+  spaceVerified       Boolean  @default(false)
+  following           Follow[] @relation("from")
+  followers           Follow[] @relation("to")
+  hasBurned           Boolean  @default(false)
+}
+
+model DomainCategory {
+  id    String @unique @default(uuid())
+  key   String @unique
+  taken Int
+}
+
+model Follow {
+  id     Int    @id @default(autoincrement())
+  from   Domain @relation("from", fields: [fromId], references: [id])
+  to     Domain @relation("to", fields: [toId], references: [id])
+  fromId String
+  toId   String
+}
+
+model Referral {
+  id                Int    @id @default(autoincrement())
+  chain             Chain
+  walletAddress     String
+  numberOfReferrals Int
+  totalEarnings     Float
+  user              User   @relation(fields: [walletAddress], references: [walletAddress])
+}
+
+model Statistic {
+  id          Int      @id @default(autoincrement())
+  chainId     Int      @default(0)
+  domains     Int      @default(0)
+  owner       Int      @default(0)
+  gifts       Int      @default(0)
+  chainName   String   @unique
+  chainDomain String   @unique
+  updatedAt   DateTime @default(now())
+}
+
+model GM {
+  id            String   @unique @default(uuid())
+  walletAddress String
+  dId           String   @default("")
+  chain         Chain
+  createdAt     DateTime @default(now())
+}
+
+model Deploy {
+  id            String   @unique @default(uuid())
+  walletAddress String
+  dId           String   @default("")
+  chain         Chain
+  createdAt     DateTime @default(now())
+}
+
+enum Category {
+  DigitalCreator
+  BlockchainEnthusiast
+  SocialCreator
+  FinancialWizard
+  TechInnovator
+  Gamer
+}
+
+enum Badges {
+  Followers100Badge
+  Followers500Badge
+  Followers1000Badge
+  Followers10000Badge
+  Domain100DaysBadge
+  Domain200DaysBadge
+  Domain365DaysBadge
+  Domain500DaysBadge
+  DomainL1Badge
+  DomainL2Badge
+  DomainL3Badge
+  DomainL4Badge
+  Domain2Badge
+  Domain5Badge
+  Domain20Badge
+  Domain100Badge
+}
+
+enum Chain {
+  ZETA
+  BERA
+  BERAMAINNET
+  BASE
+  POLY
+  MINT
+  HONEY
+  XTERIO
+  CZ
+  XLAYER
+  NFT
+  TABI
+  TABI_V2
+  TAIKO
+  FIRE
+  SCROLL
+  CANDY
+  ARTHERA
+  NEOX
+  BLAST
+  BOBA
+  XRP
+  GOLD
+  ZKLINK
+  ZIRCUIT
+  ZORA
+  PLUME
+  PLUMEMAINNET
+  SONEIUM
+  SONEIUMMAINNET
+  SONICMAINNET
+  SONIC
+  ATHENE
+  MORPH
+  STORY
+  INKMAINNET
+  INK
+  CREATOR_CHAIN
+  FORM
+  ABSTRACT
+  ABSTRACTMAINNET
+  SAHARA
+  UNICHAIN
+  MONAD
+  APE
+  HEMI
+  NEXUS
+  MEGAETH
+  COTI
+  XRPL
+  XRPLMAINNET
+  SOMNIA
+  KITE
+  UNIT0
+  KAIA
+  HYPE
+  ZENCHAIN
+  HELIOS
+}

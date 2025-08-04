@@ -1,0 +1,236 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import { useAccount, useBalance } from "wagmi";
+import { useWriteContractDeploy } from "@/lib/web3/hooks/core/useWriteContractDeploy";
+import { CONTRACTS_DEPLOY } from "@/config/contracts";
+import { useTransactionStatus } from "@/lib/web3/hooks/core/useTransactionStatus";
+import { useAppSelector } from "@/lib/store";
+import { isEmpty } from "lodash";
+import { useDeployData } from "@/lib/web3/hooks/read/useDeployData";
+import { parseEther } from "viem";
+import { canUserDeploy, saveDeploy } from "@/lib/api/deploy";
+
+export const useDeploy = (successCallback?: () => void) => {
+  const { user } = useAppSelector((state) => state.user);
+  const { address, chainId } = useAccount();
+  const [fee, setFee] = useState<bigint>(BigInt(0));
+  const [cooldownInfo, setCooldownInfo] = useState<{
+    canSend: boolean;
+    timeRemaining: number;
+    lastDeploy?: Date;
+  }>({ canSend: true, timeRemaining: 0 });
+
+  const defaultAddressReferral =
+    process.env.NEXT_PUBLIC_DEFAULT_ADDRESS_REFERRAL_HIP!;
+
+  const { fetchDeployFee, isDeploySupported } = useDeployData(chainId);
+
+  const refer = useMemo(() => {
+    if (!user || user.refer === address || isEmpty(user.refer)) {
+      return defaultAddressReferral;
+    }
+    return user.refer ?? defaultAddressReferral;
+  }, [user, address, defaultAddressReferral]);
+
+  const {
+    data: hash,
+    error,
+    isPending,
+    isError,
+    reset,
+    callWriteContractDeploy,
+  } = useWriteContractDeploy();
+
+  const { data: balanceData } = useBalance({
+    address,
+  });
+
+  // Check cooldown status
+  const checkCooldown = useCallback(async () => {
+    if (!address || !chainId || !isDeploySupported) {
+      setCooldownInfo({ canSend: true, timeRemaining: 0 });
+      return;
+    }
+
+    try {
+      const result = await canUserDeploy(address, chainId);
+
+      if (!result.isError) {
+        setCooldownInfo({
+          canSend: result.data.canSend,
+          timeRemaining: result.data.timeRemaining,
+          lastDeploy: result.data.lastDeploy
+            ? new Date(result.data.lastDeploy)
+            : undefined,
+        });
+      } else {
+        console.error("Failed to check Deploy cooldown:", result.error);
+        setCooldownInfo({ canSend: true, timeRemaining: 0 });
+      }
+    } catch (error) {
+      console.error("Error checking Deploy cooldown:", error);
+      setCooldownInfo({ canSend: true, timeRemaining: 0 });
+    }
+  }, [address, chainId, isDeploySupported]);
+
+  // Enhanced transaction status to save to database
+  const handleTransactionSuccess = useCallback(async () => {
+    // Call the original success callback first
+    if (successCallback) {
+      successCallback();
+    }
+  }, [successCallback]);
+
+  const { isLoading, receipt, isSuccess } = useTransactionStatus(
+    hash,
+    "Smart contract deployed successfully! ⚡",
+    handleTransactionSuccess,
+    reset
+  );
+
+  // Save to database when transaction is successful
+  useEffect(() => {
+    const saveDeployToDatabase = async () => {
+      if (isSuccess && receipt && address && chainId && isDeploySupported) {
+        try {
+          const result = await saveDeploy({
+            walletAddress: address,
+            dId: receipt.blockNumber.toString(),
+            chainId: chainId,
+          });
+
+          if (!result.isError) {
+            console.log("Deploy record saved to database successfully");
+            // Trigger success callback again after database save to refresh UI
+            if (successCallback) {
+              successCallback();
+            }
+            // Refresh cooldown status after successful deploy
+            checkCooldown();
+          } else {
+            console.error("Failed to save Deploy to database:", result.error);
+          }
+        } catch (error) {
+          console.error("Error saving Deploy to database:", error);
+        }
+      }
+    };
+
+    saveDeployToDatabase();
+  }, [
+    isSuccess,
+    receipt,
+    address,
+    chainId,
+    successCallback,
+    checkCooldown,
+    isDeploySupported,
+  ]);
+
+  useEffect(() => {
+    if (isError) {
+      console.error("Error deploying contract:", error);
+      toast.error("Failed to deploy contract. Please try again.");
+    }
+  }, [isError, error]);
+
+  // Check cooldown when component mounts or dependencies change
+  useEffect(() => {
+    if (address && chainId && isDeploySupported) {
+      checkCooldown();
+    }
+  }, [address, chainId, checkCooldown, isDeploySupported]);
+
+  const isProcessing = useMemo(
+    () => (isLoading && !!hash) || isPending,
+    [isLoading, hash, isPending]
+  );
+
+  const isEnoughBalance = useMemo(() => {
+    if (!balanceData || !fee) return false;
+    return balanceData.value >= fee;
+  }, [balanceData, fee]);
+
+  const canDeploy = useMemo(() => {
+    return (
+      !isProcessing &&
+      isEnoughBalance &&
+      cooldownInfo.canSend &&
+      isDeploySupported
+    );
+  }, [isProcessing, isEnoughBalance, cooldownInfo.canSend, isDeploySupported]);
+
+  const onDeploy = useCallback(async () => {
+    if (!canDeploy) {
+      if (!isDeploySupported) {
+        toast.error("Deploy is not supported on this chain");
+        return;
+      }
+      if (!cooldownInfo.canSend) {
+        toast.error(
+          `Please wait ${cooldownInfo.timeRemaining} more hours before deploying another contract`
+        );
+      }
+      return;
+    }
+
+    try {
+      await callWriteContractDeploy(
+        {
+          contract: CONTRACTS_DEPLOY.DEPLOY,
+          functionName: "deploy",
+          value: fee,
+        },
+        chainId,
+        refer
+      );
+    } catch (error) {
+      console.error("Error calling deploy:", error);
+      toast.error("Failed to deploy contract");
+    }
+  }, [
+    canDeploy,
+    cooldownInfo,
+    callWriteContractDeploy,
+    fee,
+    chainId,
+    refer,
+    isDeploySupported,
+  ]);
+
+  // Fetch actual fee from contract
+  useEffect(() => {
+    const fetchFee = async () => {
+      try {
+        if (isDeploySupported) {
+          const feeString = await fetchDeployFee();
+          const feeInWei = parseEther(feeString);
+          setFee(feeInWei);
+        } else {
+          setFee(parseEther("0")); // Set to 0 for unsupported chains
+        }
+      } catch (error) {
+        console.error("Error fetching deploy fee:", error);
+        // Fallback to default fee if contract call fails
+        setFee(parseEther("0.005")); // 0.005 ETH
+      }
+    };
+
+    if (chainId) {
+      fetchFee();
+    }
+  }, [chainId, fetchDeployFee, isDeploySupported]);
+
+  return {
+    isEnoughBalance,
+    isProcessing,
+    onDeploy,
+    fee,
+    hash,
+    isError,
+    error,
+    canDeploy,
+    cooldownInfo,
+    isDeploySupported,
+  };
+};
