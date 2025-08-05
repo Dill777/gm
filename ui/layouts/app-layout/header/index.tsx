@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Image from "@/ui/components/image";
 import Link from "@/ui/components/link";
 import { useScroll } from "@/utils/hooks/useScroll";
@@ -48,15 +48,17 @@ const Header = () => {
           </Link>
 
           {/* Navigation */}
-          <NavList
-            className={cn(
-              "flex items-center",
-              isAuthorized
-                ? "gap-10 mac_before:gap-8 desktop:gap-6"
-                : "gap-12 mac_before:gap-8 desktop:gap-6",
-              "laptop_md:hidden"
-            )}
-          />
+          <Suspense fallback={null}>
+            <NavList
+              className={cn(
+                "flex items-center",
+                isAuthorized
+                  ? "gap-10 mac_before:gap-8 desktop:gap-6"
+                  : "gap-12 mac_before:gap-8 desktop:gap-6",
+                "laptop_md:hidden"
+              )}
+            />
+          </Suspense>
 
           <div
             className={cn(

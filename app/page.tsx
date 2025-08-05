@@ -43,7 +43,9 @@ const GMDeployPage = ({
           <div className="hidden tablet_md:block w-full pt-8 tablet_md:pt-0">
             {/* Tablet Tabs */}
             <div>
-              <TabletTabNavigation activeTab={activeTabletTab} />
+              <Suspense fallback={<div>Loading...</div>}>
+                <TabletTabNavigation activeTab={activeTabletTab} />
+              </Suspense>
 
               {/* Tab Content */}
               <div className="mt-6">
