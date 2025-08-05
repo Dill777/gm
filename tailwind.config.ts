@@ -32,6 +32,7 @@ const config: Config = {
         light_b2: "#F7F7F7",
         verified: "#05ABFF",
         success: "#00AC4F",
+        success1: "#15803D",
         golden: "#FCC501",
         golden1: "#EEC731",
         warning: "#FFCE00",
@@ -79,6 +80,7 @@ const config: Config = {
         gray5: "#DDDDDD",
         gray6: "#1C1C1C",
         gray7: "#C1C1C1",
+        gray8: "#D1D5DB",
         stroke: "#292925",
         bg: "#161616",
         bg1: "#292929",
@@ -145,6 +147,8 @@ const config: Config = {
           "linear-gradient(90deg, #B1D9FF 0%, #628DBE 35.58%, rgba(161, 164, 100, 0.55) 53.85%, #E2F420 80.29%, #0177E7 96.63%)",
         gradient_progress:
           "linear-gradient(90deg, #1C96FD 12.52%, #33E360 38.55%, #F4C630 74.66%, #CB1245 111.02%, #AD00FE 160.23%), #FFF",
+        gradient_divider:
+          "linear-gradient(90deg, #1B211600 5.21%, #1B21167A 5.22%, #CAFC0126 50%, #1B21167A 91.66%, #1B211600 91.67%)",
       },
       boxShadow: {
         dropdown: "0px 4px 4px 0px rgba(1, 1, 1, 0.50)",

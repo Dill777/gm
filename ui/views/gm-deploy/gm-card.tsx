@@ -10,9 +10,10 @@ import Link from "next/link";
 import ShareLinkIcon from "@/ui/components/icon/referral/ShareLinkIcon";
 import { useAccount } from "wagmi";
 import { FlashIcon } from "@/ui/components/icon/FlashIcon";
-import { useGM } from "@/lib/web3/hooks/write/useGM";
+import { useGM } from "@/ui/hooks/useGM";
 import { useGMData, GMDataResult } from "@/lib/web3/hooks/read/useGMData";
 import BeamWrapper from "@/ui/widget/beam-wrapper";
+import SuccessModal from "@/ui/components/success-modal";
 
 interface GMCardProps {
   chainId: NETWORKS;
@@ -65,8 +66,15 @@ const GMCard: React.FC<GMCardProps> = ({
   }, [isConnected, address, chainId, fetchGMData, onGMSuccess]);
 
   // Initialize useGM with success callback for real-time updates
-  const { isProcessing, onSayGM, canSendGM, isGMSupported, cooldownInfo } =
-    useGM(refreshGMData);
+  const {
+    isProcessing,
+    onSayGM,
+    canSendGM,
+    isGMSupported,
+    cooldownInfo,
+    showSuccessModal,
+    setShowSuccessModal,
+  } = useGM(refreshGMData);
 
   // Check if this is the currently connected chain
   const { chainId: connectedChainId } = useAccount();
@@ -290,6 +298,13 @@ const GMCard: React.FC<GMCardProps> = ({
           {getButtonText()}
         </InteractionButton>
       </div>
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        type="gm"
+      />
     </div>
   );
 

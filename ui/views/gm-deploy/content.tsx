@@ -16,6 +16,28 @@ import DeployCard from "./deploy-card";
 import { useAppSelector } from "@/lib/store";
 import { useAggregatedGMData } from "@/lib/web3/hooks/read/useAggregatedGMData";
 import { useAggregatedDeployData } from "@/lib/web3/hooks/read/useAggregatedDeployData";
+import {
+  CONTRACT_DATA_GM,
+  CONTRACTS_GM,
+  CONTRACT_DATA_DEPLOY,
+  CONTRACTS_DEPLOY,
+} from "@/config/contracts";
+
+// Helper function to get chains that support GM
+const getGMSupportedChains = () => {
+  const supportedChainIds = Object.keys(
+    CONTRACT_DATA_GM[CONTRACTS_GM.GM].addresses
+  ).map(Number) as NETWORKS[];
+  return CHAINS.filter((chain) => supportedChainIds.includes(chain.id));
+};
+
+// Helper function to get chains that support Deploy
+const getDeploySupportedChains = () => {
+  const supportedChainIds = Object.keys(
+    CONTRACT_DATA_DEPLOY[CONTRACTS_DEPLOY.DEPLOY].addresses
+  ).map(Number) as NETWORKS[];
+  return CHAINS.filter((chain) => supportedChainIds.includes(chain.id));
+};
 
 const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -68,7 +90,9 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
 
   // Filter chains based on search term (by name or id) and active filter
   const filteredChains = useMemo(() => {
-    let filtered = CHAINS;
+    // Start with appropriate chains based on type
+    let filtered =
+      type === "gm" ? getGMSupportedChains() : getDeploySupportedChains();
 
     // Filter by search term (name or id)
     if (searchTerm.trim()) {
@@ -129,7 +153,7 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
       // If same priority, sort alphabetically by name
       return a.name.localeCompare(b.name);
     });
-  }, [searchTerm, activeFilter, favoriteChainIds]);
+  }, [searchTerm, activeFilter, favoriteChainIds, type]);
 
   const handleSearchChange = (search: string) => {
     setSearchTerm(search);

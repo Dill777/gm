@@ -13,12 +13,13 @@ import { FavoriteIcon } from "@/ui/components/icon/FavoriteIcon";
 import useChainFavorite from "@/ui/hooks/useChainFavorite";
 import { useAccount } from "wagmi";
 import { FlashIcon } from "@/ui/components/icon/FlashIcon";
-import { useDeploy } from "@/lib/web3/hooks/write/useDeploy";
+import { useDeploy } from "@/ui/hooks/useDeploy";
 import {
   useDeployData,
   DeployDataResult,
 } from "@/lib/web3/hooks/read/useDeployData";
 import BeamWrapper from "@/ui/widget/beam-wrapper";
+import SuccessModal from "@/ui/components/success-modal";
 
 interface DeployCardProps {
   chainId: NETWORKS;
@@ -70,8 +71,15 @@ const DeployCard: React.FC<DeployCardProps> = ({
   }, [isConnected, address, chainId, fetchDeployData, onDeploySuccess]);
 
   // Initialize useDeploy with success callback for real-time updates
-  const { isProcessing, onDeploy, canDeploy, isDeploySupported, cooldownInfo } =
-    useDeploy(refreshDeployData);
+  const {
+    isProcessing,
+    onDeploy,
+    canDeploy,
+    isDeploySupported,
+    cooldownInfo,
+    showSuccessModal,
+    setShowSuccessModal,
+  } = useDeploy(refreshDeployData);
 
   // Check if this is the currently connected chain
   const { chainId: connectedChainId } = useAccount();
@@ -280,6 +288,13 @@ const DeployCard: React.FC<DeployCardProps> = ({
           {getButtonText()}
         </InteractionButton>
       </div>
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        type="deploy"
+      />
     </div>
   );
 

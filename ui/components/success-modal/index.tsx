@@ -1,0 +1,248 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { IoMdRefresh } from "react-icons/io";
+import { toast } from "react-toastify";
+import Image from "@/ui/components/image";
+import Icon from "@/ui/components/icon";
+import React, { useMemo } from "react";
+import { useAccount } from "wagmi";
+import { copyToClipboard } from "@/utils";
+import { useAppSelector } from "@/lib/store";
+import { useClientRender } from "@/utils/hooks/useClientRender";
+import { Button } from "@/ui/components/button";
+import CopyLinkIcon from "@/ui/components/icon/CopyLinkIcon";
+import ShareLinkIcon from "@/ui/components/icon/referral/ShareLinkIcon";
+import { testnets } from "@/config/chains";
+import TooltipIcon from "../icon/TooltipIcon";
+
+interface SuccessModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  isMinted?: boolean;
+  type?: "gm" | "deploy";
+}
+
+const SuccessModal: React.FC<SuccessModalProps> = ({
+  isOpen,
+  onClose,
+  type = "gm",
+  isMinted = false,
+}) => {
+  const router = useRouter();
+  const { isConnected, chainId } = useAccount();
+  const isClient = useClientRender();
+  const { user } = useAppSelector((state) => state.user);
+
+  // Check if current chain is testnet
+  const isTestnet = useMemo(() => {
+    return chainId ? testnets.includes(chainId) : false;
+  }, [chainId]);
+
+  // Get referral URL
+  const referUrl = useMemo(
+    () =>
+      isClient
+        ? user && user.referralCode
+          ? `${window.location.origin}?ref=${user.referralCode}`
+          : `${window.location.origin}`
+        : "",
+    [user, isClient]
+  );
+
+  const onCopy = () => {
+    if (user) {
+      copyToClipboard(referUrl);
+      toast.success("Copied to clipboard");
+    }
+  };
+
+  const onShare = () => {
+    let description =
+      "🟢 Big news for @znsconnect!\n" +
+      "\n" +
+      "🟢 Mint your domain and enjoy up to 25%25 rewards directly in your wallet!\n" +
+      "\n" +
+      "Visit:";
+
+    let url = referUrl;
+    let hashtags = "zns,znsconnect";
+    window.open(
+      `https://twitter.com/intent/tweet?text=${description}&url=${url}&hashtags=${hashtags}`,
+      "_blank"
+    );
+  };
+
+  const onRedirectToMint = () => {
+    router.push("/search");
+  };
+
+  const handleSocialShare = (platform: string) => {
+    const shareUrls = {
+      twitter: `https://twitter.com/ZNSConnect`,
+      telegram: `https://t.me/znsconnect`,
+      linkedin: `https://www.linkedin.com/company/zns-connect`,
+      discord: `https://discord.com/invite/skbA5Ucmmc`,
+    };
+
+    const shareUrl = shareUrls[platform as keyof typeof shareUrls];
+    if (shareUrl) {
+      window.open(shareUrl, "_blank");
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/30 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="relative bg-bg3 rounded-[20px] p-[56px] tablet:px-4 tablet:py-6 max-w-xl w-full mx-4 text-white"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button onClick={onClose} className="absolute top-3.5 right-3.5">
+          <Image
+            src="/img/close-circle.svg"
+            alt="Close"
+            width={22}
+            height={22}
+          />
+        </button>
+
+        {/* Success Icon */}
+        <div className="flex flex-col items-center space-y-2">
+          <Image
+            src="/img/success-group.svg"
+            alt="Success"
+            width={102}
+            height={85}
+          />
+
+          <h2 className="text-2xl tablet:text-lg font-bold text-center">
+            {isMinted
+              ? isTestnet
+                ? "Testnet Domain Minted!"
+                : "Domain Successfully Minted on Testnet!"
+              : type === "deploy"
+              ? "Contract Deployed!"
+              : "GM Successfully Sent!"}
+          </h2>
+
+          <div className="w-[76px] h-[2px] bg-success1 mx-auto" />
+        </div>
+
+        {/* Action Buttons */}
+
+        <div className="space-y-[18px] mt-6">
+          {!isMinted && (
+            <button
+              onClick={onClose}
+              className="w-full bg-gray6 text-primary text-sm font-medium flex items-center justify-center gap-2 rounded-xl px-2.5 py-3"
+            >
+              {type === "deploy"
+                ? "Deploy more contracts"
+                : "Say more GM today"}
+              <div className="w-6 h-6 border rounded-full border-primary flex items-center justify-center">
+                <ShareLinkIcon className="w-[9px] h-[9px] text-primary" />
+              </div>
+            </button>
+          )}
+          {!(isMinted && !isTestnet) && (
+            <button
+              onClick={onRedirectToMint}
+              className="w-full bg-primary text-bg text-sm font-medium flex items-center justify-center gap-2 rounded-xl px-2.5 py-3"
+            >
+              Mint real Domain & start Earning
+            </button>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div className="bg-gradient_divider h-[1px] w-full max-w-[412px] mx-auto my-8" />
+
+        {/* Invite & Earn Section */}
+        <div className="flex flex-col gap-5 items-center">
+          <div className="w-full flex flex-col gap-3.5 items-center">
+            <div className="flex flex-col items-center gap-1">
+              <h3 className="font-bold text-lg">Invite & Earn</h3>
+              <span className="text-text_body text-sm text-center">
+                Get up to <span className="text-white">25% commission</span> on
+                every {type === "deploy" ? "deployment" : "GM"}
+              </span>
+            </div>
+
+            {/* Referral Link */}
+            {isConnected && (
+              <div className="bg-gray6 rounded-[18px] pl-5 pr-1.5 py-1.5 border border-bg2 w-full max-w-md">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center flex-1 h-8 w-full">
+                    <p className="text-white text-xs truncate max-w-[195px]">
+                      {referUrl}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      className="flex-1 bg-bg2 text-white rounded-xl py-2.5 px-3 gap-2 font-medium text-sm"
+                      onClick={onShare}
+                      disabled={!user}
+                    >
+                      <ShareLinkIcon className="w-4 h-4" />
+                      <span className="tablet:hidden">Share</span>
+                    </Button>
+                    <Button
+                      className="bg-primary rounded-xl py-2.5 px-3 text-black min-w-[50px] tablet:min-w-auto"
+                      onClick={onCopy}
+                    >
+                      <CopyLinkIcon className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isMinted && isTestnet && (
+              <div className="flex items-center justify-center px-2 py-2.5 rounded-xl bg-gray6 gap-2">
+                <div className="flex items-center justify-center w-5 h-5 rounded-full bg-bg2">
+                  <TooltipIcon className="w-3 h-3" />
+                </div>
+                <span className="text-text_body text-sm">
+                  No rewards on testnet mints. Try mainnet to start earning!
+                </span>
+              </div>
+            )}
+          </div>
+          <p className="text-gray7 font-medium text-center">
+            {isMinted
+              ? "Share your minting success with the community!"
+              : type === "deploy"
+              ? "Share your deployment success with the community!"
+              : "Share your daily GM ritual with the community!"}
+          </p>
+          <div className="flex justify-center gap-3">
+            {["twitter", "telegram", "linkedin", "discord"].map((item) => (
+              <button
+                key={item}
+                onClick={() => handleSocialShare(item)}
+                className="w-10 h-10 bg-bg2 rounded-full flex items-center justify-center transition-colors text-gray8"
+              >
+                <Icon name={item as keyof typeof Icon} size={18} />
+              </button>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+export default SuccessModal;

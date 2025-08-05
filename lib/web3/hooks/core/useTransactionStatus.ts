@@ -6,7 +6,8 @@ export const useTransactionStatus = (
   hash: `0x${string}` | undefined,
   successMessage: string,
   successCallback: () => void,
-  reset: () => void
+  reset: () => void,
+  showToast: boolean = true
 ) => {
   const {
     isSuccess,
@@ -18,11 +19,13 @@ export const useTransactionStatus = (
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success(successMessage);
+      if (showToast) {
+        toast.success(successMessage);
+      }
       reset();
       if (successCallback) successCallback();
     }
-  }, [isSuccess]);
+  }, [isSuccess, successMessage, successCallback, reset, showToast]);
 
   return { isLoading, receipt, isSuccess };
 };

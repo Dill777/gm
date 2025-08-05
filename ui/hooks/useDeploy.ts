@@ -1,30 +1,30 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { useAccount, useBalance } from "wagmi";
-import { useWriteContractGM } from "@/lib/web3/hooks/core/useWriteContractGM";
-import { CONTRACTS_GM } from "@/config/contracts";
+import { useWriteContractDeploy } from "@/lib/web3/hooks/core/useWriteContractDeploy";
+import { CONTRACTS_DEPLOY } from "@/config/contracts";
 import { useTransactionStatus } from "@/lib/web3/hooks/core/useTransactionStatus";
 import { useAppSelector } from "@/lib/store";
 import { isEmpty } from "lodash";
-import { useGMData } from "@/lib/web3/hooks/read/useGMData";
+import { useDeployData } from "@/lib/web3/hooks/read/useDeployData";
 import { parseEther } from "viem";
-import { canUserSendGM, saveGM } from "@/lib/api/gm";
+import { canUserDeploy, saveDeploy } from "@/lib/api/deploy";
 
-export const useGM = (successCallback?: () => void) => {
+export const useDeploy = (successCallback?: () => void) => {
   const { user } = useAppSelector((state) => state.user);
   const { address, chainId } = useAccount();
   const [fee, setFee] = useState<bigint>(BigInt(0));
   const [cooldownInfo, setCooldownInfo] = useState<{
     canSend: boolean;
     timeRemaining: number;
-    lastGM?: Date;
+    lastDeploy?: Date;
   }>({ canSend: true, timeRemaining: 0 });
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const defaultAddressReferral =
     process.env.NEXT_PUBLIC_DEFAULT_ADDRESS_REFERRAL_HIP!;
 
-  // Initialize useGM with success callback for real-time updates
-  const { fetchGMFee, isGMSupported } = useGMData(chainId);
+  const { fetchDeployFee, isDeploySupported } = useDeployData(chainId);
 
   const refer = useMemo(() => {
     if (!user || user.refer === address || isEmpty(user.refer)) {
@@ -39,8 +39,8 @@ export const useGM = (successCallback?: () => void) => {
     isPending,
     isError,
     reset,
-    callWriteContractGM,
-  } = useWriteContractGM();
+    callWriteContractDeploy,
+  } = useWriteContractDeploy();
 
   const { data: balanceData } = useBalance({
     address,
@@ -48,32 +48,36 @@ export const useGM = (successCallback?: () => void) => {
 
   // Check cooldown status
   const checkCooldown = useCallback(async () => {
-    if (!address || !chainId || !isGMSupported) {
+    if (!address || !chainId || !isDeploySupported) {
       setCooldownInfo({ canSend: true, timeRemaining: 0 });
       return;
     }
 
     try {
-      const result = await canUserSendGM(address, chainId);
+      const result = await canUserDeploy(address, chainId);
 
       if (!result.isError) {
         setCooldownInfo({
           canSend: result.data.canSend,
           timeRemaining: result.data.timeRemaining,
-          lastGM: result.data.lastGM ? new Date(result.data.lastGM) : undefined,
+          lastDeploy: result.data.lastDeploy
+            ? new Date(result.data.lastDeploy)
+            : undefined,
         });
       } else {
-        console.error("Failed to check GM cooldown:", result.error);
+        console.error("Failed to check Deploy cooldown:", result.error);
         setCooldownInfo({ canSend: true, timeRemaining: 0 });
       }
     } catch (error) {
-      console.error("Error checking GM cooldown:", error);
+      console.error("Error checking Deploy cooldown:", error);
       setCooldownInfo({ canSend: true, timeRemaining: 0 });
     }
-  }, [address, chainId, isGMSupported]);
+  }, [address, chainId, isDeploySupported]);
 
   // Enhanced transaction status to save to database
   const handleTransactionSuccess = useCallback(async () => {
+    // Show success modal instead of toast
+    setShowSuccessModal(true);
     // Call the original success callback first
     if (successCallback) {
       successCallback();
@@ -82,40 +86,41 @@ export const useGM = (successCallback?: () => void) => {
 
   const { isLoading, receipt, isSuccess } = useTransactionStatus(
     hash,
-    "GM sent successfully! 👋",
+    "Smart contract deployed successfully! ⚡",
     handleTransactionSuccess,
-    reset
+    reset,
+    false // Don't show toast, we'll show modal instead
   );
 
   // Save to database when transaction is successful
   useEffect(() => {
-    const saveGMToDatabase = async () => {
-      if (isSuccess && receipt && address && chainId && isGMSupported) {
+    const saveDeployToDatabase = async () => {
+      if (isSuccess && receipt && address && chainId && isDeploySupported) {
         try {
-          const result = await saveGM({
+          const result = await saveDeploy({
             walletAddress: address,
             dId: receipt.blockNumber.toString(),
             chainId: chainId,
           });
 
           if (!result.isError) {
-            console.log("GM record saved to database successfully");
+            console.log("Deploy record saved to database successfully");
             // Trigger success callback again after database save to refresh UI
             if (successCallback) {
               successCallback();
             }
-            // Refresh cooldown status after successful GM
+            // Refresh cooldown status after successful deploy
             checkCooldown();
           } else {
-            console.error("Failed to save GM to database:", result.error);
+            console.error("Failed to save Deploy to database:", result.error);
           }
         } catch (error) {
-          console.error("Error saving GM to database:", error);
+          console.error("Error saving Deploy to database:", error);
         }
       }
     };
 
-    saveGMToDatabase();
+    saveDeployToDatabase();
   }, [
     isSuccess,
     receipt,
@@ -123,22 +128,22 @@ export const useGM = (successCallback?: () => void) => {
     chainId,
     successCallback,
     checkCooldown,
-    isGMSupported,
+    isDeploySupported,
   ]);
 
   useEffect(() => {
     if (isError) {
-      console.error("Error sending GM:", error);
-      toast.error("Failed to send GM. Please try again.");
+      console.error("Error deploying contract:", error);
+      toast.error("Failed to deploy contract. Please try again.");
     }
   }, [isError, error]);
 
   // Check cooldown when component mounts or dependencies change
   useEffect(() => {
-    if (address && chainId && isGMSupported) {
+    if (address && chainId && isDeploySupported) {
       checkCooldown();
     }
-  }, [address, chainId, checkCooldown, isGMSupported]);
+  }, [address, chainId, checkCooldown, isDeploySupported]);
 
   const isProcessing = useMemo(
     () => (isLoading && !!hash) || isPending,
@@ -150,83 +155,88 @@ export const useGM = (successCallback?: () => void) => {
     return balanceData.value >= fee;
   }, [balanceData, fee]);
 
-  const canSendGM = useMemo(() => {
+  const canDeploy = useMemo(() => {
     return (
-      !isProcessing && isEnoughBalance && cooldownInfo.canSend && isGMSupported
+      !isProcessing &&
+      isEnoughBalance &&
+      cooldownInfo.canSend &&
+      isDeploySupported
     );
-  }, [isProcessing, isEnoughBalance, cooldownInfo.canSend, isGMSupported]);
+  }, [isProcessing, isEnoughBalance, cooldownInfo.canSend, isDeploySupported]);
 
-  const onSayGM = useCallback(async () => {
-    if (!canSendGM) {
-      if (!isGMSupported) {
-        toast.error("GM is not supported on this chain");
+  const onDeploy = useCallback(async () => {
+    if (!canDeploy) {
+      if (!isDeploySupported) {
+        toast.error("Deploy is not supported on this chain");
         return;
       }
       if (!cooldownInfo.canSend) {
         toast.error(
-          `Please wait ${cooldownInfo.timeRemaining} more hours before sending another GM`
+          `Please wait ${cooldownInfo.timeRemaining} more hours before deploying another contract`
         );
       }
       return;
     }
 
     try {
-      await callWriteContractGM(
+      await callWriteContractDeploy(
         {
-          contract: CONTRACTS_GM.GM,
-          functionName: "sayGM",
+          contract: CONTRACTS_DEPLOY.DEPLOY,
+          functionName: "deploy",
           value: fee,
         },
         chainId,
         refer
       );
     } catch (error) {
-      console.error("Error calling sayGM:", error);
-      toast.error("Failed to send GM");
+      console.error("Error calling deploy:", error);
+      toast.error("Failed to deploy contract");
     }
   }, [
-    canSendGM,
+    canDeploy,
     cooldownInfo,
-    callWriteContractGM,
+    callWriteContractDeploy,
     fee,
     chainId,
     refer,
-    isGMSupported,
+    isDeploySupported,
   ]);
 
   // Fetch actual fee from contract
   useEffect(() => {
     const fetchFee = async () => {
       try {
-        if (isGMSupported) {
-          const feeString = await fetchGMFee();
+        if (isDeploySupported) {
+          const feeString = await fetchDeployFee();
           const feeInWei = parseEther(feeString);
           setFee(feeInWei);
         } else {
           setFee(parseEther("0")); // Set to 0 for unsupported chains
         }
       } catch (error) {
-        console.error("Error fetching GM fee:", error);
+        console.error("Error fetching deploy fee:", error);
         // Fallback to default fee if contract call fails
-        setFee(parseEther("0.001")); // 0.001 ETH
+        setFee(parseEther("0.005")); // 0.005 ETH
       }
     };
 
     if (chainId) {
       fetchFee();
     }
-  }, [chainId, fetchGMFee, isGMSupported]);
+  }, [chainId, fetchDeployFee, isDeploySupported]);
 
   return {
     isEnoughBalance,
     isProcessing,
-    onSayGM,
+    onDeploy,
     fee,
     hash,
     isError,
     error,
-    canSendGM,
+    canDeploy,
     cooldownInfo,
-    isGMSupported,
+    isDeploySupported,
+    showSuccessModal,
+    setShowSuccessModal,
   };
 };
