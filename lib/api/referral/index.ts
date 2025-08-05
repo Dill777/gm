@@ -32,6 +32,98 @@ export const updateRefer = async (refer: string, chainId: NETWORKS) => {
   }
 };
 
+export const updateGMReferral = async (
+  refer: string,
+  gmFee: bigint,
+  chainId: NETWORKS
+) => {
+  const chain = getChainByID(chainId).chain;
+
+  // First find the referral item to get its ID
+  const referralItem = await prisma.referral.findFirst({
+    where: {
+      walletAddress: refer,
+      chain: chain,
+    },
+  });
+
+  // Convert bigint to number with 18 decimal places
+  const gmFeeNumber = Number(gmFee) / Math.pow(10, 18);
+  const referralAmount = gmFeeNumber * 0.25; // 25% of the GM fee
+
+  if (!referralItem) {
+    // Create new referral if not found
+    const newReferral = await prisma.referral.create({
+      data: {
+        chain: chain,
+        walletAddress: refer,
+        numberOfReferrals: 1,
+        totalEarnings: referralAmount,
+      },
+    });
+    return newReferral.id;
+  } else {
+    await prisma.referral.update({
+      data: {
+        totalEarnings: {
+          increment: referralAmount,
+        },
+      },
+      where: {
+        id: referralItem.id,
+      },
+    });
+
+    return referralItem.id;
+  }
+};
+
+export const updateDeployReferral = async (
+  refer: string,
+  deployFee: bigint,
+  chainId: NETWORKS
+) => {
+  const chain = getChainByID(chainId).chain;
+
+  // First find the referral item to get its ID
+  const referralItem = await prisma.referral.findFirst({
+    where: {
+      walletAddress: refer,
+      chain: chain,
+    },
+  });
+
+  // Convert bigint to number with 18 decimal places
+  const deployFeeNumber = Number(deployFee) / Math.pow(10, 18);
+  const referralAmount = deployFeeNumber * 0.25; // 25% of the deploy fee
+
+  if (!referralItem) {
+    // Create new referral if not found
+    const newReferral = await prisma.referral.create({
+      data: {
+        chain: chain,
+        walletAddress: refer,
+        numberOfReferrals: 1,
+        totalEarnings: referralAmount,
+      },
+    });
+    return newReferral.id;
+  } else {
+    await prisma.referral.update({
+      data: {
+        totalEarnings: {
+          increment: referralAmount,
+        },
+      },
+      where: {
+        id: referralItem.id,
+      },
+    });
+
+    return referralItem.id;
+  }
+};
+
 export const getReferrals = async (chainId: NETWORKS, address?: string) => {
   const my_earnings = await prisma.referral.findMany({
     where: { walletAddress: address },

@@ -9,6 +9,7 @@ import { isEmpty } from "lodash";
 import { useDeployData } from "@/lib/web3/hooks/read/useDeployData";
 import { parseEther } from "viem";
 import { canUserDeploy, saveDeploy } from "@/lib/api/deploy";
+import { updateDeployReferral } from "@/lib/api/referral";
 
 export const useDeploy = (successCallback?: () => void) => {
   const { user } = useAppSelector((state) => state.user);
@@ -105,6 +106,12 @@ export const useDeploy = (successCallback?: () => void) => {
 
           if (!result.isError) {
             console.log("Deploy record saved to database successfully");
+
+            // Update referral earnings if there's a valid referrer
+            if (refer !== defaultAddressReferral) {
+              await updateDeployReferral(refer, fee, chainId);
+            }
+
             // Trigger success callback again after database save to refresh UI
             if (successCallback) {
               successCallback();
@@ -129,6 +136,9 @@ export const useDeploy = (successCallback?: () => void) => {
     successCallback,
     checkCooldown,
     isDeploySupported,
+    refer,
+    fee,
+    defaultAddressReferral,
   ]);
 
   useEffect(() => {

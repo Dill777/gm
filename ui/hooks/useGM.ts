@@ -9,6 +9,7 @@ import { isEmpty } from "lodash";
 import { useGMData } from "@/lib/web3/hooks/read/useGMData";
 import { parseEther } from "viem";
 import { canUserSendGM, saveGM } from "@/lib/api/gm";
+import { updateGMReferral } from "@/lib/api/referral";
 
 export const useGM = (successCallback?: () => void) => {
   const { user } = useAppSelector((state) => state.user);
@@ -104,6 +105,12 @@ export const useGM = (successCallback?: () => void) => {
 
           if (!result.isError) {
             console.log("GM record saved to database successfully");
+
+            // Update referral earnings if there's a valid referrer
+            if (refer !== defaultAddressReferral) {
+              await updateGMReferral(refer, fee, chainId);
+            }
+
             // Trigger success callback again after database save to refresh UI
             if (successCallback) {
               successCallback();
@@ -128,6 +135,9 @@ export const useGM = (successCallback?: () => void) => {
     successCallback,
     checkCooldown,
     isGMSupported,
+    refer,
+    fee,
+    defaultAddressReferral,
   ]);
 
   useEffect(() => {
