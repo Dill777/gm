@@ -22,14 +22,14 @@ const TabletTabNavigation = ({ activeTab }: TabletTabNavigationProps) => {
   };
 
   return (
-    <div className="flex border-b border-gray6">
+    <div className="flex">
       <button
         onClick={() => handleTabChange("GM")}
         className={cn(
-          "flex-1 py-3 px-4 text-center font-medium transition-colors",
+          "flex-1 py-3 px-4 text-center font-medium transition-colors border-b-2 border-light_gray2",
           activeTab === "GM"
-            ? "border-b-2 border-primary text-primary"
-            : "text-gray3 hover:text-white"
+            ? "border-primary text-primary"
+            : "text-text2 hover:text-primary"
         )}
       >
         GM
@@ -37,10 +37,10 @@ const TabletTabNavigation = ({ activeTab }: TabletTabNavigationProps) => {
       <button
         onClick={() => handleTabChange("Dashboard")}
         className={cn(
-          "flex-1 py-3 px-4 text-center font-medium transition-colors",
+          "flex-1 py-3 px-4 text-center font-medium transition-colors border-b-2 border-light_gray2",
           activeTab === "Dashboard"
-            ? "border-b-2 border-primary text-primary"
-            : "text-gray3 hover:text-white"
+            ? "border-primary text-primary"
+            : "text-text2 hover:text-primary"
         )}
       >
         Dashboard

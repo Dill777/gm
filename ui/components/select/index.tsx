@@ -69,7 +69,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
           {options.find((option) => option.value === selectedValue)?.label ?? (
             <span className="text-white-500">{placeholder}</span>
           )}
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text_body">
             <svg
               className="fill-current h-4 w-4"
               xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +93,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
                   key={`${option.value}_${idx}`}
                   onClick={() => handleSelect(option.value)}
                   className={cn(
-                    "cursor-pointer p-4 hover:text-primary bg-black border-main-200 border-b-2",
+                    "cursor-pointer p-4 text-black hover:text-primary bg-white border-light_gray2 border-b-2",
                     idx === options.length - 1 && "border-none",
                     option.value === selectedValue && "text-primary"
                   )}

@@ -78,13 +78,14 @@ const Header = () => {
               <>
                 <div
                   className={cn(
-                    "rounded-[10px] bg-bg2 hover:text-primary cursor-pointer",
-                    "p-2.5",
-                    "hidden laptop_md:block"
+                    "rounded-[10px] bg-light_bg1 hover:text-primary cursor-pointer",
+                    "p-[9px]",
+                    "hidden laptop_md:block",
+                    "border border-light_gray"
                   )}
                   onClick={() => setShowMenu(true)}
                 >
-                  <Menu className="w-6 h-6" />
+                  <Menu className="w-6 h-6 text-text3" />
                 </div>
                 <MobileMenu showMenu={showMenu} setShowMenu={setShowMenu} />
               </>

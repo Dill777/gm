@@ -97,8 +97,8 @@ const GMDeployFilters = ({
           onChange={handleFilterSelectChange}
           placeholder="Select filter"
           className={cn(
-            "border border-bg2 rounded-2xl bg-bg3 px-3 py-[9px]",
-            "text-sm font-medium text-text_body",
+            "border-transparent rounded-2xl bg-white px-3 py-[9px]",
+            "text-sm font-medium text-text3/60",
             "min-w-[120px] h-[43px]"
           )}
         />

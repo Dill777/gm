@@ -76,6 +76,7 @@ const config: Config = {
         },
         light_gray: "#E6E6E6",
         light_gray1: "#E9E9E9",
+        light_gray2: "#E7E9EA",
         gray1: "#191919",
         gray2: "#454545",
         gray3: "#8F8F8F",

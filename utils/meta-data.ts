@@ -2,10 +2,10 @@ import { Metadata } from "next";
 
 const meta_data: { [key: string]: Metadata } = {
   "gm-deploy": {
-    title: "GM Deploy | ZNS Connect",
+    title: "GM Deploy | CheapGM",
     description:
-      "GM Deploy - Your deployment hub for good mornings on ZNS Connect.",
-    keywords: "GM Deploy, Good Morning, Deployment, ZNS Connect",
+      "GM Deploy - Your deployment hub for good mornings on CheapGM.",
+    keywords: "GM Deploy, Good Morning, Deployment, CheapGM",
   },
 };
 
@@ -19,14 +19,14 @@ export const getMetaData = ({
   keywords: string;
 }) => {
   return {
-    applicationName: "ZNS Connect Name Service",
+    applicationName: "CheapGM",
     title: title,
     description: description,
     keywords: keywords,
     openGraph: {
       type: "website",
-      url: "https://v3.znsconnect.io/",
-      siteName: "ZNS Connect",
+      url: "https://cheapgm.xyz/",
+      siteName: "CheapGM",
       title: title,
       description: description,
       //   images: metaImage,

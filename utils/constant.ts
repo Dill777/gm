@@ -1,15 +1,32 @@
 import { TelegramColorIcon } from "@/ui/components/icon/footer/TelegramColorIcon";
 import { TwitterColorIcon } from "@/ui/components/icon/footer/TwitterColorIcon";
+import { FlashIcon } from "@/ui/components/icon/FlashIcon";
+import { SearchIcon } from "@/ui/components/icon/SearchIcon";
 
 export const HEADER_MENU_LIST = [
-  { name: "👋🏻 Say GM today", link: "/?tab=gm", tab: "gm", external: false },
   {
+    icon: "/img/hand.svg",
+    iconType: "svg",
+    name: "Say GM today",
+    link: "/?tab=gm",
+    tab: "gm",
+    external: false,
+  },
+  {
+    icon: FlashIcon,
+    iconType: "component",
     name: "Deploy Smart Contract",
     link: "/?tab=deploy",
     tab: "deploy",
     external: false,
   },
-  { name: "Register Domain", link: "https://zns.bio/search", external: true },
+  {
+    icon: SearchIcon,
+    iconType: "component",
+    name: "Register Domain",
+    link: "https://zns.bio/search",
+    external: true,
+  },
 ];
 
 export const FOOTER_MENU_LIST = [

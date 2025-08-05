@@ -10,9 +10,7 @@ const GMDeployTabs = () => {
     {
       label: (
         <>
-          <p className="text-sm text-nowrap laptop_md:text-xs">
-            👋🏻 Say GM on Blockchain
-          </p>
+          <p className="text-sm text-nowrap laptop_md:text-xs">👋🏻 Say GM</p>
         </>
       ),
       value: "gm",

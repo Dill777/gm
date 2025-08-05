@@ -27,7 +27,7 @@ export default function Footer() {
           {/* ZNS Connect */}
           <div
             className={cn(
-              "flex flex-col items-start w-[288px] gap-[62px]",
+              "flex flex-col items-start w-[288px] gap-5",
               "laptop_md:col-span-2",
               "mobile:col-span-2"
             )}
@@ -106,14 +106,12 @@ export default function Footer() {
 
         <div
           className={cn(
-            "flex items-center justify-center w-full",
+            "flex items-center justify-center tablet:justify-start w-full",
             "border-t-2 border-t-text2 border-opacity-25",
-            "h-[82px] p-[10px]",
-            "laptop_md:h-[155px] laptop_md:flex-col-reverse laptop_md:items-start laptop_md:justify-between",
-            "mobile:h-[155px] mobile:flex-col-reverse mobile:items-start mobile:justify-between"
+            "px-4 py-10"
           )}
         >
-          <div className="text-text_body">
+          <div className="text-text_body tablet:text-sm">
             © 2025 • CheapGM. • All rights reserved.
           </div>
         </div>
