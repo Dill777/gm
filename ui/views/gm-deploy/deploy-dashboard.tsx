@@ -188,7 +188,7 @@ const DeployDashboard = ({
               </div>
             ))}
           </div>
-          <div className="h-3 relative mx-6">
+          <div className="h-3 relative mx-7">
             <div
               className={cn(
                 "absolute -translate-y-1/2 top-1/2 right-0 z-10",
