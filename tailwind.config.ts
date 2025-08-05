@@ -157,6 +157,7 @@ const config: Config = {
       boxShadow: {
         dropdown: "0px 4px 4px 0px rgba(1, 1, 1, 0.50)",
         shadow1: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+        shadow2: "0 4px 28px 0 rgba(0, 0, 0, 0.06)",
       },
       borderRadius: {
         full: "9999px",

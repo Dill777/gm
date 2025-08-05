@@ -185,7 +185,7 @@ const GMCard: React.FC<GMCardProps> = ({
   };
 
   const cardContent = (
-    <div className="bg-white rounded-2xl px-5 py-4 flex flex-col justify-between border border-transparent hover:border-primary/20 transition-all duration-300 h-full">
+    <div className="bg-white rounded-2xl px-5 py-4 flex flex-col justify-between border border-transparent hover:border-primary/20 transition-all duration-300 h-full shadow-shadow2">
       {/* Header Section */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
