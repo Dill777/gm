@@ -29,7 +29,7 @@ const UnAuthWallet = () => {
           <InteractionButton
             isPending={isPending}
             onClick={signUser}
-            className="font-medium"
+            className="font-medium text-white"
           >
             Sign In
           </InteractionButton>
