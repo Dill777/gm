@@ -50,13 +50,13 @@ const TabsV2 = ({
   return (
     <>
       {/* header */}
-      <div className="w-fit h-fit mobile_md:w-full overflow-scroll hide-scroll-bar shadow-shadow2">
+      <div className="w-fit h-fit mobile_md:w-full overflow-scroll hide-scroll-bar">
         <div
           className={cn(
             "bg-white",
             "flex items-center justify-between",
             "rounded-[10px]",
-            "w-fit h-fit p-[4.5px_6px]",
+            "w-fit h-fit p-[4.5px_6px] shadow-shadow2",
             className ?? ""
           )}
         >

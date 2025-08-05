@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 const GMDeployHeader = () => {
   const searchParams = useSearchParams();
-  const tab = searchParams.get("tab");
+  const tab = searchParams.get("tab") || "gm";
 
   return (
     <div className="text-center mb-8">

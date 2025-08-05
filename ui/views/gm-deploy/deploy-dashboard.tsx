@@ -175,15 +175,10 @@ const DeployDashboard = ({
         </div>
 
         {/* score - mobile */}
-        <div
-          className={cn(
-            "flex flex-col gap-[15px] small:gap-6",
-            "hidden small:flex"
-          )}
-        >
+        <div className={cn("flex-col gap-8", "hidden small:flex")}>
           <div className="grid grid-cols-6">
             {DEPLOY_DASHBOARD.map((item) => (
-              <div className="flex justify-start">
+              <div className="flex">
                 <p
                   key={`${item.deploy}`}
                   className="text-text_body3 text-xs w-[70px] text-left -rotate-90 whitespace-nowrap"

@@ -168,15 +168,10 @@ const GMDashboard = ({
         </div>
 
         {/* score - mobile */}
-        <div
-          className={cn(
-            "flex flex-col gap-[15px] small:gap-6",
-            "hidden small:flex"
-          )}
-        >
+        <div className={cn("flex-col gap-8", "hidden small:flex")}>
           <div className="grid grid-cols-6">
             {GM_DASHBOARD.map((item) => (
-              <div className="flex justify-start">
+              <div className="flex">
                 <p
                   key={`${item.gm}`}
                   className="text-text_body3 text-xs w-[70px] text-left -rotate-90 whitespace-nowrap"
@@ -186,7 +181,7 @@ const GMDashboard = ({
               </div>
             ))}
           </div>
-          <div className="h-3 relative mx-6">
+          <div className="h-3 relative mx-7">
             <div
               className={cn(
                 "absolute -translate-y-1/2 top-1/2 right-0 z-10",
