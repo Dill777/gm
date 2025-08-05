@@ -70,7 +70,8 @@ const IconNav: FC<ComponentProps & { contentClassName?: string }> = ({
                     "flex items-center justify-between",
                     "w-[190px] h-[46px] p-[10px_9px]",
                     "tablet:w-11 tablet:h-11 tablet:p-0 tablet:justify-center",
-                    "relative rounded-xl font-semibold bg-bg2/70 cursor-pointer"
+                    "relative rounded-xl font-semibold bg-light_bg1 cursor-pointer",
+                    "border border-light_gray"
                   )}
                 >
                   <div className="flex items-center gap-1.5">
@@ -81,14 +82,14 @@ const IconNav: FC<ComponentProps & { contentClassName?: string }> = ({
                         width={24}
                         height={24}
                         className={cn(
-                          "w-6 h-6 rounded-full border-[0.5px] border-stroke/80",
+                          "w-6 h-6 rounded-full border-[0.5px] border-text2/[.14]",
                           "tablet:w-11 tablet:h-11 tablet:rounded-xl tablet:border-none"
                         )}
                       />
                     ) : (
                       <div
                         className={cn(
-                          "group w-6 h-6 flex items-center justify-center border-[0.5px] border-stroke/80 rounded-full"
+                          "group w-6 h-6 flex items-center justify-center border-[0.5px] border-text2/[.14] rounded-full"
                         )}
                       >
                         <UserIcon />
@@ -96,7 +97,7 @@ const IconNav: FC<ComponentProps & { contentClassName?: string }> = ({
                     )}
                     <span
                       className={cn(
-                        "text-base font-semibold text-text_body1/90 font-inter leading-[140%] w-[120px] tablet:hidden",
+                        "text-base font-semibold text-text3 font-inter leading-[140%] w-[120px] tablet:hidden",
                         "text-start",
                         "text-ellipsis overflow-hidden whitespace-nowrap"
                       )}
@@ -105,7 +106,7 @@ const IconNav: FC<ComponentProps & { contentClassName?: string }> = ({
                     </span>
                   </div>
 
-                  <ArrowDownIcon className="tablet:hidden" />
+                  <ArrowDownIcon className="tablet:hidden text-text2" />
                 </button>
               )}
             </Popover>

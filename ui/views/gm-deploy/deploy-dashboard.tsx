@@ -97,7 +97,7 @@ const DeployDashboard = ({
           <div className="flex items-center gap-4">
             <div className="rounded-3xl p-[1px] bg-gradient_cheap_primary">
               <div className="rounded-3xl bg-white flex laptop:flex-col items-center laptop:items-start justify-center gap-2 p-[6px_16px]">
-                <p className="text-black text-lg font-semibold small:text-sm">
+                <p className="text-text3/60 text-lg font-semibold small:text-sm">
                   {isLoadingDeployData ? "..." : todayDeployCount}
                 </p>
                 <p className="text-text2 small:text-xs">Deploy Today</p>

@@ -15,10 +15,10 @@ export const NetworkButton = () => {
                 return (
                   <div
                     onClick={openChainModal}
-                    className="flex items-center justify-between px-4 py-3 bg-black/40 rounded-xl space-x-3 cursor-pointer hover:text-primary"
+                    className="flex items-center justify-between px-4 py-3 bg-light_bg2/40 rounded-xl space-x-3 cursor-pointer text-text3/60 hover:text-primary"
                   >
                     <div className="flex items-center space-x-3">
-                      <LuSettings2 className="w-6 h-6" />
+                      <LuSettings2 className="w-6 h-6 text-text2" />
                       <p className="text-sm font-medium text-error">
                         Wrong Network
                       </p>
@@ -29,7 +29,7 @@ export const NetworkButton = () => {
               return (
                 <div
                   onClick={openChainModal}
-                  className="flex items-center justify-between px-5 h-[42px] bg-bg3 rounded-xl space-x-3 cursor-pointer text-text_normal hover:text-primary group"
+                  className="flex items-center justify-between px-5 h-[42px] bg-light_bg1 rounded-xl space-x-3 cursor-pointer text-text3/60 hover:text-primary group border border-light_gray"
                 >
                   <div className="flex items-center space-x-2.5">
                     <SwitchNetworkIcon />

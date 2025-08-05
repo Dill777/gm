@@ -63,8 +63,8 @@ const GMDeploySidebar = () => {
               <div className="flex items-center justify-between">
                 <span className="text-sm text-text_body">Current Network</span>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <span className="text-white text-sm">Connected</span>
+                  <div className="w-2 h-2 rounded-full bg-success2" />
+                  <span className="text-success2 text-sm">Connected</span>
                 </div>
               </div>
               <NetworkButton />
@@ -90,10 +90,10 @@ const GMDeploySidebar = () => {
       </div>
 
       {isConnected && (
-        <div className="rounded-3xl p-[1px] bg-[linear-gradient(to_right,_#975E4D,_#628DBE,_#C244C9,_#A1A464,_#905858,_#975E4D)]">
-          <span className="block rounded-3xl bg-bg3 px-4 py-1.5 text-sm">
+        <div className="rounded-3xl p-[1px] bg-gradient_cheap_primary">
+          <span className="block rounded-3xl bg-white px-4 py-1.5 text-sm text-primary">
             <b>25%</b> rewards{" "}
-            <span className="text-text_body3">from all SC from your link</span>
+            <span className="text-text2">from all SC from your link</span>
           </span>
         </div>
       )}
@@ -101,16 +101,16 @@ const GMDeploySidebar = () => {
       {/* Referral Link */}
       {isConnected && (
         <div className="space-y-4">
-          <span className="text-gray7 font-medium">Referral Link</span>
-          <div className="bg-bg3 rounded-2xl px-5 py-3 space-y-3">
+          <span className="text-black font-medium">Referral Link</span>
+          <div className="bg-light_bg1/60 rounded-2xl px-5 py-3 space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="flex items-center flex-1 rounded-xl p-3 border border-white/30 h-[50px]">
-                <p className="text-white text-xs truncate max-w-[190px]">
+              <div className="flex items-center flex-1 rounded-xl p-3 border border-light_gray h-[50px] bg-light_bg1">
+                <p className="text-text2 text-xs truncate max-w-[190px]">
                   {referUrl}
                 </p>
               </div>
               <Button
-                className="bg-primary rounded-xl w-[50px] h-[50px] text-black p-4"
+                className="bg-primary text-white rounded-xl w-[50px] h-[50px] p-4"
                 onClick={onCopy}
               >
                 <CopyLinkIcon className="w-6 h-6" />
@@ -118,7 +118,7 @@ const GMDeploySidebar = () => {
             </div>
             <div className="flex gap-2">
               <Button
-                className="flex-1 bg-bg2 text-white rounded-xl py-2.5 px-3 gap-2 font-medium"
+                className="flex-1 bg-primary/20 text-primary rounded-xl py-2.5 px-3 gap-2 font-medium"
                 onClick={onShare}
                 disabled={!user}
               >

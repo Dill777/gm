@@ -6,21 +6,16 @@ import { FaCheck, FaRegCopy } from "react-icons/fa6";
 import Link from "@/ui/components/link";
 import Loading from "@/ui/components/loading";
 import Tooltip from "@/ui/components/tooltip";
-import { GradientText } from "@/ui/components/text";
 import NetworkButton from "@/ui/widget/network-button";
 import { useAppSelector } from "@/lib/store";
 import { formatPrice } from "@/utils";
-import { makeMultisuffix, shortenWalletAddress } from "@/utils/string-helper";
+import { shortenWalletAddress } from "@/utils/string-helper";
 import { useTLD } from "@/ui/hooks/useTLD";
 import { useCopy } from "@/utils/hooks/useCopy";
-import { CreditIcon } from "@/ui/components/icon/CreditIcon";
-import { UserIcon } from "@/ui/components/icon/UserIcon";
-import { DomainIcon } from "@/ui/components/icon/DomainIcon";
-import { SettingIcon } from "@/ui/components/icon/SettingIcon";
 import { LogoutIcon } from "@/ui/components/icon/LogoutIcon";
-import { toast } from "react-toastify";
 import { getChainByID } from "@/config/chains";
 import { FlashIcon } from "@/ui/components/icon/FlashIcon";
+import Image from "@/ui/components/image";
 
 const ProfileMenu = () => {
   const { address, chainId } = useAccount();
@@ -92,12 +87,12 @@ const ProfileMenu = () => {
           </span>
           <NetworkButton />
         </div>
-        <div className="p-5 rounded-2xl bg-light_b2 space-y-[18px]">
+        <div className="p-5 rounded-2xl bg-light_bg2 space-y-[18px]">
           <Link
             className="flex items-center space-x-2.5 cursor-pointer hover:text-primary group"
             href="/?tab=gm"
           >
-            <span>👋🏻</span>
+            <Image src="/img/hand.svg" alt="hand" width={16} height={16} />
             <p className="text-text3 group-hover:text-primary text-sm">
               Say Gm on Blockchain
             </p>
