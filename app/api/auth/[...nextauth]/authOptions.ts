@@ -5,7 +5,6 @@ import DiscordProvider from "next-auth/providers/discord";
 import TwitterProvider from "next-auth/providers/twitter";
 import LinkedInProvider from "next-auth/providers/linkedin";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verifyAccount } from "@/lib/api/domain/profile";
 import { ProfileAccountsType } from "@/lib/model/domain";
 import { getISessionNonce } from "@/lib/auth/nonce";
 import { getOrCreateUserIdByAddress } from "@/lib/api/user";
@@ -91,9 +90,6 @@ export const authOptions: NextAuthOptions = {
           return callbackUrl;
       }
 
-      const profileId = callbackUrl.split("id=")[1];
-      const platform = account.provider as keyof ProfileAccountsType;
-      await verifyAccount(profileId, platform, data || "");
       return callbackUrl;
     },
     async session({ session, token }) {
