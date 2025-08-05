@@ -171,11 +171,8 @@ const GMDashboard = ({
         <div className={cn("flex-col gap-8", "hidden small:flex")}>
           <div className="grid grid-cols-6">
             {GM_DASHBOARD.map((item) => (
-              <div className="flex">
-                <p
-                  key={`${item.gm}`}
-                  className="text-text_body3 text-xs w-[70px] text-left -rotate-90 whitespace-nowrap"
-                >
+              <div className="flex" key={`${item.gm}`}>
+                <p className="text-text_body3 text-xs w-[70px] text-left -rotate-90 whitespace-nowrap">
                   {item.gm} GM
                 </p>
               </div>
