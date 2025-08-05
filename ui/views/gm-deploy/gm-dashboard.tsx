@@ -80,34 +80,34 @@ const GMDashboard = ({
 
   return (
     <>
-      <div className="flex flex-col items-stretch p-[30px] gap-6 bg-white rounded-2xl">
+      <div className="flex flex-col items-stretch p-[30px] tablet:px-3 tablet:py-5 gap-6 tablet:gap-8 bg-white rounded-2xl shadow-shadow2">
         {/* title */}
         <div className="flex flex-row desktop:flex-col items-center desktop:items-start justify-between gap-4">
           <div className="flex items-center gap-2 small:flex-col small:items-start">
-            <p className="text-black text-lg small:text-xs font-semibold">
+            <p className="text-black text-lg small:text-base font-semibold">
               Your GM Dashboard
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="rounded-3xl p-[1px] bg-gradient_cheap_primary">
-              <div className="rounded-3xl bg-white flex laptop:flex-col flex-row items-center laptop:items-start justify-center gap-2 p-[6px_16px]">
+          <div className="flex items-center gap-4 small:gap-2">
+            <div className="small:rounded-xl rounded-3xl p-[1px] bg-gradient_cheap_primary">
+              <div className="small:rounded-xl rounded-3xl bg-white flex laptop:flex-col flex-row items-center laptop:items-start justify-center gap-2 p-[6px_16px]">
                 <p className="text-text3/60 text-lg font-semibold small:text-sm">
                   {isLoadingGMData ? "..." : todayGMCount}
                 </p>
                 <p className="text-text2 small:text-xs">GM Today</p>
               </div>
             </div>
-            <div className="rounded-3xl p-[1px] bg-gradient_cheap_primary">
-              <div className="rounded-3xl bg-white flex laptop:flex-col flex-row items-center laptop:items-start justify-center gap-2 p-[6px_16px]">
+            <div className="small:rounded-xl rounded-3xl p-[1px] bg-gradient_cheap_primary">
+              <div className="small:rounded-xl rounded-3xl bg-white flex laptop:flex-col flex-row items-center laptop:items-start justify-center gap-2 p-[6px_16px]">
                 <p className="text-text3/60 text-lg font-semibold small:text-sm">
                   {isLoadingGMData ? "..." : thisWeekGMCount}
                 </p>
                 <p className="text-text2 small:text-xs">This week</p>
               </div>
             </div>
-            <div className="rounded-3xl p-[1px] bg-gradient_cheap_primary">
-              <div className="rounded-3xl bg-white flex laptop:flex-col flex-row items-center laptop:items-start justify-center gap-2 p-[6px_16px]">
+            <div className="small:rounded-xl rounded-3xl p-[1px] bg-gradient_cheap_primary">
+              <div className="small:rounded-xl rounded-3xl bg-white flex laptop:flex-col flex-row items-center laptop:items-start justify-center gap-2 p-[6px_16px]">
                 <p className="text-text3/60 text-lg font-semibold small:text-sm">
                   {isLoadingGMData ? "..." : totalGMsAllChains}
                 </p>
@@ -135,7 +135,7 @@ const GMDashboard = ({
             ></div>
             <div
               className={cn(
-                "absolute -translate-y-1/2 top-1/2  right-0 z-20",
+                "absolute -translate-y-1/2 top-1/2 right-0 z-20",
                 "h-[4px] bg-gray4"
               )}
               style={{
@@ -161,32 +161,47 @@ const GMDashboard = ({
                 key={`${item.gm}`}
                 className="flex flex-col gap-[7px] items-center"
               >
-                <p className="text-text_body3 font-poppins text-base font-normal leading-[100%]">
-                  {item.gm} GM
-                </p>
+                <p className="text-text_body3">{item.gm} GM</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* score - mobile */}
-        <div className={cn("flex gap-[15px] h-[300px]", "hidden small:flex")}>
-          <div className="w-3 my-2 relative">
+        <div
+          className={cn(
+            "flex flex-col gap-[15px] small:gap-6",
+            "hidden small:flex"
+          )}
+        >
+          <div className="grid grid-cols-6">
+            {GM_DASHBOARD.map((item) => (
+              <div className="flex justify-start">
+                <p
+                  key={`${item.gm}`}
+                  className="text-text_body3 text-xs w-[70px] text-left -rotate-90 whitespace-nowrap"
+                >
+                  {item.gm} GM
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="h-3 relative mx-6">
             <div
               className={cn(
-                "absolute -translate-x-1/2 left-1/2 bottom-0 z-10",
-                "h-full",
-                "w-[4px]",
-                "bg-[linear-gradient(to_bottom,_#1C96FD,_#33E360,_#F4C630,_#CB1245,_#AD00FE)]"
+                "absolute -translate-y-1/2 top-1/2 right-0 z-10",
+                "w-full",
+                "h-[4px]",
+                "bg-[linear-gradient(to_right,_#1C96FD,_#33E360,_#F4C630,_#CB1245,_#AD00FE)]"
               )}
             ></div>
             <div
               className={cn(
-                "absolute -translate-x-1/2 left-1/2 bottom-0 z-20",
-                "w-[4px] bg-[#363940]"
+                "absolute -translate-y-1/2 top-1/2 right-0 z-20",
+                "h-[4px] bg-gray4"
               )}
               style={{
-                height: `${Math.max(
+                width: `${Math.max(
                   0,
                   Math.min(100, 100 - progressPercentage)
                 )}%`,
@@ -197,19 +212,9 @@ const GMDashboard = ({
                 key={`${item.gm}`}
                 fill={totalGMsAllChains >= item.gm ? "white" : "black"}
                 stroke={item.color}
-                top={`${item.percent}%`}
+                left={`${item.percent}%`}
                 className={cn("absolute z-30")}
-                vertical
               />
-            ))}
-          </div>
-          <div className="flex flex-col justify-between">
-            {GM_DASHBOARD.map((item) => (
-              <div key={`${item.gm}`} className="flex gap-2 items-center">
-                <p className="text-text_body3 font-poppins text-base font-normal leading-[100%]">
-                  {item.gm} GM
-                </p>
-              </div>
             ))}
           </div>
         </div>

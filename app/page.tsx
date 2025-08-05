@@ -40,10 +40,11 @@ const GMDeployPage = ({
           </div>
 
           {/* Tablet Layout - Only shown on tablet_md and below */}
-          <div className="hidden tablet_md:block w-full pt-8 tablet_md:pt-0">
+          <div className="hidden tablet_md:block w-full py-8">
             {/* Tablet Tabs */}
             <div>
               <Suspense fallback={<div>Loading...</div>}>
+                <GMDeployHeader />
                 <TabletTabNavigation activeTab={activeTabletTab} />
               </Suspense>
 

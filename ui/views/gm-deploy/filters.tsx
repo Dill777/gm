@@ -58,7 +58,7 @@ const GMDeployFilters = ({
             key={`filter_${filter}`}
             onClick={() => handleFilterClick(filter)}
             className={cn(
-              "bg-white rounded-xl overflow-hidden border",
+              "bg-white rounded-xl overflow-hidden border shadow-shadow2",
               activeFilter === filter ? "border-primary" : "border-white"
             )}
           >
