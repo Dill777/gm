@@ -32,7 +32,7 @@ const GMDeployPage = ({
               </Suspense>
               <GMDeployTabs />
             </div>
-            <div className="w-[358px] px-5 py-6 border-x border-white/5 bg-white">
+            <div className="w-[358px] px-5 py-6 border-x border-white/5 bg-white sticky top-[102px] h-[calc(100vh-102px)]">
               <Suspense fallback={<div>Loading...</div>}>
                 <GMDeploySidebar />
               </Suspense>
