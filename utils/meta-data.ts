@@ -26,7 +26,7 @@ export const getMetaData = ({
     keywords: keywords,
     openGraph: {
       type: "website",
-      url: "https://cheap.gm/",
+      url: "https://gm.cheap/",
       siteName: "GM.Cheap",
       title: title,
       description: description,
