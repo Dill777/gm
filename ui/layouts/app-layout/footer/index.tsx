@@ -32,7 +32,7 @@ export default function Footer() {
                   alt="Cheap logo"
                   width={1167}
                   height={1128}
-                  className="mobile:w-[45px] mobile:h-[45px] rounded-full"
+                  className="w-16 h-16 mobile:w-[45px] mobile:h-[45px] rounded-full"
                 />
                 <p className="text-text3 text-[32px] mobile:text-2xl font-medium">
                   CheapGM
