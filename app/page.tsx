@@ -10,7 +10,7 @@ import {
 import TabletTabNavigation from "@/ui/views/gm-deploy/tablet-tab-navigation";
 import { ReferUpdater } from "@/ui/views/landing";
 
-export const metadata: Metadata = getMetaDataByName("gm-deploy");
+export const metadata: Metadata = getMetaDataByName("home");
 
 const GMDeployPage = ({
   searchParams,
