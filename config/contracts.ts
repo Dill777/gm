@@ -1,27 +1,11 @@
 import { Address } from "viem";
-import {
-  GIFT_CARD_ABI,
-  HIP_ABI,
-  REGISTRY_ABI,
-  NFT_ABI,
-  GM_ABI,
-  DEPLOY_ABI,
-} from "./abis";
+import { GIFT_CARD_ABI, REGISTRY_ABI, GM_ABI, DEPLOY_ABI } from "./abis";
 import { NETWORKS } from "./chains";
-import { NFTS } from "./nfts";
 
 export enum CONTRACTS {
   REGISTRY = "REGISTRY",
   GIFTCARD = "GIFTCARD",
   // ORACLE = "ORACLE",
-}
-
-export enum CONTRACTS_HIP {
-  HIP = "HIP",
-}
-
-export enum CONTRACTS_NFT {
-  NFT = "NFT",
 }
 
 export enum CONTRACTS_GM {
@@ -36,21 +20,6 @@ type CONTRACTS_TYPE = {
   [key in CONTRACTS]: {
     abi: any;
     addresses: { [key in NETWORKS]: Address };
-  };
-};
-
-type CONTRACTS_HIP_TYPE = {
-  [key in CONTRACTS_HIP]: {
-    abi: any;
-    addresses: { [key in NETWORKS.INKMAINNET]: Address };
-  };
-};
-
-type CONTRACTS_NFT_TYPE = {
-  [key in CONTRACTS_NFT]: {
-    abi: any;
-    addresses: { [key in NFTS]: Address };
-    chains: { [key in NFTS]: NETWORKS };
   };
 };
 
@@ -198,33 +167,6 @@ export const CONTRACT_DATA: CONTRACTS_TYPE = {
   //     [NETWORKS.ZORA]: "0x0246D65bA41Da3DB6dB55e489146eB25ca3634E5",
   //   },
   // },
-};
-
-export const CONTRACT_DATA_HIP: CONTRACTS_HIP_TYPE = {
-  [CONTRACTS_HIP.HIP]: {
-    abi: HIP_ABI,
-    addresses: {
-      [NETWORKS.INKMAINNET]: "0x61bc2caaa44cFF1b2DFeb0f39a6Cf1fEFA691Bd2",
-    },
-  },
-};
-
-export const CONTRACT_DATA_NFT: CONTRACTS_NFT_TYPE = {
-  [CONTRACTS_NFT.NFT]: {
-    abi: NFT_ABI,
-    addresses: {
-      [NFTS.HONEY]: "0x67879c4d26c096da0dacfde89306af500fb16144",
-      [NFTS.CUBE]: "0x1195Cf65f83B3A5768F3C496D3A05AD6412c64B7",
-      [NFTS.GULID_PIN]: "0x73d1a63bce3083be47597E2Ef0646BbFd1907f1C",
-      [NFTS.EYE_SEEKER]: "0x9234d821c10b72e09c594f882f1d5dacf2621006",
-    },
-    chains: {
-      [NFTS.HONEY]: NETWORKS.BERA,
-      [NFTS.CUBE]: NETWORKS.INKMAINNET,
-      [NFTS.GULID_PIN]: NETWORKS.INKMAINNET,
-      [NFTS.EYE_SEEKER]: NETWORKS.INKMAINNET,
-    },
-  },
 };
 
 export const CONTRACT_DATA_GM: CONTRACTS_GM_TYPE = {

@@ -9,7 +9,13 @@ const NavList = ({ className }: { className?: string }) => {
   const searchParams = useSearchParams();
 
   return (
-    <nav className={cn("flex items-center", className ?? "")}>
+    <nav
+      className={cn(
+        "flex items-center",
+        "gap-6 mac_before:gap-4 desktop:gap-3 laptop_md:gap-6 tablet_md:gap-4",
+        className ?? ""
+      )}
+    >
       {HEADER_MENU_LIST.map((menu, idx) => {
         return (
           <Link
@@ -20,6 +26,9 @@ const NavList = ({ className }: { className?: string }) => {
               "text-text2 text-sm",
               "hover:text-primary transition-colors",
               "flex items-center gap-2",
+              "tablet:gap-1",
+              "tablet:rounded-[10px] tablet:bg-light_bg1 tablet:p-[9px]",
+              "tablet:border tablet:border-light_gray",
               menu.tab === searchParams.get("tab")
                 ? "font-medium text-primary"
                 : ""
@@ -35,7 +44,7 @@ const NavList = ({ className }: { className?: string }) => {
                 height={20}
               />
             )}
-            {menu.name}
+            <span className="tablet:hidden">{menu.name}</span>
           </Link>
         );
       })}

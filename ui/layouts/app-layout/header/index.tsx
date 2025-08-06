@@ -5,7 +5,6 @@ import Link from "@/ui/components/link";
 import { useScroll } from "@/utils/hooks/useScroll";
 import { MdOutlineMenu as Menu } from "react-icons/md";
 import { cn } from "@/utils";
-import CheapLogo from "@/public/img/cheap-logo.svg";
 import NavList from "./nav-list";
 import IconNav from "./icon-nav";
 import MobileMenu from "./menu";
@@ -35,15 +34,11 @@ const Header = () => {
           {/* Logo */}
           <Link href="/">
             <Image
-              src={CheapLogo}
+              src="/img/cheap-logo.png"
               alt="CheapGM logo"
-              width={44}
-              height={44}
-              className={cn(
-                "w-[44px] h-[44px]",
-                "mr-10 mac_before:mr-4"
-                // "mobile:w-[29px] mobile:h-[29px]"
-              )}
+              width={1167}
+              height={1128}
+              className={cn("w-[44px] h-[44px] rounded-full")}
             />
           </Link>
 
@@ -51,11 +46,8 @@ const Header = () => {
           <Suspense fallback={null}>
             <NavList
               className={cn(
-                "flex items-center",
-                isAuthorized
-                  ? "gap-10 mac_before:gap-8 desktop:gap-6"
-                  : "gap-12 mac_before:gap-8 desktop:gap-6",
-                "laptop_md:hidden"
+                "flex items-center mac_before:gap-8 desktop:gap-6",
+                isAuthorized ? "gap-10" : "gap-12"
               )}
             />
           </Suspense>

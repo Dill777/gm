@@ -28,11 +28,11 @@ export default function Footer() {
             <div className="flex flex-col gap-6 items-start self-stretch">
               <div className="flex items-center gap-3 self-stretch">
                 <Image
-                  src="/img/cheap-logo.svg"
+                  src="/img/cheap-logo.png"
                   alt="Cheap logo"
-                  width={63}
-                  height={63}
-                  className="mobile:w-[45px] mobile:h-[45px]"
+                  width={1167}
+                  height={1128}
+                  className="mobile:w-[45px] mobile:h-[45px] rounded-full"
                 />
                 <p className="text-text3 text-[32px] mobile:text-2xl font-medium">
                   CheapGM
