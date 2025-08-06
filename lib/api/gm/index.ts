@@ -105,6 +105,81 @@ export const canUserSendGM = async (
   }
 };
 
+// Helper function to calculate GM streak
+const calculateGMStreak = async (whereClause: any): Promise<number> => {
+  try {
+    // Get all GMs for the user, ordered by date descending
+    const gms = await prisma.gM.findMany({
+      where: whereClause,
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        createdAt: true,
+      },
+    });
+
+    if (gms.length === 0) return 0;
+
+    // Helper function to get date string in YYYY-MM-DD format (UTC)
+    const getDateString = (date: Date): string => {
+      return date.toISOString().split("T")[0];
+    };
+
+    // Get unique days when GMs were sent (in UTC to avoid timezone issues)
+    const gmDays = new Set<string>();
+    for (const gm of gms) {
+      gmDays.add(getDateString(gm.createdAt));
+    }
+
+    // Convert to sorted array (most recent first)
+    const uniqueDays = Array.from(gmDays).sort().reverse();
+
+    if (uniqueDays.length === 0) return 0;
+
+    const today = getDateString(new Date());
+
+    // Calculate previous day
+    const getPreviousDay = (dateStr: string): string => {
+      const date = new Date(dateStr + "T00:00:00.000Z");
+      date.setUTCDate(date.getUTCDate() - 1);
+      return getDateString(date);
+    };
+
+    const yesterday = getPreviousDay(today);
+
+    let streak = 0;
+    let expectedDay = today;
+
+    // Check if streak should start from today or yesterday
+    if (gmDays.has(today)) {
+      expectedDay = today;
+    } else if (gmDays.has(yesterday)) {
+      expectedDay = yesterday;
+    } else {
+      // No recent GM, streak is 0
+      return 0;
+    }
+
+    // Count consecutive days backwards
+    for (const gmDay of uniqueDays) {
+      if (gmDay === expectedDay) {
+        streak++;
+        expectedDay = getPreviousDay(expectedDay);
+      } else if (gmDay < expectedDay) {
+        // Found a gap, streak ends
+        break;
+      }
+      // If gmDay > expectedDay, keep looking for the expected day
+    }
+
+    return streak;
+  } catch (e) {
+    console.error("Error calculating GM streak:", e);
+    return 0;
+  }
+};
+
 export const getUserGMStats = async (
   walletAddress: string,
   chainId?: NETWORKS
@@ -155,6 +230,9 @@ export const getUserGMStats = async (
       },
     });
 
+    // Calculate streak
+    const gmStreak = await calculateGMStreak(whereClause);
+
     return {
       isError: false,
       error: null,
@@ -164,6 +242,7 @@ export const getUserGMStats = async (
         weekCount,
         lastGM: lastGM?.createdAt || null,
         todayStatus: todayCount > 0,
+        gmStreak,
       },
     };
   } catch (e) {
@@ -177,6 +256,7 @@ export const getUserGMStats = async (
         weekCount: 0,
         lastGM: null,
         todayStatus: false,
+        gmStreak: 0,
       },
     };
   }
@@ -203,6 +283,7 @@ export const getAllUserGMStats = async (walletAddress: string) => {
         weekCount: 0,
         lastGM: null,
         todayStatus: false,
+        gmStreak: 0,
       },
     };
   }

@@ -201,8 +201,8 @@ export const useGMData = (
       if (dbStats && !dbStats.isError) {
         lastGM = dbStats.data.lastGM ? new Date(dbStats.data.lastGM) : null;
         todayGMStatus = dbStats.data.todayStatus || false;
-        // Calculate streak from available data - use todayStatus as basic streak indicator
-        gmStreak = todayGMStatus ? 1 : 0;
+        // Use the calculated streak from the database
+        gmStreak = dbStats.data.gmStreak || 0;
       }
 
       const lastGMFormatted = formatLastGM(lastGM);
