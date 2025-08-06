@@ -19,19 +19,12 @@ export default function Footer() {
       >
         <div
           className={cn(
-            "flex items-start justify-between self-stretch",
-            "laptop_md:grid laptop_md:grid-cols-2 laptop_md:gap-10",
-            "mobile:grid mobile:grid-cols-2 mobile:gap-10"
+            "flex items-start justify-between self-stretch gap-5",
+            "tablet:flex-col tablet:gap-10"
           )}
         >
           {/* ZNS Connect */}
-          <div
-            className={cn(
-              "flex flex-col items-start w-[288px] gap-5",
-              "laptop_md:col-span-2",
-              "mobile:col-span-2"
-            )}
-          >
+          <div className={cn("flex flex-col w-full max-w-[356px] gap-5")}>
             <div className="flex flex-col gap-6 items-start self-stretch">
               <div className="flex items-center gap-3 self-stretch">
                 <Image
@@ -68,7 +61,7 @@ export default function Footer() {
           </div>
 
           {/* Explore */}
-          <div className="flex flex-col items-start w-[156px] gap-8 mobile:col-span-1">
+          <div className="flex flex-col items-start gap-8 w-full">
             <p className="self-stretch text-text3 text-sm font-medium">
               COMPANY
             </p>
@@ -77,7 +70,8 @@ export default function Footer() {
                 <Link
                   key={`navbar_menu_${index}`}
                   href={menu.link}
-                  className="text-text2 hover:underline cursor-pointer"
+                  className="text-text2 hover:underline cursor-pointer whitespace-nowrap"
+                  newTab={menu.external}
                 >
                   {menu.name}
                 </Link>
@@ -88,8 +82,7 @@ export default function Footer() {
           {/* Join our weekly digest */}
           <div
             className={cn(
-              "flex flex-col items-start gap-8 w-[361px]",
-              "mobile:col-span-2 mobile:w-full"
+              "flex flex-col items-start gap-8 max-w-[325px] w-full"
             )}
           >
             <div className="flex flex-col items-start gap-2 self-stretch">

@@ -30,11 +30,10 @@ export const HEADER_MENU_LIST = [
 ];
 
 export const FOOTER_MENU_LIST = [
-  { name: "Home", link: "/" },
-  { name: "Register domain", link: "/search" },
-  { name: "Referrals", link: "/referrals" },
-  { name: "Badges", link: "/badges" },
-  { name: "Documentation", link: "https://docs.znsconnect.io/" },
+  { name: "Say GM Today", link: "/?tab=gm", external: false },
+  { name: "Deploy Smart Contract", link: "/?tab=deploy", external: false },
+  { name: "Register domain", link: "https://zns.bio/search", external: true },
+  { name: "Contact Us", link: "#", external: false },
 ];
 
 // footer assets

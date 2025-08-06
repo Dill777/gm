@@ -178,11 +178,8 @@ const DeployDashboard = ({
         <div className={cn("flex-col gap-8", "hidden small:flex")}>
           <div className="grid grid-cols-6">
             {DEPLOY_DASHBOARD.map((item) => (
-              <div className="flex">
-                <p
-                  key={`${item.deploy}`}
-                  className="text-text_body3 text-xs w-[70px] text-left -rotate-90 whitespace-nowrap"
-                >
+              <div className="flex" key={`${item.deploy}`}>
+                <p className="text-text_body3 text-xs w-[70px] text-left -rotate-90 whitespace-nowrap">
                   {item.deploy} SC
                 </p>
               </div>

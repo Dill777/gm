@@ -22,14 +22,14 @@ const Header = () => {
         className={cn(
           "fixed top-0 z-[100] w-full flex justify-center bg-white",
           isScrolled && "shadow-lg",
-          "h-[102px] mobile:h-[80px]"
+          "h-[102px] tablet:h-[80px]"
         )}
       >
         <div
           className={cn(
             "max-w-[1440px] w-full h-full",
             "flex items-center justify-between p-[28px_40px] ",
-            "p-[28px_56px] mobile:p-[12px_16px]"
+            "p-[28px_56px] tablet:p-[12px_16px]"
           )}
         >
           {/* Logo */}
