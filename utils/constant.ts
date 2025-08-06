@@ -33,7 +33,7 @@ export const FOOTER_MENU_LIST = [
   { name: "Say GM Today", link: "/?tab=gm", external: false },
   { name: "Deploy Smart Contract", link: "/?tab=deploy", external: false },
   { name: "Register domain", link: "https://zns.bio/search", external: true },
-  { name: "Contact Us", link: "#", external: false },
+  { name: "Documentation", link: "https://docs.gm.cheap", external: true },
 ];
 
 // footer assets
