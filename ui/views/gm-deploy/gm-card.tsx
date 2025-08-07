@@ -67,6 +67,7 @@ const GMCard: React.FC<GMCardProps> = ({
 
   // Initialize useGM with success callback for real-time updates
   const {
+    isEnoughBalance,
     isProcessing,
     onSayGM,
     canSendGM,
@@ -165,6 +166,7 @@ const GMCard: React.FC<GMCardProps> = ({
     // If this is the current chain
     if (!isGMSupported) return "GM Not Available";
     if (isProcessing) return "Sending GM...";
+    if (!isEnoughBalance) return "Insufficient Balance";
     if (!cooldownInfo.canSend && countdown !== "00:00:00") {
       return `Wait ${countdown}`;
     }
@@ -291,7 +293,7 @@ const GMCard: React.FC<GMCardProps> = ({
           onClick={isConnected ? onSayGM : onConnect}
           requiredChain={chainId}
           requiredConnect={true}
-          className="w-full h-10 rounded-[10px] gap-1.5 text-white"
+          className="w-full h-10 rounded-[10px] gap-1.5 text-white disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-200 disabled:hover:bg-gray-400"
           disabled={getButtonDisabled()}
         >
           {!isConnected && <FlashIcon className="w-4 h-4" />}
