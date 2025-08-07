@@ -133,9 +133,9 @@
 .MuiAutocomplete-paper {
   margin-top: 2px;
   border-radius: 12px;
-  background: black;
+  background: white;
   padding: 17px 16px;
-  border: 2px solid #25212b;
+  border: none;
 }
 .MuiAutocomplete-listbox {
   display: flex;

@@ -99,7 +99,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="w-full h-full overflow-x-hidden">
-        <div className="absolute -z-10 inset-0 bg-black" />
+        <div className="absolute -z-10 inset-0 bg-body" />
         <Providers>
           <Header />
           <div className="flex flex-col min-h-screen">

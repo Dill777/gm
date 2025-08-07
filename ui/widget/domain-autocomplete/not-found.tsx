@@ -36,7 +36,7 @@ const NotfoundAutoComplete = () => {
   }, [search]);
 
   return (
-    <div className="relative border border-white-200 bg-white rounded-xl w-full">
+    <div className="relative w-full max-w-[488px] mx-auto">
       <Autocomplete
         open={searchedDomain !== "" && isAutoCompleteOpen}
         onBlur={() => onAutoComplete(false)}
@@ -47,8 +47,8 @@ const NotfoundAutoComplete = () => {
             <div
               key={option.label}
               className={cn(
-                "self-stretch flex items-center justify-between px-5 py-5 h-[47px] rounded-xl",
-                "bg-[#101010] hover:bg-[#10101088] cursor-pointer"
+                "self-stretch flex items-center justify-between px-5 py-2.5 h-[47px] rounded-xl",
+                "bg-light_bg1/60 cursor-pointer"
               )}
               onClick={() => navigateDomain(option.domain, option.chain)}
             >
@@ -62,7 +62,7 @@ const NotfoundAutoComplete = () => {
                     "bg-[lightgray] bg-center bg-cover bg-no-repeat rounded-full w-[22px] h-[22px]"
                   }
                 />
-                <p className="font-inter text-sm text-text_normal text-ellipsis overflow-hidden whitespace-nowrap">
+                <p className="font-inter text-sm text-text3/60 text-ellipsis overflow-hidden whitespace-nowrap">
                   {option.domain}
                   <span style={{ color: option.color }}>.{option.tld}</span>
                 </p>
@@ -72,24 +72,38 @@ const NotfoundAutoComplete = () => {
           );
         }}
         renderInput={(params) => (
-          <div ref={params.InputProps.ref}>
-            <input
-              {...params.inputProps}
-              value={searchInputText}
-              onChange={onInputUpdate}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") navigateDomain(searchedDomain);
-              }}
-              placeholder="Search Domain Names"
-              className="w-full h-[55px]  p-6 text-base  font-normal text-black placeholder:text-main-400 border-none outline-none bg-transparent"
-            />
-            <button
-              type="submit"
-              onClick={() => navigateDomain(searchedDomain)}
-              className="absolute w-[155px] small:w-[102px] h-full right-0 bg-primary rounded-xl inline-flex items-center justify-center"
+          <div ref={params.InputProps.ref} className="w-full">
+            <div
+              className={cn(
+                "w-full h-[58px] p-[1px]",
+                "rounded-full relative overflow-hidden",
+                "flex items-center justify-center",
+                "bg-gradient_cheap_primary backdrop-blur-[2px]"
+              )}
             >
-              <SearchIcon className="text-black w-8 h-8" />
-            </button>
+              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                <div className="w-full h-full rounded-full flex items-center">
+                  <input
+                    {...params.inputProps}
+                    value={searchInputText}
+                    onChange={onInputUpdate}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") navigateDomain(searchedDomain);
+                    }}
+                    placeholder="Search Domain Names"
+                    className="w-full h-full p-[12px_2rem] text-black text-sm border-none outline-none flex-1 bg-transparent"
+                  />
+                  <button
+                    type="submit"
+                    onClick={() => navigateDomain(searchedDomain)}
+                    className="flex items-center justify-center bg-primary text-sm m-[7px] p-[12px_13px] rounded-3xl text-white text-center"
+                  >
+                    <SearchIcon className="w-5 h-5" />
+                    Search
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       />

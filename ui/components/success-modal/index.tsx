@@ -60,8 +60,12 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
 
     let url = referUrl;
     let hashtags = "GM,CheapGM";
+    const encodedText = encodeURIComponent(description);
+    const encodedUrl = encodeURIComponent(url);
+    const encodedHashtags = encodeURIComponent(hashtags);
+
     window.open(
-      `https://twitter.com/intent/tweet?text=${description}&url=${url}&hashtags=${hashtags}`,
+      `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}&hashtags=${encodedHashtags}`,
       "_blank"
     );
   };

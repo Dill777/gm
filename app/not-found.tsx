@@ -6,7 +6,7 @@ const NotFoundPage = () => {
   return (
     <Container as="main">
       <div className="flex items-center justify-center py-[200px]">
-        <NotFound label="Search your domain" />
+        <NotFound label="Search Your Domains" />
       </div>
     </Container>
   );

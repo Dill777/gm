@@ -24,7 +24,7 @@ export const HEADER_MENU_LIST = [
     icon: SearchIcon,
     iconType: "component",
     name: "Register Domain",
-    link: "https://zns.bio/search",
+    link: "/search",
     external: true,
   },
 ];
@@ -32,7 +32,7 @@ export const HEADER_MENU_LIST = [
 export const FOOTER_MENU_LIST = [
   { name: "Say GM Today", link: "/?tab=gm", external: false },
   { name: "Deploy Smart Contract", link: "/?tab=deploy", external: false },
-  { name: "Register domain", link: "https://zns.bio/search", external: true },
+  { name: "Register domain", link: "/search", external: true },
   { name: "Documentation", link: "https://docs.gm.cheap", external: true },
 ];
 
