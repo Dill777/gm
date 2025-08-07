@@ -7,8 +7,8 @@ type NotFoundType = {
 };
 const NotFound: FC<NotFoundType> = ({ label }) => {
   return (
-    <div className="flex flex-col space-y-8 pt-[50px] w-full">
-      <div className="flex flex-col items-center w-full py-[20px] small:px-[20px]">
+    <div className="flex flex-col space-y-8 py-8 w-full">
+      <div className="flex flex-col items-center w-full small:px-[20px]">
         <p className="text-5xl small:text-2xl font-semibold text-center leading-normal tracking-tighter text-text3">
           {label}
         </p>

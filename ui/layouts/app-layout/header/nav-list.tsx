@@ -19,8 +19,9 @@ const NavList = ({ className }: { className?: string }) => {
     >
       {HEADER_MENU_LIST.map((menu, idx) => {
         const isActive = menu.tab
-          ? menu.tab === searchParams.get("tab") ||
-            (menu.tab === "gm" && !searchParams.get("tab"))
+          ? pathname === "/" &&
+            (menu.tab === searchParams.get("tab") ||
+              (menu.tab === "gm" && !searchParams.get("tab")))
           : pathname === menu.link;
 
         return (

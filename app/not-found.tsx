@@ -5,7 +5,7 @@ import Container from "@/ui/components/container";
 const NotFoundPage = () => {
   return (
     <Container as="main">
-      <div className="flex items-center justify-center py-[200px]">
+      <div className="flex justify-center pt-[102px] pb-[200px]">
         <NotFound label="Search Your Domains" />
       </div>
     </Container>
