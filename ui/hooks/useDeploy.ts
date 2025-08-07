@@ -180,6 +180,10 @@ export const useDeploy = (successCallback?: () => void) => {
         toast.error("Deploy is not supported on this chain");
         return;
       }
+      if (!isEnoughBalance) {
+        toast.error("Insufficient balance.");
+        return;
+      }
       if (!cooldownInfo.canSend) {
         toast.error(
           `Please wait ${cooldownInfo.timeRemaining} more hours before deploying another contract`
@@ -210,6 +214,7 @@ export const useDeploy = (successCallback?: () => void) => {
     chainId,
     refer,
     isDeploySupported,
+    isEnoughBalance,
   ]);
 
   // Fetch actual fee from contract

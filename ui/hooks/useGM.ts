@@ -176,6 +176,10 @@ export const useGM = (successCallback?: () => void) => {
         toast.error("GM is not supported on this chain");
         return;
       }
+      if (!isEnoughBalance) {
+        toast.error("Insufficient balance.");
+        return;
+      }
       if (!cooldownInfo.canSend) {
         toast.error(
           `Please wait ${cooldownInfo.timeRemaining} more hours before sending another GM`
@@ -206,6 +210,7 @@ export const useGM = (successCallback?: () => void) => {
     chainId,
     refer,
     isGMSupported,
+    isEnoughBalance,
   ]);
 
   // Fetch actual fee from contract
