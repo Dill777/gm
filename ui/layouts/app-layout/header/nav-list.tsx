@@ -2,11 +2,12 @@ import React from "react";
 import Link from "@/ui/components/link";
 import { HEADER_MENU_LIST } from "@/utils/constant";
 import { cn } from "@/utils";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import Image from "@/ui/components/image";
 
 const NavList = ({ className }: { className?: string }) => {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   return (
     <nav
@@ -17,6 +18,11 @@ const NavList = ({ className }: { className?: string }) => {
       )}
     >
       {HEADER_MENU_LIST.map((menu, idx) => {
+        const isActive = menu.tab
+          ? menu.tab === searchParams.get("tab") ||
+            (menu.tab === "gm" && !searchParams.get("tab"))
+          : pathname === menu.link;
+
         return (
           <Link
             key={`navbar_menu_${idx}`}
@@ -29,9 +35,7 @@ const NavList = ({ className }: { className?: string }) => {
               "tablet:gap-1",
               "tablet:rounded-[10px] tablet:bg-light_bg1 tablet:p-[9px]",
               "tablet:border tablet:border-light_gray",
-              menu.tab === searchParams.get("tab")
-                ? "font-medium text-primary"
-                : ""
+              isActive ? "font-medium text-primary" : ""
             )}
           >
             {menu.iconType === "component" ? (
