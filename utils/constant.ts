@@ -25,14 +25,14 @@ export const HEADER_MENU_LIST = [
     iconType: "component",
     name: "Register Domain",
     link: "/search",
-    external: true,
+    external: false,
   },
 ];
 
 export const FOOTER_MENU_LIST = [
   { name: "Say GM Today", link: "/?tab=gm", external: false },
   { name: "Deploy Smart Contract", link: "/?tab=deploy", external: false },
-  { name: "Register domain", link: "/search", external: true },
+  { name: "Register domain", link: "/search", external: false },
   { name: "Documentation", link: "https://docs.gm.cheap", external: true },
 ];
 
