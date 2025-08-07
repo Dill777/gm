@@ -38,8 +38,8 @@ export const FOOTER_MENU_LIST = [
 
 // footer assets
 export const SOCIAL_LIST = [
-  { icon: TwitterColorIcon, link: "https://twitter.com/ZNSConnect" },
-  { icon: TelegramColorIcon, link: "https://t.me/znsconnect" },
+  { icon: TwitterColorIcon, link: "https://x.com/gmcheap" },
+  { icon: TelegramColorIcon, link: "https://t.me/gmcheap" },
 ];
 
 export interface RewardInfo {

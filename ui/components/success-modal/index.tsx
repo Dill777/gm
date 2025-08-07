@@ -52,14 +52,14 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
 
   const onShare = () => {
     let description =
-      "🟢 Big news for @znsconnect!\n" +
+      "🌞 Big GM energy for @gmcheap!\n" +
       "\n" +
-      "🟢 Mint your domain and enjoy up to 25%25 rewards directly in your wallet!\n" +
+      "Mint your onchain GM now and earn up to 25% forever from your referrals 🪙\n" +
       "\n" +
-      "Visit:";
+      "Start here →";
 
     let url = referUrl;
-    let hashtags = "zns,znsconnect";
+    let hashtags = "GM,CheapGM";
     window.open(
       `https://twitter.com/intent/tweet?text=${description}&url=${url}&hashtags=${hashtags}`,
       "_blank"
@@ -72,10 +72,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
 
   const handleSocialShare = (platform: string) => {
     const shareUrls = {
-      twitter: `https://twitter.com/ZNSConnect`,
-      telegram: `https://t.me/znsconnect`,
-      linkedin: `https://www.linkedin.com/company/zns-connect`,
-      discord: `https://discord.com/invite/skbA5Ucmmc`,
+      twitter: `https://x.com/gmcheap`,
+      telegram: `https://t.me/gmcheap`,
     };
 
     const shareUrl = shareUrls[platform as keyof typeof shareUrls];
@@ -195,7 +193,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
               : "Share your daily GM ritual with the community!"}
           </p>
           <div className="flex justify-center gap-3">
-            {["twitter", "telegram", "linkedin", "discord"].map((item) => (
+            {["twitter", "telegram"].map((item) => (
               <button
                 key={item}
                 onClick={() => handleSocialShare(item)}

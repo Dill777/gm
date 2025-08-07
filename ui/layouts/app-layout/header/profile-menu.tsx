@@ -99,7 +99,7 @@ const ProfileMenu = () => {
           </Link>
           <Link
             className="flex items-center space-x-2.5 cursor-pointer text-text2 hover:text-primary group"
-            href="/?tab=dashboard"
+            href="/?tab=deploy"
           >
             <FlashIcon className="w-4 h-4" />
             <p className="text-text3 group-hover:text-primary text-sm">

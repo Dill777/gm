@@ -51,14 +51,14 @@ const Info = ({ className }: Props) => {
   };
   const onShare = () => {
     let description =
-      "🟢 Big news for @znsconnect!\n" +
+      "🌞 Big GM energy for @gmcheap!\n" +
       "\n" +
-      "🟢 Mint your domain and enjoy up to 25%25 rewards directly in your wallet!\n" +
+      "Mint your onchain GM now and earn up to 25% forever from your referrals 🪙\n" +
       "\n" +
-      "Visit:";
+      "Start here →";
 
     let url = referUrl;
-    let hashtags = "zns,znsconnect";
+    let hashtags = "GM,CheapGM";
     window.open(
       `https://twitter.com/intent/tweet?text=${description}&url=${url}&hashtags=${hashtags}`,
       "_blank"

@@ -38,14 +38,14 @@ const GMDeploySidebar = () => {
 
   const onShare = () => {
     let description =
-      "🟢 Big news for @znsconnect!\n" +
+      "🌞 Big GM energy for @gmcheap!\n" +
       "\n" +
-      "🟢 Mint your domain and enjoy up to 25%25 rewards directly in your wallet!\n" +
+      "Mint your onchain GM now and earn up to 25% forever from your referrals 🪙\n" +
       "\n" +
-      "Visit:";
+      "Start here →";
 
     let url = referUrl;
-    let hashtags = "zns,znsconnect";
+    let hashtags = "GM,CheapGM";
     window.open(
       `https://twitter.com/intent/tweet?text=${description}&url=${url}&hashtags=${hashtags}`,
       "_blank"
@@ -141,13 +141,13 @@ const GMDeploySidebar = () => {
               </div>
               <div className="gap-1">
                 <span className="text-text2 text-xs font-medium">
-                  2025-06-30
+                  2025-08-01
                 </span>
                 <div className="text-black font-medium">
-                  Coti Network Added!
+                  🟢 Plume Network Added!
                 </div>
                 <div className="text-text2 text-sm">
-                  Coti Network has been added for GM and deployment
+                  .goon domains now available for GM and deployment.
                 </div>
               </div>
             </div>
@@ -159,13 +159,29 @@ const GMDeploySidebar = () => {
               </div>
               <div className="gap-1">
                 <span className="text-text2 text-xs font-medium">
-                  2025-06-30
+                  2025-08-05
+                </span>
+                <div className="text-black font-medium">🟣 XRPL Added!</div>
+                <div className="text-text2 text-sm">
+                  .xrpl domains now supported for GM and deployment.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-light_bg1/60 rounded-2xl px-5 py-3 space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="flex items-center justify-center w-4 h-4 min-w-4 rounded-[4.25px] bg-primary/20 mt-1">
+                <div className="w-2.5 h-2.5 rounded-full bg-primary" />
+              </div>
+              <div className="gap-1">
+                <span className="text-text2 text-xs font-medium">
+                  2025-08-08
                 </span>
                 <div className="text-black font-medium">
-                  Coti Network Added!
+                  🌌 Somnia Testnet Added!
                 </div>
                 <div className="text-text2 text-sm">
-                  Coti Network has been added for GM and deployment
+                  .somnia domains now integrated for GM functionality.
                 </div>
               </div>
             </div>

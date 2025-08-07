@@ -11,14 +11,14 @@ export const useShare = () => {
 
   const onTweet = useCallback(() => {
     let description =
-      "Exciting news for our @znsconnect community! 🟢\n" +
+      "🌞 Big GM energy for @gmcheap!\n" +
       "\n" +
-      "Join me by following back! 🚀✨\n" +
+      "Mint your onchain GM now and earn up to 25% forever from your referrals 🪙\n" +
       "\n" +
-      "Visit:";
+      "Start here →";
 
     let url = window.location.href.split("?")[0];
-    let hashtags = "zns,znsconnect,nameservise";
+    let hashtags = "GM,CheapGM";
     window.open(
       `https://twitter.com/intent/tweet?text=${description}&url=${url}&hashtags=${hashtags}`,
       "_blank"
