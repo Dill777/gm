@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 export const PlusIcon: FC<{ className?: string; color?: string }> = ({
   className,
-  color = "#CAFC01",
+  color = "#0177E7",
 }) => (
   <svg
     width="21"

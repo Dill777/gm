@@ -12,8 +12,8 @@
   height: 5px;
   width: 100%;
   position: fixed;
-  background: #cafc01;
-  box-shadow: "0 0 2px #cafc01";
+  background: #0177e7;
+  box-shadow: "0 0 2px #0177E7";
 }
 #nprogress .peg {
   right: 0;
@@ -23,7 +23,7 @@
   display: block;
   position: absolute;
   transform: "rotate(3deg) translate(0px, -4px)";
-  box-shadow: "0 0 10px #cafc01, 0 0 5px #cafc01";
+  box-shadow: "0 0 10px #0177E7, 0 0 5px #0177E7";
 }
 
 ::-webkit-scrollbar {
@@ -37,7 +37,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cafc01;
+  background: #0177e7;
   border-radius: 100px;
 }
 
@@ -60,21 +60,21 @@
 }
 
 .bage_type_slider .swiper-pagination-bullet {
-  background: #cafc01;
+  background: #0177e7;
 }
 
 .bage_type_slider .swiper-pagination-bullet-active {
-  background: #cafc01;
+  background: #0177e7;
   width: 10px;
   height: 10px;
 }
 
 .bage_type_slider .swiper-button-next {
-  color: #cafc01;
+  color: #0177e7;
 }
 
 .bage_type_slider .swiper-button-prev {
-  color: #cafc01;
+  color: #0177e7;
 }
 
 .overflow_effect_swiper .swiper-slide {
@@ -107,11 +107,11 @@
 }
 
 .badge_effect_swiper_mobile .swiper-pagination-bullet {
-  background: #cafc01;
+  background: #0177e7;
 }
 
 .badge_effect_swiper_mobile .swiper-pagination-bullet-active {
-  background: #cafc01;
+  background: #0177e7;
   width: 10px;
   height: 10px;
 }

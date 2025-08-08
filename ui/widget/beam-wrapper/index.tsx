@@ -26,7 +26,7 @@ export default function BeamWrapper({
     });
   }, []);
 
-  const backgroundImage = useMotionTemplate`conic-gradient(from ${turn}turn, #cafc0100 75%, #0177E7 100%)`;
+  const backgroundImage = useMotionTemplate`conic-gradient(from ${turn}turn, #0177E700 75%, #0177E7 100%)`;
 
   return (
     <div className={cn(className)}>

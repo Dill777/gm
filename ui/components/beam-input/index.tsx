@@ -39,7 +39,7 @@ export default function BeamInput({
     });
   }, []);
 
-  const backgroundImage = useMotionTemplate`conic-gradient(from ${turn}turn, #cafc0100 75%, #cafc01 100%)`;
+  const backgroundImage = useMotionTemplate`conic-gradient(from ${turn}turn, #0177E700 75%, #0177E7 100%)`;
 
   const handleSubmit = () => {
     if (type === "search")
