@@ -79,7 +79,9 @@ const Header = () => {
                 >
                   <Menu className="w-6 h-6 text-text3" />
                 </div>
-                <MobileMenu showMenu={showMenu} setShowMenu={setShowMenu} />
+                <Suspense fallback={null}>
+                  <MobileMenu showMenu={showMenu} setShowMenu={setShowMenu} />
+                </Suspense>
               </>
             }
           </div>
