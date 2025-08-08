@@ -7,7 +7,7 @@ import { MdOutlineMenu as Menu } from "react-icons/md";
 import { cn } from "@/utils";
 import NavList from "./nav-list";
 import IconNav from "./icon-nav";
-import MobileMenu from "./menu";
+import MobileMenu from "./mobile-menu";
 import useAuth from "@/lib/auth/useAuth";
 
 const Header = () => {

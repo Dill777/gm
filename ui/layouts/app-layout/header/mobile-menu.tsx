@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useAccount } from "wagmi";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { MdCancel } from "react-icons/md";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Link from "@/ui/components/link";
@@ -14,6 +14,7 @@ import { cn } from "@/utils";
 type MenuProps = { showMenu: boolean; setShowMenu: (value: boolean) => void };
 const MobileMenu: React.FC<MenuProps> = ({ showMenu, setShowMenu }) => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
   const handleClose = () => setShowMenu(!showMenu);
@@ -61,6 +62,12 @@ const MobileMenu: React.FC<MenuProps> = ({ showMenu, setShowMenu }) => {
 
           <div className="flex flex-col space-y-5">
             {HEADER_MENU_LIST.map((menu, index) => {
+              const isActive = menu.tab
+                ? pathname === "/" &&
+                  (menu.tab === searchParams.get("tab") ||
+                    (menu.tab === "gm" && !searchParams.get("tab")))
+                : pathname === menu.link;
+
               return (
                 <Link
                   key={`navbar_menu_${index}`}
@@ -70,9 +77,8 @@ const MobileMenu: React.FC<MenuProps> = ({ showMenu, setShowMenu }) => {
                   className={cn(
                     "animated-border relative hover:text-primary text-black",
                     "flex items-center gap-2",
-                    pathname === menu.link
-                      ? "text-primary text-2xl mobile:text-lg font-bold"
-                      : "text-xl mobile:text-base font-normal"
+                    "text-xl mobile:text-base",
+                    isActive ? "text-primary font-medium" : "font-normal"
                   )}
                 >
                   {menu.iconType === "component" ? (
