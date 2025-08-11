@@ -93,9 +93,9 @@ export const useDomainSearch = () => {
     urlParams.set("domain", _domain);
     if (_chain) urlParams.set("chain", _chain.toString());
     if (_domain === "") {
-      router.push(`https://zns.bio/search?tab=smart`);
+      window.open(`https://zns.bio/search?tab=smart`, "_blank");
     } else {
-      router.push(`https://zns.bio/search?${urlParams}`);
+      window.open(`https://zns.bio/search?${urlParams}`, "_blank");
     }
     setIsAutoCompleteOpen(false);
     setSearchInputText(_domain);
