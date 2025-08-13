@@ -1,5 +1,5 @@
 "use client";
-import { CHAIN_IDS, mainnets, NETWORKS } from "@/config/chains";
+import { mainnets, NETWORKS, CHAIN_IDS_REGISTER } from "@/config/chains";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import ChainLogo from "../chain-logo";
 import { tlds } from "@/config/tld";
@@ -26,7 +26,10 @@ const ChainSelect: FC<ChainSelectProps> = ({
   noNetworkFilter = false,
 }) => {
   const [isMainnet, setIsMainnet] = useState<boolean>(true);
-  const networks = useMemo(() => (chains ? chains : CHAIN_IDS), [chains]);
+  const networks = useMemo(
+    () => (chains ? chains : CHAIN_IDS_REGISTER),
+    [chains]
+  );
   const handleSwitchChange = (newState: boolean, inside = false) => {
     if (newState) {
       onNetworkSelect && onNetworkSelect("mainnet", inside);
@@ -37,7 +40,7 @@ const ChainSelect: FC<ChainSelectProps> = ({
   };
 
   useEffect(() => {
-    if (value && CHAIN_IDS.includes(value) && !noNetworkFilter) {
+    if (value && CHAIN_IDS_REGISTER.includes(value) && !noNetworkFilter) {
       const isMainnetBySelected = mainnets.includes(value);
       if (isMainnetBySelected !== isMainnet) {
         handleSwitchChange(isMainnetBySelected, true);
@@ -103,7 +106,7 @@ const ChainSelect: FC<ChainSelectProps> = ({
                 d="M9 12h6m2 4H7m8-8H9"
               />
             </svg>
-            <p className={cn("text-base font-medium text-main-300")}>
+            <p className={cn("text-base font-500 text-main-300")}>
               No Available Chain
             </p>
           </div>
@@ -121,7 +124,7 @@ const ChainSelect: FC<ChainSelectProps> = ({
               <ChainLogo chainId={chainId} className="w-6 h-6" />
               <p
                 className={cn(
-                  "text-base font-medium group-hover:text-primary",
+                  "text-base font-500 group-hover:text-primary",
                   "tablet:text-xs"
                   // value === chainId && "text-primary"
                 )}

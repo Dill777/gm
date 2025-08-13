@@ -224,4 +224,5 @@ enum Chain {
   HYPE
   ZENCHAIN
   HELIOS
+  CONFLUX
 }

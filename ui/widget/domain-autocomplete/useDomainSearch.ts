@@ -24,22 +24,24 @@ export const useDomainSearch = () => {
 
   const options = useMemo(() => {
     const availableDomains = domainAvaliables || [];
-    return mainnets.map((chain) => {
-      const domain = availableDomains.find((item) => item.chainId === chain);
-      const tld = tlds.find((tld) => tld.chainId === chain)?.label;
-      const chainColor = getChainColor(chain);
-      const iconUrl = chains.find((c) => c.id === chain)?.iconUrl ?? "";
+    return mainnets
+      .filter((chain) => !chains.find((c) => c.id === chain)?.gmOnly)
+      .map((chain) => {
+        const domain = availableDomains.find((item) => item.chainId === chain);
+        const tld = tlds.find((tld) => tld.chainId === chain)?.label;
+        const chainColor = getChainColor(chain);
+        const iconUrl = chains.find((c) => c.id === chain)?.iconUrl ?? "";
 
-      return {
-        label: `${searchedDomain}.${tld}`,
-        domain: searchedDomain,
-        tld,
-        chain: chain,
-        status: !domain?.data.domainName,
-        color: chainColor,
-        iconUrl,
-      };
-    });
+        return {
+          label: `${searchedDomain}.${tld}`,
+          domain: searchedDomain,
+          tld,
+          chain: chain,
+          status: !domain?.data.domainName,
+          color: chainColor,
+          iconUrl,
+        };
+      });
   }, [searchedDomain, domainAvaliables]);
 
   const debouncedAlert = useDebouncedCall(

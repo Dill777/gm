@@ -26,6 +26,7 @@ export enum NETWORKS {
   UNIT0 = 88811,
   ABSTRACTMAINNET = 2741,
   BERA = 80094,
+  CONFLUX = 1030,
   // MORPH = 2818,
   // MINT = 185,
   // XLAYER = 196,
@@ -81,6 +82,7 @@ export const rpcs: { [key in NETWORKS]: string } = {
   // [NETWORKS.APE]: process.env.NEXT_PUBLIC_RPC_APE!,
   [NETWORKS.HEMI]: process.env.NEXT_PUBLIC_RPC_HEMI!,
   [NETWORKS.UNIT0]: process.env.NEXT_PUBLIC_RPC_UNIT0!,
+  [NETWORKS.CONFLUX]: process.env.NEXT_PUBLIC_RPC_CONFLUX!,
   // [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
   // [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
   [NETWORKS.CREATOR_CHAIN]: process.env.NEXT_PUBLIC_RPC_CREATOR_CHAIN!,
@@ -112,6 +114,7 @@ export interface NETWORK_TYPE extends Chain {
   color?: string;
   sellMarket?: string;
   iconUrl?: string;
+  gmOnly?: boolean;
 }
 
 export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
@@ -137,6 +140,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   // [NETWORKS.APE]: "#0052f0",
   [NETWORKS.HEMI]: "#ff6c15",
   [NETWORKS.UNIT0]: "#a1e0c2",
+  [NETWORKS.CONFLUX]: "#17B38A",
   // [NETWORKS.MINT]: "#30BF54",
   // [NETWORKS.XLAYER]: "#fff",
   [NETWORKS.CREATOR_CHAIN]: "#F4F53A",
@@ -708,6 +712,32 @@ export const CHAINS: NETWORK_TYPE[] = [
         blockCreated: 25770160,
       },
     },
+  },
+  {
+    id: NETWORKS.CONFLUX,
+    name: "Conflux eSpace",
+    shortName: "Conflux",
+    chain: PrismaChain.CONFLUX,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "CFX", symbol: "CFX", decimals: 18 },
+    iconUrl: "/img/chainLogos/conflux.svg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.CONFLUX]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "ConfluxScan",
+        url: "https://evm.confluxscan.net/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
   },
   // {
   //   id: NETWORKS.MINT,
@@ -1331,6 +1361,10 @@ export const getChainByChain = (chain: PrismaChain) =>
 export const chains = CHAINS as unknown as [NETWORK_TYPE, ...NETWORK_TYPE[]];
 
 export const CHAIN_IDS = chains.map((c) => c.id);
+
+export const CHAIN_IDS_REGISTER = chains
+  .filter((c) => !c.gmOnly)
+  .map((c) => c.id);
 
 export const mainnets = chains.filter((c) => !c.testnet).map((c) => c.id);
 export const testnets = chains.filter((c) => c.testnet).map((c) => c.id);
