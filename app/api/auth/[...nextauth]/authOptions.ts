@@ -1,13 +1,12 @@
 import { cookies } from "next/headers";
-import { SiweMessage } from "siwe";
 import { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import TwitterProvider from "next-auth/providers/twitter";
 import LinkedInProvider from "next-auth/providers/linkedin";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { ProfileAccountsType } from "@/lib/model/domain";
 import { getISessionNonce } from "@/lib/auth/nonce";
 import { getOrCreateUserIdByAddress } from "@/lib/api/user";
+import { verifyMessage } from "viem";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -16,20 +15,32 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         message: { label: "message", type: "text" },
         signature: { label: "Signature", type: "text" },
+        address: { label: "Address", type: "text" },
       },
       async authorize(credentials) {
-        if (credentials?.message && credentials?.signature) {
+        if (
+          credentials?.message &&
+          credentials?.signature &&
+          credentials?.address
+        ) {
           const sessionNonce = await getISessionNonce();
-          const siweMessage = new SiweMessage(JSON.parse(credentials.message));
 
-          const { data: fields } = await siweMessage.verify({
-            signature: credentials.signature,
-          });
+          // Verify the signature using Viem
+          try {
+            const isValid = await verifyMessage({
+              address: credentials.address as `0x${string}`,
+              message: credentials.message,
+              signature: credentials.signature as `0x${string}`,
+            });
 
-          if (fields.nonce === sessionNonce) {
-            const userId =
-              (await getOrCreateUserIdByAddress(fields.address)) ?? "";
-            return { id: userId, address: fields.address };
+            if (isValid && credentials.message.includes(sessionNonce)) {
+              const userId =
+                (await getOrCreateUserIdByAddress(credentials.address)) ?? "";
+              return { id: userId, address: credentials.address };
+            }
+          } catch (error) {
+            console.error("Signature verification failed:", error);
+            return null;
           }
         }
         return null;

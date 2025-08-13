@@ -1,62 +1,121 @@
 import { useCallback, useState } from "react";
 import { signIn } from "next-auth/react";
-import { SiweMessage } from "siwe";
-import { useAccount, useSignMessage } from "wagmi";
+import { useAccount, useSignMessage, useConnect } from "wagmi";
 import { toast } from "react-toastify";
 import { getNonce } from "./nonce";
+import { isChainSupported } from "@/config/chains";
 
 const useSign = () => {
-  const { address, chainId } = useAccount();
+  const { address, chainId, isConnected, connector } = useAccount();
   const { signMessageAsync } = useSignMessage();
+  const { connectAsync, connectors } = useConnect();
   const [isPending, setIsPending] = useState(false);
 
   const signUser = useCallback(async () => {
-    if (!address || !chainId) {
+    // Enhanced validation
+    if (!isConnected || !connector) {
       toast.error("Please connect your wallet first");
+      return;
+    }
+
+    if (!address) {
+      toast.error(
+        "Wallet address not available. Please reconnect your wallet."
+      );
+      return;
+    }
+
+    if (!chainId) {
+      toast.error(
+        "Current chain is not available. Please check your wallet connection."
+      );
+      return;
+    }
+
+    // Check if the current chain is supported
+    if (!isChainSupported(chainId)) {
+      toast.error(
+        "Current network is not supported. Please switch to a supported network."
+      );
       return;
     }
 
     setIsPending(true);
     try {
+      // Ensure we have a fresh connection
+      if (!connector.getAccount) {
+        // Try to reconnect if connector seems stale
+        try {
+          const availableConnector = connectors.find(
+            (c) => c.id === connector.id
+          );
+          if (availableConnector) {
+            await connectAsync({ connector: availableConnector });
+          }
+        } catch (reconnectError) {
+          console.warn("Reconnection failed:", reconnectError);
+          // Continue with original connector
+        }
+      }
+
       const nonce = await getNonce();
       if (!nonce) {
         throw new Error("Failed to get nonce");
       }
 
-      const message = new SiweMessage({
-        domain: window.location.host,
-        address,
-        statement: "Sign in with Ethereum to the app.",
-        uri: window.location.origin,
-        version: "1",
-        chainId,
-        nonce,
-      });
+      // Create a simple message for wallet authentication
+      const message = `Sign in to gm.cheap\n\nWallet: ${address}\nChain ID: ${chainId}\nNonce: ${nonce}\n\nThis signature will be used to authenticate you on our platform.`;
 
-      const preparedMessage = message.prepareMessage();
       const signature = await signMessageAsync({
-        message: preparedMessage,
+        message,
       });
 
       await signIn("credentials", {
-        message: JSON.stringify(message),
+        message,
         signature,
+        address,
         redirect: false,
       });
     } catch (error: any) {
+      console.error("Signing error:", error);
+
       if (error?.message?.includes("User rejected the request")) {
-        console.error("MetaMask - User rejected the request.");
         toast.error(
           "You rejected the request. Please sign the message to continue."
         );
+      } else if (error?.message?.includes("Connector not connected")) {
+        toast.error(
+          "Wallet connection lost. Please reconnect your wallet and try again."
+        );
+      } else if (error?.message?.includes("Chain not configured")) {
+        toast.error(
+          "Current network is not supported. Please switch to a supported network."
+        );
+      } else if (error?.code === 4001) {
+        // User denied message signature
+        toast.error("Message signature was denied. Please try again.");
+      } else if (error?.code === -32603) {
+        // Internal error
+        toast.error(
+          "Wallet internal error. Please try again or refresh the page."
+        );
       } else {
-        console.error("An unexpected error occurred:", error);
-        toast.error("An unexpected error occurred. Please try again.");
+        toast.error(
+          error?.message || "An unexpected error occurred during signing"
+        );
       }
     } finally {
       setIsPending(false);
     }
-  }, [address, chainId, signMessageAsync]);
+  }, [
+    address,
+    chainId,
+    isConnected,
+    connector,
+    signMessageAsync,
+    connectAsync,
+    connectors,
+  ]);
 
   return { signUser, isPending };
 };

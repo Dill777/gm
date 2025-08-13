@@ -2,7 +2,12 @@
 import { IRON_OPTIONS } from "@/config/session";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
-import { generateNonce } from "siwe";
+import { randomBytes } from "crypto";
+
+// Generate a random nonce for wallet authentication
+const generateNonce = () => {
+  return randomBytes(32).toString("hex");
+};
 
 export const getNonce = async () => {
   const session = await getIronSession<{ nonce: string }>(

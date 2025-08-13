@@ -3,12 +3,18 @@ import { useMemo } from "react";
 import { useAccount } from "wagmi";
 import { useSession } from "next-auth/react";
 import { AuthenticationStatus } from "@rainbow-me/rainbowkit";
+import { isChainSupported } from "@/config/chains";
 
 const useAuth = () => {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chainId } = useAccount();
   const { data: session, status: sessionStatus } = useSession();
 
   const isLoading = useMemo(() => sessionStatus === "loading", [sessionStatus]);
+
+  const isChainValid = useMemo(() => {
+    return chainId ? isChainSupported(chainId) : false;
+  }, [chainId]);
+
   const status = useMemo(
     () =>
       isLoading
@@ -18,9 +24,14 @@ const useAuth = () => {
         : "unauthenticated",
     [isLoading, session]
   );
+
   const isAuthorized = useMemo(
-    () => isConnected && address && session?.user.address === address,
-    [isConnected, address, session]
+    () =>
+      isConnected &&
+      address &&
+      session?.user.address === address &&
+      isChainValid,
+    [isConnected, address, session, isChainValid]
   );
 
   const isNeedToResign = useMemo(() => {

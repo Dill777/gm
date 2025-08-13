@@ -27,13 +27,13 @@ const GMDeployPage = ({
           {/* Desktop Layout - Hidden on tablet_md and below */}
           <div className="tablet_md:hidden flex gap-5 w-full">
             <div className="flex-1 w-full py-8">
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense>
                 <GMDeployHeader />
               </Suspense>
               <GMDeployTabs />
             </div>
             <div className="w-[358px] px-5 py-6 border-x border-white/5 bg-white sticky top-[102px] h-[calc(100vh-102px)] overflow-y-auto">
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense>
                 <GMDeploySidebar />
               </Suspense>
             </div>
@@ -43,7 +43,7 @@ const GMDeployPage = ({
           <div className="hidden tablet_md:block w-full py-8">
             {/* Tablet Tabs */}
             <div>
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense>
                 <GMDeployHeader />
                 <TabletTabNavigation activeTab={activeTabletTab} />
               </Suspense>
@@ -53,7 +53,7 @@ const GMDeployPage = ({
                 {activeTabletTab === "GM" && <GMDeployTabs />}
                 {activeTabletTab === "Dashboard" && (
                   <div className="px-5 py-6 border border-white/5 bg-white rounded-2xl">
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense>
                       <GMDeploySidebar />
                     </Suspense>
                   </div>

@@ -63,6 +63,7 @@ export function createWagmiConfig() {
     transports,
     ...CLIENT_CONFIG,
     connectors,
+    multiInjectedProviderDiscovery: false,
   });
 }
 
