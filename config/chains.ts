@@ -160,7 +160,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.CRONOS]: "#000000",
   [NETWORKS.OPTIMISM]: "#ff0420",
   [NETWORKS.KATANA]: "#1a1a1a",
-  [NETWORKS.LINEA]: "#000000",
+  [NETWORKS.LINEA]: "#61dfff",
   [NETWORKS.RARI]: "#B16EFF",
   [NETWORKS.MANTLE]: "#000000",
   [NETWORKS.BOB]: "#F25D00",
@@ -848,7 +848,7 @@ export const CHAINS: NETWORK_TYPE[] = [
     chain: PrismaChain.LINEA,
     sellMarket: "https://element.market",
     nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
-    iconUrl: "/img/chainLogos/linea.svg",
+    iconUrl: "/img/chainLogos/linea.png",
     rpcUrls: {
       default: {
         http: [rpcs[NETWORKS.LINEA]],
@@ -900,7 +900,7 @@ export const CHAINS: NETWORK_TYPE[] = [
     chain: PrismaChain.MANTLE,
     sellMarket: "https://element.market",
     nativeCurrency: { name: "MNT", symbol: "MNT", decimals: 18 },
-    iconUrl: "/img/chainLogos/mantle.png",
+    iconUrl: "/img/chainLogos/mantle.jpg",
     rpcUrls: {
       default: {
         http: [rpcs[NETWORKS.MANTLE]],
