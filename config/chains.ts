@@ -27,6 +27,14 @@ export enum NETWORKS {
   ABSTRACTMAINNET = 2741,
   BERA = 80094,
   CONFLUX = 1030,
+  CRONOS = 25,
+  OPTIMISM = 10,
+  KATANA = 747474,
+  LINEA = 59144,
+  RARI = 1380012617,
+  MANTLE = 5000,
+  BOB = 60808,
+  CELO = 42220,
   // MORPH = 2818,
   // MINT = 185,
   // XLAYER = 196,
@@ -83,6 +91,14 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.HEMI]: process.env.NEXT_PUBLIC_RPC_HEMI!,
   [NETWORKS.UNIT0]: process.env.NEXT_PUBLIC_RPC_UNIT0!,
   [NETWORKS.CONFLUX]: process.env.NEXT_PUBLIC_RPC_CONFLUX!,
+  [NETWORKS.CRONOS]: process.env.NEXT_PUBLIC_RPC_CRONOS!,
+  [NETWORKS.OPTIMISM]: process.env.NEXT_PUBLIC_RPC_OPTIMISM!,
+  [NETWORKS.KATANA]: process.env.NEXT_PUBLIC_RPC_KATANA!,
+  [NETWORKS.LINEA]: process.env.NEXT_PUBLIC_RPC_LINEA!,
+  [NETWORKS.RARI]: process.env.NEXT_PUBLIC_RPC_RARI!,
+  [NETWORKS.MANTLE]: process.env.NEXT_PUBLIC_RPC_MANTLE!,
+  [NETWORKS.BOB]: process.env.NEXT_PUBLIC_RPC_BOB!,
+  [NETWORKS.CELO]: process.env.NEXT_PUBLIC_RPC_CELO!,
   // [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
   // [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
   [NETWORKS.CREATOR_CHAIN]: process.env.NEXT_PUBLIC_RPC_CREATOR_CHAIN!,
@@ -124,7 +140,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   // [NETWORKS.ZORA]: "#72E1EA",
   [NETWORKS.BASE]: "#1653f0",
   [NETWORKS.SONICMAINNET]: "#274363",
-  [NETWORKS.XRPLMAINNET]: "#FEFEFE",
+  [NETWORKS.XRPLMAINNET]: "#1a1a1a",
   [NETWORKS.ABSTRACTMAINNET]: "#08ce6e",
   [NETWORKS.SONEIUMMAINNET]: "#5FDEF3",
   [NETWORKS.PLUMEMAINNET]: "#f53a39",
@@ -141,6 +157,14 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.HEMI]: "#ff6c15",
   [NETWORKS.UNIT0]: "#a1e0c2",
   [NETWORKS.CONFLUX]: "#17B38A",
+  [NETWORKS.CRONOS]: "#000000",
+  [NETWORKS.OPTIMISM]: "#ff0420",
+  [NETWORKS.KATANA]: "#1a1a1a",
+  [NETWORKS.LINEA]: "#000000",
+  [NETWORKS.RARI]: "#B16EFF",
+  [NETWORKS.MANTLE]: "#000000",
+  [NETWORKS.BOB]: "#F25D00",
+  [NETWORKS.CELO]: "#2d2d2d",
   // [NETWORKS.MINT]: "#30BF54",
   // [NETWORKS.XLAYER]: "#fff",
   [NETWORKS.CREATOR_CHAIN]: "#F4F53A",
@@ -530,7 +554,7 @@ export const CHAINS: NETWORK_TYPE[] = [
     blockExplorers: {
       default: {
         name: "ETH",
-        url: "https://basescan.org/",
+        url: "https://base.blockscout.com/",
       },
     },
     contracts: {
@@ -730,6 +754,214 @@ export const CHAINS: NETWORK_TYPE[] = [
       default: {
         name: "ConfluxScan",
         url: "https://evm.confluxscan.net/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.CRONOS,
+    name: "Cronos",
+    shortName: "Cronos",
+    chain: PrismaChain.CRONOS,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "CRO", symbol: "CRO", decimals: 18 },
+    iconUrl: "/img/chainLogos/cronos.png",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.CRONOS]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Cronos Explorer",
+        url: "https://explorer.cronos.org/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.OPTIMISM,
+    name: "Optimism",
+    shortName: "Optimism",
+    chain: PrismaChain.OPTIMISM,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/optimism.svg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.OPTIMISM]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Optimism Explorer",
+        url: "https://explorer.optimism.io/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.KATANA,
+    name: "Katana",
+    shortName: "Katana",
+    chain: PrismaChain.KATANA,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/katana.svg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.KATANA]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Katana Explorer",
+        url: "https://explorer.katanarpc.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.LINEA,
+    name: "Linea",
+    shortName: "Linea",
+    chain: PrismaChain.LINEA,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/linea.svg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.LINEA]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Linea Explorer",
+        url: "https://explorer.linea.build/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.RARI,
+    name: "Rari Chain Mainnet",
+    shortName: "Rari",
+    chain: PrismaChain.RARI,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/rari.svg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.RARI]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Rari Explorer",
+        url: "https://mainnet.explorer.rarichain.org/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.MANTLE,
+    name: "Mantle",
+    shortName: "Mantle",
+    chain: PrismaChain.MANTLE,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "MNT", symbol: "MNT", decimals: 18 },
+    iconUrl: "/img/chainLogos/mantle.png",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.MANTLE]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Mantle Explorer",
+        url: "https://explorer.mantle.xyz/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.BOB,
+    name: "BOB",
+    shortName: "BOB",
+    chain: PrismaChain.BOB,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/bob.svg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.BOB]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "BOB Explorer",
+        url: "https://explorer.gobob.xyz/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.CELO,
+    name: "CELO",
+    shortName: "CELO",
+    chain: PrismaChain.CELO,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
+    iconUrl: "/img/chainLogos/celo.svg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.CELO]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Celo Explorer",
+        url: "https://explorer.celo.org/",
       },
     },
     contracts: {
