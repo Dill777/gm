@@ -15,17 +15,12 @@ import {
 import binanceWallet from "@binance/w3w-rainbow-connector-v2";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 
-import { CHAINS, chains } from "@/config/chains";
+import { chains } from "@/config/chains";
 import { CLIENT_CONFIG, publicClient } from "./viem";
 
-export const transports = CHAINS.reduce((ts, chain) => {
-  if (ts) {
-    return {
-      ...ts,
-      [chain.id]: http(),
-    };
-  }
+export const transports = chains.reduce((ts, chain) => {
   return {
+    ...ts,
     [chain.id]: http(),
   };
 }, {} as Record<number, Transport>);

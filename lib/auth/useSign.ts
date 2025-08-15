@@ -1,14 +1,15 @@
 import { useCallback, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useAccount, useSignMessage, useConnect } from "wagmi";
+import { useAccount, useSignMessage, useConnect, useSwitchChain } from "wagmi";
 import { toast } from "react-toastify";
 import { getNonce } from "./nonce";
-import { isChainSupported } from "@/config/chains";
+import { isChainSupported, NETWORKS } from "@/config/chains";
 
 const useSign = () => {
   const { address, chainId, isConnected, connector } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const { connectAsync, connectors } = useConnect();
+  const { switchChainAsync } = useSwitchChain();
   const [isPending, setIsPending] = useState(false);
 
   const signUser = useCallback(async () => {
@@ -32,12 +33,19 @@ const useSign = () => {
       return;
     }
 
-    // Check if the current chain is supported
+    // Check if the current chain is supported and auto-switch if not
     if (!isChainSupported(chainId)) {
-      toast.error(
-        "Current network is not supported. Please switch to a supported network."
-      );
-      return;
+      try {
+        console.log("Attempting to switch to default chain:", NETWORKS.DEFAULT);
+        await switchChainAsync({ chainId: NETWORKS.DEFAULT });
+        toast.success("Switched to supported network");
+      } catch (switchError) {
+        console.error("Chain switch failed:", switchError);
+        toast.error(
+          "Current network is not supported. Please switch to a supported network manually."
+        );
+        return;
+      }
     }
 
     setIsPending(true);
@@ -115,6 +123,7 @@ const useSign = () => {
     signMessageAsync,
     connectAsync,
     connectors,
+    switchChainAsync,
   ]);
 
   return { signUser, isPending };
