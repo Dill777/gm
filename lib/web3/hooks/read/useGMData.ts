@@ -127,7 +127,7 @@ export const useGMData = (
       (now.getTime() - lastGM.getTime()) / (1000 * 60 * 60 * 24)
     );
 
-    if (diffInDays === 0) return "Today";
+    if (diffInDays <= 0) return "Today";
     if (diffInDays === 1) return "Yesterday";
     if (diffInDays < 7) return `${diffInDays} days ago`;
 

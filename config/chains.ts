@@ -11,6 +11,7 @@ export enum NETWORKS {
   COTI = 2632500,
   // ZORA = 7777777,
   PLUMEMAINNET = 98866,
+  KATANA = 747474,
   HYPE = 999,
   KAIA = 8217,
   // APE = 33139,
@@ -29,7 +30,6 @@ export enum NETWORKS {
   CONFLUX = 1030,
   CRONOS = 25,
   OPTIMISM = 10,
-  KATANA = 747474,
   LINEA = 59144,
   RARI = 1380012617,
   MANTLE = 5000,
@@ -354,6 +354,31 @@ export const CHAINS: NETWORK_TYPE[] = [
     contracts: {
       multicall3: {
         address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+  },
+  {
+    id: NETWORKS.KATANA,
+    name: "Katana",
+    shortName: "Katana",
+    chain: PrismaChain.KATANA,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/katana.svg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.KATANA]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Katana Explorer",
+        url: "https://explorer.katanarpc.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
       },
     },
   },
@@ -806,32 +831,6 @@ export const CHAINS: NETWORK_TYPE[] = [
       default: {
         name: "Optimism Explorer",
         url: "https://explorer.optimism.io/",
-      },
-    },
-    contracts: {
-      multicall3: {
-        address: "0xca11bde05977b3631167028862be2a173976ca11",
-      },
-    },
-    gmOnly: true,
-  },
-  {
-    id: NETWORKS.KATANA,
-    name: "Katana",
-    shortName: "Katana",
-    chain: PrismaChain.KATANA,
-    sellMarket: "https://element.market",
-    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
-    iconUrl: "/img/chainLogos/katana.svg",
-    rpcUrls: {
-      default: {
-        http: [rpcs[NETWORKS.KATANA]],
-      },
-    },
-    blockExplorers: {
-      default: {
-        name: "Katana Explorer",
-        url: "https://explorer.katanarpc.com/",
       },
     },
     contracts: {

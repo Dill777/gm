@@ -12,6 +12,7 @@ export const tlds: TLD[] = [
   { chainId: NETWORKS.ABSTRACTMAINNET, label: "abs", tld: "abs" },
   { chainId: NETWORKS.SONEIUMMAINNET, label: "future", tld: "future" },
   { chainId: NETWORKS.PLUMEMAINNET, label: "goon", tld: "goon" },
+  { chainId: NETWORKS.KATANA, label: "katana", tld: "katana" },
   { chainId: NETWORKS.HYPE, label: "hype", tld: "hype" },
   // { chainId: NETWORKS.FORM, label: "form", tld: "form" },
   { chainId: NETWORKS.SCROLL, label: "scroll", tld: "scroll" },
