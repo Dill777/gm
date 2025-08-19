@@ -41,7 +41,7 @@ const getDeploySupportedChains = () => {
 
 const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeFilter, setActiveFilter] = useState("Mainnets");
   const { favoriteChainIds } = useAppSelector((state) => state.chainFavorites);
 
   // Get real aggregated GM data across all chains

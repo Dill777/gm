@@ -14,10 +14,10 @@ const GMDeployFilters = ({
   onSearchChange,
   onFilterChange,
 }: GMDeployFiltersProps) => {
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeFilter, setActiveFilter] = useState("Mainnets");
   const [searchChains, setSearchChains] = useState("");
 
-  const filters = ["All", "Mainnets", "Testnets", "Favourites", "Hot"];
+  const filters = ["Mainnets", "Testnets", "Favourites", "Hot", "All"];
 
   // Transform filters array into options format for Select component
   const filterOptions = filters.map((filter) => ({
