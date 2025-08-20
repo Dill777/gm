@@ -25,7 +25,11 @@ export const useDomainSearch = () => {
   const options = useMemo(() => {
     const availableDomains = domainAvaliables || [];
     return mainnets
-      .filter((chain) => !chains.find((c) => c.id === chain)?.gmOnly)
+      .filter(
+        (chain) =>
+          !chains.find((c) => c.id === chain)?.gmOnly &&
+          !chains.find((c) => c.id === chain)?.hidden
+      )
       .map((chain) => {
         const domain = availableDomains.find((item) => item.chainId === chain);
         const tld = tlds.find((tld) => tld.chainId === chain)?.label;

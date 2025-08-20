@@ -15,12 +15,17 @@ import {
 import binanceWallet from "@binance/w3w-rainbow-connector-v2";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 
-import { chains } from "@/config/chains";
+import { CHAINS, chains } from "@/config/chains";
 import { CLIENT_CONFIG, publicClient } from "./viem";
 
-export const transports = chains.reduce((ts, chain) => {
+export const transports = CHAINS.reduce((ts, chain) => {
+  if (ts) {
+    return {
+      ...ts,
+      [chain.id]: http(),
+    };
+  }
   return {
-    ...ts,
     [chain.id]: http(),
   };
 }, {} as Record<number, Transport>);
@@ -58,7 +63,7 @@ export function createWagmiConfig() {
     transports,
     ...CLIENT_CONFIG,
     connectors,
-    multiInjectedProviderDiscovery: false,
+    multiInjectedProviderDiscovery: true,
   });
 }
 

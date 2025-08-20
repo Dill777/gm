@@ -1,6 +1,7 @@
 "use client";
 import React, { FC, PropsWithChildren } from "react";
 import {
+  darkTheme,
   RainbowKitProvider,
   createAuthenticationAdapter,
   RainbowKitAuthenticationProvider,
@@ -8,7 +9,6 @@ import {
 import { signIn, signOut } from "next-auth/react";
 import { getNonce } from "../auth/nonce";
 import useAuth from "../auth/useAuth";
-import { chains, isChainSupported } from "@/config/chains";
 
 const authenticationAdapter = createAuthenticationAdapter({
   getNonce: async () => {
@@ -21,9 +21,7 @@ const authenticationAdapter = createAuthenticationAdapter({
     }
   },
   createMessage: ({ nonce, address, chainId }) => {
-    // Use the first supported chain if current chain is not supported
-    const supportedChainId = isChainSupported(chainId) ? chainId : chains[0].id;
-    return `Sign in to gm.cheap\n\nWallet: ${address}\nChain ID: ${supportedChainId}\nNonce: ${nonce}\n\nThis signature will be used to authenticate you on our platform.`;
+    return `Sign in to gm.cheap\n\nWallet: ${address}\nChain ID: ${chainId}\nNonce: ${nonce}\n\nThis signature will be used to authenticate you on our platform.`;
   },
   verify: async ({ message, signature }) => {
     try {

@@ -3,7 +3,7 @@ import { memoize } from "lodash";
 import { Chain } from "viem";
 
 export enum NETWORKS {
-  DEFAULT = 57073,
+  DEFAULT = 1,
   INKMAINNET = 57073,
   UNICHAIN = 130,
   SONEIUMMAINNET = 1868,
@@ -68,6 +68,7 @@ export enum NETWORKS {
 }
 
 export const rpcs: { [key in NETWORKS]: string } = {
+  [NETWORKS.DEFAULT]: process.env.NEXT_PUBLIC_RPC_DEFAULT!,
   [NETWORKS.BERA]: process.env.NEXT_PUBLIC_RPC_BERA!,
   [NETWORKS.CZ]: process.env.NEXT_PUBLIC_RPC_CZ!,
   [NETWORKS.INKMAINNET]: process.env.NEXT_PUBLIC_RPC_INK!,
@@ -131,9 +132,11 @@ export interface NETWORK_TYPE extends Chain {
   sellMarket?: string;
   iconUrl?: string;
   gmOnly?: boolean;
+  hidden?: boolean;
 }
 
 export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
+  [NETWORKS.DEFAULT]: "#FFFFFF",
   [NETWORKS.BERA]: "#FD7108",
   [NETWORKS.CZ]: "#f0b90b",
   [NETWORKS.INKMAINNET]: "#7132f4",
@@ -196,6 +199,30 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
 export const getChainColor = (id: NETWORKS) => CHAIN_COLOR[id];
 
 export const CHAINS: NETWORK_TYPE[] = [
+  {
+    id: NETWORKS.DEFAULT,
+    name: "Ethereum",
+    shortName: "ETH",
+    chain: PrismaChain.ETH,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/eth.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.DEFAULT]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "ETH",
+        url: "https://etherscan.io/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    hidden: true,
+  },
   {
     id: NETWORKS.INKMAINNET,
     name: "Ink Mainnet",

@@ -233,4 +233,5 @@ enum Chain {
   MANTLE
   BOB
   CELO
+  ETH
 }
