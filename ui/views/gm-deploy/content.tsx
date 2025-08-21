@@ -196,6 +196,9 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
 
   const handleFilterChange = (filter: string) => {
     setActiveFilter(filter);
+    // Reset search term when filter changes so all chains are visible
+    setSearchTerm("");
+    updateURL("");
   };
 
   // Helper function to check if a chain is hot (higher priority)
@@ -210,6 +213,7 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
       <GMDeployFilters
         onSearchChange={handleSearchChange}
         onFilterChange={handleFilterChange}
+        searchTerm={searchTerm}
       />
 
       {/* Dashboard - Different for GM vs Deploy */}

@@ -8,14 +8,20 @@ import Select from "@/ui/components/select";
 interface GMDeployFiltersProps {
   onSearchChange?: (searchTerm: string) => void;
   onFilterChange?: (filter: string) => void;
+  searchTerm?: string; // Add prop to control search term from parent
 }
 
 const GMDeployFilters = ({
   onSearchChange,
   onFilterChange,
+  searchTerm,
 }: GMDeployFiltersProps) => {
   const [activeFilter, setActiveFilter] = useState("Mainnets");
   const [searchChains, setSearchChains] = useState("");
+
+  // Use prop value if provided, otherwise use internal state
+  const displaySearchValue =
+    searchTerm !== undefined ? searchTerm : searchChains;
 
   const filters = ["Mainnets", "Testnets", "Favourites", "Hot", "All"];
 
@@ -29,7 +35,10 @@ const GMDeployFilters = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const value = e.target.value;
-    setSearchChains(value);
+    // Only update internal state if no prop is provided
+    if (searchTerm === undefined) {
+      setSearchChains(value);
+    }
     onSearchChange?.(value);
   };
 
@@ -45,8 +54,8 @@ const GMDeployFilters = ({
 
   const handleSearchSubmit = () => {
     // Handle search logic here
-    console.log("Searching for chains:", searchChains);
-    onSearchChange?.(searchChains);
+    console.log("Searching for chains:", displaySearchValue);
+    onSearchChange?.(displaySearchValue);
   };
 
   return (
@@ -107,7 +116,7 @@ const GMDeployFilters = ({
       <div className="bg-gradient_cheap_primary rounded-2xl p-[1px] overflow-hidden">
         <div className="relative bg-white rounded-2xl overflow-hidden">
           <Input
-            value={searchChains}
+            value={displaySearchValue}
             onChange={handleSearchChainsChange}
             type="search"
             onKeyDown={(e) => {
