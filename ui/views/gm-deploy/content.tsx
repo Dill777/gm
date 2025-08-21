@@ -1,5 +1,12 @@
 "use client";
-import React, { useState, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import GMDeployFilters from "./filters";
 import GMDashboard from "./gm-dashboard";
 import DeployDashboard from "./deploy-dashboard";
@@ -43,6 +50,33 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("Mainnets");
   const { favoriteChainIds } = useAppSelector((state) => state.chainFavorites);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isInitialLoad = useRef(true);
+
+  // Initialize search term from URL on component mount
+  useEffect(() => {
+    if (isInitialLoad.current) {
+      const currentSearchTerm = searchParams.get("search") || "";
+      setSearchTerm(currentSearchTerm);
+      isInitialLoad.current = false;
+    }
+  }, [searchParams]);
+
+  // Update URL when search term changes
+  const updateURL = useCallback(
+    (newSearchTerm: string) => {
+      const urlParams = new URLSearchParams(searchParams);
+      if (newSearchTerm.trim()) {
+        urlParams.set("search", newSearchTerm);
+      } else {
+        urlParams.delete("search");
+      }
+      router.push(`${pathname}?${urlParams.toString()}`, { scroll: false });
+    },
+    [searchParams, pathname, router]
+  );
 
   // Get real aggregated GM data across all chains
   const {
@@ -157,6 +191,7 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
 
   const handleSearchChange = (search: string) => {
     setSearchTerm(search);
+    updateURL(search);
   };
 
   const handleFilterChange = (filter: string) => {
