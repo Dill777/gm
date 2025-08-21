@@ -48,34 +48,43 @@ const getDeploySupportedChains = () => {
 
 const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("Mainnets");
+  const [activeFilter, setActiveFilter] = useState("mainnets");
   const { favoriteChainIds } = useAppSelector((state) => state.chainFavorites);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isInitialLoad = useRef(true);
 
-  // Initialize search term from URL on component mount
+  // Initialize search term and filter from URL on component mount
   useEffect(() => {
     if (isInitialLoad.current) {
       const currentSearchTerm = searchParams.get("search") || "";
+      const currentFilter = searchParams.get("filter") || "mainnets";
       setSearchTerm(currentSearchTerm);
+      setActiveFilter(currentFilter);
       isInitialLoad.current = false;
     }
   }, [searchParams]);
 
-  // Update URL when search term changes
+  // Update URL when search term or filter changes
   const updateURL = useCallback(
-    (newSearchTerm: string) => {
+    (newSearchTerm: string, newFilter?: string) => {
       const urlParams = new URLSearchParams(searchParams);
+
+      // Handle search parameter
       if (newSearchTerm.trim()) {
         urlParams.set("search", newSearchTerm);
       } else {
         urlParams.delete("search");
       }
+
+      // Handle filter parameter - always set it
+      const filterToSet = newFilter !== undefined ? newFilter : activeFilter;
+      urlParams.set("filter", filterToSet);
+
       router.push(`${pathname}?${urlParams.toString()}`, { scroll: false });
     },
-    [searchParams, pathname, router]
+    [searchParams, pathname, router, activeFilter]
   );
 
   // Get real aggregated GM data across all chains
@@ -141,15 +150,15 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
     }
 
     // Apply additional filters
-    if (activeFilter === "Favourites") {
+    if (activeFilter === "favourites") {
       filtered = filtered.filter((chain) =>
         favoriteChainIds.includes(chain.id)
       );
-    } else if (activeFilter === "Mainnets") {
+    } else if (activeFilter === "mainnets") {
       filtered = filtered.filter((chain) => mainnets.includes(chain.id));
-    } else if (activeFilter === "Testnets") {
+    } else if (activeFilter === "testnets") {
       filtered = filtered.filter((chain) => testnets.includes(chain.id));
-    } else if (activeFilter === "Hot") {
+    } else if (activeFilter === "hot") {
       filtered = filtered.filter((chain) => hotChains.includes(chain.id));
     }
 
@@ -198,7 +207,7 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
     setActiveFilter(filter);
     // Reset search term when filter changes so all chains are visible
     setSearchTerm("");
-    updateURL("");
+    updateURL("", filter);
   };
 
   // Helper function to check if a chain is hot (higher priority)
@@ -214,6 +223,7 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
         onSearchChange={handleSearchChange}
         onFilterChange={handleFilterChange}
         searchTerm={searchTerm}
+        activeFilter={activeFilter}
       />
 
       {/* Dashboard - Different for GM vs Deploy */}
@@ -271,13 +281,13 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
       </div>
       {filteredChains.length === 0 && (
         <div className="text-center text-text_body py-8">
-          {activeFilter === "Favourites" && searchTerm.trim() === ""
+          {activeFilter === "favourites" && searchTerm.trim() === ""
             ? "No favorite chains yet. Click the heart icon on any chain to add it to your favorites!"
-            : activeFilter === "Mainnets" && searchTerm.trim() === ""
+            : activeFilter === "mainnets" && searchTerm.trim() === ""
             ? "No mainnet chains found."
-            : activeFilter === "Testnets" && searchTerm.trim() === ""
+            : activeFilter === "testnets" && searchTerm.trim() === ""
             ? "No testnet chains found."
-            : activeFilter === "Hot" && searchTerm.trim() === ""
+            : activeFilter === "hot" && searchTerm.trim() === ""
             ? "No hot chains found."
             : `No chains found matching "${searchTerm}"`}
         </div>

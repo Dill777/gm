@@ -9,25 +9,30 @@ interface GMDeployFiltersProps {
   onSearchChange?: (searchTerm: string) => void;
   onFilterChange?: (filter: string) => void;
   searchTerm?: string; // Add prop to control search term from parent
+  activeFilter?: string; // Add prop to control active filter from parent
 }
 
 const GMDeployFilters = ({
   onSearchChange,
   onFilterChange,
   searchTerm,
+  activeFilter,
 }: GMDeployFiltersProps) => {
-  const [activeFilter, setActiveFilter] = useState("Mainnets");
   const [searchChains, setSearchChains] = useState("");
 
   // Use prop value if provided, otherwise use internal state
   const displaySearchValue =
     searchTerm !== undefined ? searchTerm : searchChains;
 
+  // Use prop value if provided, otherwise default to "mainnets"
+  const currentActiveFilter =
+    activeFilter !== undefined ? activeFilter : "mainnets";
+
   const filters = ["Mainnets", "Testnets", "Favourites", "Hot", "All"];
 
-  // Transform filters array into options format for Select component
+  // Transform filters array into options format for Select component with lowercase values
   const filterOptions = filters.map((filter) => ({
-    value: filter,
+    value: filter.toLowerCase(),
     label: filter,
   }));
 
@@ -43,12 +48,10 @@ const GMDeployFilters = ({
   };
 
   const handleFilterClick = (filter: string) => {
-    setActiveFilter(filter);
-    onFilterChange?.(filter);
+    onFilterChange?.(filter.toLowerCase());
   };
 
   const handleFilterSelectChange = (value: string) => {
-    setActiveFilter(value);
     onFilterChange?.(value);
   };
 
@@ -68,27 +71,29 @@ const GMDeployFilters = ({
             onClick={() => handleFilterClick(filter)}
             className={cn(
               "bg-white rounded-xl overflow-hidden border shadow-shadow2",
-              activeFilter === filter ? "border-primary" : "border-white"
+              currentActiveFilter === filter.toLowerCase()
+                ? "border-primary"
+                : "border-white"
             )}
           >
             <div
               className={cn(
                 "relative flex items-center justify-between gap-2 px-6 py-3 w-fit min-w-max bg-transparent cursor-pointer group",
                 "mobile:space-x-0 mobile:px-1.5 mobile:justify-evenly",
-                activeFilter === filter && "bg-primary/20"
+                currentActiveFilter === filter.toLowerCase() && "bg-primary/20"
               )}
             >
               <span
                 className={cn(
                   "w-2 h-2 rounded-full bg-text_body group-hover:bg-primary",
-                  activeFilter === filter && "bg-primary"
+                  currentActiveFilter === filter.toLowerCase() && "bg-primary"
                 )}
               />
               <p
                 className={cn(
                   "text-sm font-medium group-hover:text-primary",
                   "tablet:text-xs text-text_body",
-                  activeFilter === filter && "text-primary"
+                  currentActiveFilter === filter.toLowerCase() && "text-primary"
                 )}
               >
                 {filter}
@@ -102,7 +107,7 @@ const GMDeployFilters = ({
       <div className="hidden desktop:block relative z-50 flex-1">
         <Select
           options={filterOptions}
-          value={activeFilter}
+          value={currentActiveFilter}
           onChange={handleFilterSelectChange}
           placeholder="Select filter"
           className={cn(
