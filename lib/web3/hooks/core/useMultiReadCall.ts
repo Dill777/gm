@@ -33,10 +33,10 @@ export const useMultiReadCall = () => {
           contracts: contractsToCall,
         });
       } catch (error) {
-        console.warn(
-          `Multicall failed on chain ${chain}, falling back to individual calls`,
-          error
-        );
+        // console.warn(
+        //   `Multicall failed on chain ${chain}, falling back to individual calls`,
+        //   error
+        // );
 
         // Fall back to individual calls
         const results = await Promise.all(
@@ -45,10 +45,10 @@ export const useMultiReadCall = () => {
               const result = await client.readContract(contract);
               return { result, status: "success" };
             } catch (error) {
-              console.error(
-                `Individual call failed for ${contract.functionName}`,
-                error
-              );
+              // console.error(
+              //   `Individual call failed for ${contract.functionName}`,
+              //   error
+              // );
               return { error, status: "failure" };
             }
           })
