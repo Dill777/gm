@@ -14,7 +14,7 @@ export enum NETWORKS {
   KATANA = 747474,
   HYPE = 999,
   KAIA = 8217,
-  // APE = 33139,
+  APE = 33139,
   CZ = 56,
   BASE = 8453,
   SONICMAINNET = 146,
@@ -35,6 +35,20 @@ export enum NETWORKS {
   MANTLE = 5000,
   BOB = 60808,
   CELO = 42220,
+  ARBITRUM = 42161,
+  AVALANCHE = 43114,
+  GNOSIS = 100,
+  LISK = 1135,
+  WORLDCHAIN = 480,
+  SUPERPOSITION = 55244,
+  SUPERSEED = 5330,
+  ZIRCUIT = 48900,
+  GRAVITY = 1625,
+  METIS = 1088,
+  ANCIENT8 = 888888888,
+  BOBA = 288,
+  APPCHAIN = 466,
+  DEGEN = 666666666,
   // MORPH = 2818,
   // MINT = 185,
   // XLAYER = 196,
@@ -53,11 +67,9 @@ export enum NETWORKS {
   // XRP = 1440002,
   // XRPL = 1449000,
   SAHARA = 313313,
-  // BOBA = 288,
   // ARTHERA = 10242,
   // ZKLINK = 810180,
   // TABI = 9789,
-  // ZIRCUIT = 48900,
   // SONIC = 64165,
   // NEOX = 12227331,
   // ZKCANDY = 302,
@@ -88,7 +100,7 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.POLY]: process.env.NEXT_PUBLIC_RPC_POLY!,
   [NETWORKS.UNICHAIN]: process.env.NEXT_PUBLIC_RPC_UNICHAIN!,
   [NETWORKS.COTI]: process.env.NEXT_PUBLIC_RPC_COTI!,
-  // [NETWORKS.APE]: process.env.NEXT_PUBLIC_RPC_APE!,
+  [NETWORKS.APE]: process.env.NEXT_PUBLIC_RPC_APE!,
   [NETWORKS.HEMI]: process.env.NEXT_PUBLIC_RPC_HEMI!,
   [NETWORKS.UNIT0]: process.env.NEXT_PUBLIC_RPC_UNIT0!,
   [NETWORKS.CONFLUX]: process.env.NEXT_PUBLIC_RPC_CONFLUX!,
@@ -100,6 +112,20 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.MANTLE]: process.env.NEXT_PUBLIC_RPC_MANTLE!,
   [NETWORKS.BOB]: process.env.NEXT_PUBLIC_RPC_BOB!,
   [NETWORKS.CELO]: process.env.NEXT_PUBLIC_RPC_CELO!,
+  [NETWORKS.ARBITRUM]: process.env.NEXT_PUBLIC_RPC_ARBITRUM!,
+  [NETWORKS.AVALANCHE]: process.env.NEXT_PUBLIC_RPC_AVALANCHE!,
+  [NETWORKS.GNOSIS]: process.env.NEXT_PUBLIC_RPC_GNOSIS!,
+  [NETWORKS.LISK]: process.env.NEXT_PUBLIC_RPC_LISK!,
+  [NETWORKS.WORLDCHAIN]: process.env.NEXT_PUBLIC_RPC_WORLDCHAIN!,
+  [NETWORKS.SUPERPOSITION]: process.env.NEXT_PUBLIC_RPC_SUPERPOSITION!,
+  [NETWORKS.SUPERSEED]: process.env.NEXT_PUBLIC_RPC_SUPERSEED!,
+  [NETWORKS.ZIRCUIT]: process.env.NEXT_PUBLIC_RPC_ZIRCUIT!,
+  [NETWORKS.GRAVITY]: process.env.NEXT_PUBLIC_RPC_GRAVITY!,
+  [NETWORKS.METIS]: process.env.NEXT_PUBLIC_RPC_METIS!,
+  [NETWORKS.ANCIENT8]: process.env.NEXT_PUBLIC_RPC_ANCIENT8!,
+  [NETWORKS.BOBA]: process.env.NEXT_PUBLIC_RPC_BOBA!,
+  [NETWORKS.APPCHAIN]: process.env.NEXT_PUBLIC_RPC_APPCHAIN!,
+  [NETWORKS.DEGEN]: process.env.NEXT_PUBLIC_RPC_DEGEN!,
   // [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
   // [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
   [NETWORKS.CREATOR_CHAIN]: process.env.NEXT_PUBLIC_RPC_CREATOR_CHAIN!,
@@ -117,12 +143,10 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.KITE]: process.env.NEXT_PUBLIC_RPC_KITE!,
   [NETWORKS.ZENCHAIN]: process.env.NEXT_PUBLIC_RPC_ZENCHAIN!,
   [NETWORKS.HELIOS]: process.env.NEXT_PUBLIC_RPC_HELIOS!,
-  // [NETWORKS.BOBA]: process.env.NEXT_PUBLIC_RPC_BOBA!,
   // [NETWORKS.ZKLINK]: process.env.NEXT_PUBLIC_RPC_ZKLINK!,
   // [NETWORKS.ARTHERA]: process.env.NEXT_PUBLIC_RPC_ARTHERA!,
   // [NETWORKS.NEOX]: process.env.NEXT_PUBLIC_RPC_NEOX!,
-  // [NETWORKS.TABI]: process.env.NEXT_PUBLIC_RPC_TABI!,
-  // [NETWORKS.ZIRCUIT]: process.env.NEXT_PUBLIC_RPC_ZIRCUIT!,
+  // [NETWORKS.TABI]: process.env.NEXT_PUBLIC_RPC_TABI!
 };
 
 export interface NETWORK_TYPE extends Chain {
@@ -156,7 +180,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.POLY]: "#8247E5",
   [NETWORKS.UNICHAIN]: "#f60cb2",
   [NETWORKS.COTI]: "#207ec3",
-  // [NETWORKS.APE]: "#0052f0",
+  [NETWORKS.APE]: "#0052f0",
   [NETWORKS.HEMI]: "#ff6c15",
   [NETWORKS.UNIT0]: "#a1e0c2",
   [NETWORKS.CONFLUX]: "#17B38A",
@@ -168,6 +192,20 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.MANTLE]: "#000000",
   [NETWORKS.BOB]: "#F25D00",
   [NETWORKS.CELO]: "#2d2d2d",
+  [NETWORKS.ARBITRUM]: "#DECEB7",
+  [NETWORKS.AVALANCHE]: "#ff394a",
+  [NETWORKS.GNOSIS]: "#143628",
+  [NETWORKS.LISK]: "#ffffff",
+  [NETWORKS.WORLDCHAIN]: "#d3d3d3",
+  [NETWORKS.SUPERPOSITION]: "#e1e1e1",
+  [NETWORKS.SUPERSEED]: "#91d3d1",
+  [NETWORKS.ZIRCUIT]: "#277E29",
+  [NETWORKS.GRAVITY]: "#964d24",
+  [NETWORKS.METIS]: "#00d2ff",
+  [NETWORKS.ANCIENT8]: "#ffffff",
+  [NETWORKS.BOBA]: "#a3e871",
+  [NETWORKS.APPCHAIN]: "#30c75b",
+  [NETWORKS.DEGEN]: "#4c2896",
   // [NETWORKS.MINT]: "#30BF54",
   // [NETWORKS.XLAYER]: "#fff",
   [NETWORKS.CREATOR_CHAIN]: "#F4F53A",
@@ -185,11 +223,9 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.KITE]: "#00C853",
   [NETWORKS.ZENCHAIN]: "#bbf14b",
   [NETWORKS.HELIOS]: "#002DCB",
-  // [NETWORKS.BOBA]: "#CCFE3F",
   // [NETWORKS.ZKLINK]: "#04D693",
   // [NETWORKS.ARTHERA]: "#B10C90",
   // [NETWORKS.TABI]: "#FF8311",
-  // [NETWORKS.ZIRCUIT]: "#277E29",
   // [NETWORKS.NEOX]: "#00E599",
   // [NETWORKS.ZKCANDY]: "#D125D6",
   // [NETWORKS.MORPHHOLESKY]: "#00AB00",
@@ -450,29 +486,30 @@ export const CHAINS: NETWORK_TYPE[] = [
       },
     },
   },
-  // {
-  //   id: NETWORKS.APE,
-  //   name: "ApeChain",
-  //   shortName: "Apechain",
-  //   chain: PrismaChain.APE,
-  //   sellMarket: "https://element.market",
-  //   nativeCurrency: { name: "APE", symbol: "APE", decimals: 18 },
-  //   iconUrl: "/img/chainLogos/ape.jpg",
-  //   rpcUrls: {
-  //     default: { http: [rpcs[NETWORKS.APE]] },
-  //   },
-  //   blockExplorers: {
-  //     default: {
-  //       name: "APE",
-  //       url: "https://apechain.calderaexplorer.xyz/",
-  //     },
-  //   },
-  //   contracts: {
-  //     multicall3: {
-  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
-  //     },
-  //   },
-  // },
+  {
+    id: NETWORKS.APE,
+    name: "ApeChain",
+    shortName: "ApeChain",
+    chain: PrismaChain.APE,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "APE", symbol: "APE", decimals: 18 },
+    iconUrl: "/img/chainLogos/ape.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.APE]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Apechain Explorer",
+        url: "https://apechain.calderaexplorer.xyz/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
   {
     id: NETWORKS.HEMI,
     name: "Hemi Mainnet",
@@ -997,6 +1034,344 @@ export const CHAINS: NETWORK_TYPE[] = [
     },
     gmOnly: true,
   },
+  {
+    id: NETWORKS.ARBITRUM,
+    name: "Arbitrum One",
+    shortName: "Arbitrum",
+    chain: PrismaChain.ARBITRUM,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/arbitrum.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.ARBITRUM]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Arbitrum Explorer",
+        url: "https://arbiscan.io/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.AVALANCHE,
+    name: "Avalanche C-Chain",
+    shortName: "Avalanche",
+    chain: PrismaChain.AVALANCHE,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "AVAX", symbol: "AVAX", decimals: 18 },
+    iconUrl: "/img/chainLogos/avalanche.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.AVALANCHE]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Snowtrace Explorer",
+        url: "https://snowtrace.io/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.GNOSIS,
+    name: "Gnosis",
+    shortName: "Gnosis",
+    chain: PrismaChain.GNOSIS,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "xDAI", symbol: "xDAI", decimals: 18 },
+    iconUrl: "/img/chainLogos/gnosis.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.GNOSIS]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Gnosis Explorer",
+        url: "https://gnosis.blockscout.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.LISK,
+    name: "Lisk",
+    shortName: "Lisk",
+    chain: PrismaChain.LISK,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/lisk.png",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.LISK]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Lisk Explorer",
+        url: "https://blockscout.lisk.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.WORLDCHAIN,
+    name: "World Chain",
+    shortName: "World Chain",
+    chain: PrismaChain.WORLDCHAIN,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/worldchain.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.WORLDCHAIN]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "World Chain Explorer",
+        url: "https://worldscan.org/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.SUPERPOSITION,
+    name: "Superposition",
+    shortName: "Superposition",
+    chain: PrismaChain.SUPERPOSITION,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/superposition.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.SUPERPOSITION]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Superposition Explorer",
+        url: "https://explorer.superposition.so/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.SUPERSEED,
+    name: "Superseed",
+    shortName: "Superseed",
+    chain: PrismaChain.SUPERSEED,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/superseed.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.SUPERSEED]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Superseed Explorer",
+        url: "https://explorer.superseed.xyz/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.ZIRCUIT,
+    name: "Zircuit Mainnet",
+    shortName: "Zircuit",
+    chain: PrismaChain.ZIRCUIT,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/zircuit.png",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.ZIRCUIT]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Zircuit Explorer",
+        url: "https://explorer.zircuit.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.GRAVITY,
+    name: "Gravity Alpha Mainnet",
+    shortName: "Gravity",
+    chain: PrismaChain.GRAVITY,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "G", symbol: "G", decimals: 18 },
+    iconUrl: "/img/chainLogos/gravity.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.GRAVITY]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Gravity Alpha Mainnet Explorer",
+        url: "https://explorer.gravity.xyz/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.METIS,
+    name: "Metis Andromeda Mainnet",
+    shortName: "Metis",
+    chain: PrismaChain.METIS,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "METIS", symbol: "METIS", decimals: 18 },
+    iconUrl: "/img/chainLogos/metis.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.METIS]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Metis Explorer",
+        url: "https://metisscan.info/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.ANCIENT8,
+    name: "Ancient8",
+    shortName: "Ancient8",
+    chain: PrismaChain.ANCIENT8,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/ancient8.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.ANCIENT8]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Ancient8 Explorer",
+        url: "https://scan.ancient8.gg/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0x4C97D35c668EE5194a13c8DE8Afc18cce40C9F28",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.BOBA,
+    name: "Boba",
+    shortName: "Boba",
+    chain: PrismaChain.BOBA,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/boba.jpg",
+    nativeCurrency: {
+      decimals: 18,
+      name: "Ether",
+      symbol: "ETH",
+    },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.BOBA]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "BOBA Scan",
+        url: "https://bobascan.com",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+        blockCreated: 446859,
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.APPCHAIN,
+    name: "AppChain",
+    shortName: "AppChain",
+    chain: PrismaChain.APPCHAIN,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/appchain.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.APPCHAIN]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "AppChain Explorer",
+        url: "https://explorer.appchain.xyz/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xEB92D3f697F0d7DCbC025912e671d2A979FBFf78",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.DEGEN,
+    name: "Degen Chain",
+    shortName: "Degen",
+    chain: PrismaChain.DEGEN,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "DEGEN", symbol: "DEGEN", decimals: 18 },
+    iconUrl: "/img/chainLogos/degen.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.DEGEN]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Degen Explorer",
+        url: "https://explorer.degen.tips/",
+      },
+    },
+    gmOnly: true,
+  },
   // {
   //   id: NETWORKS.MINT,
   //   name: "Mint Mainnet",
@@ -1040,36 +1415,6 @@ export const CHAINS: NETWORK_TYPE[] = [
   //     multicall3: {
   //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
   //       blockCreated: 47416,
-  //     },
-  //   },
-  // },
-  // {
-  //   id: NETWORKS.BOBA,
-  //   name: "Boba",
-  //   shortName: "Boba",
-  //   chain: PrismaChain.BOBA,
-  //   sellMarket: "https://element.market",
-  //   iconUrl: "/img/chainLogos/boba.svg",
-  //   nativeCurrency: {
-  //     decimals: 18,
-  //     name: "Ether",
-  //     symbol: "ETH",
-  //   },
-  //   rpcUrls: {
-  //     default: {
-  //       http: [rpcs[NETWORKS.BOBA]],
-  //     },
-  //   },
-  //   blockExplorers: {
-  //     default: {
-  //       name: "BOBAScan",
-  //       url: "https://bobascan.com",
-  //     },
-  //   },
-  //   contracts: {
-  //     multicall3: {
-  //       address: "0xca11bde05977b3631167028862be2a173976ca11",
-  //       blockCreated: 446859,
   //     },
   //   },
   // },
@@ -1541,26 +1886,6 @@ export const CHAINS: NETWORK_TYPE[] = [
   //   contracts: {
   //     multicall3: {
   //       address: "0x825267E0fA5CAe92F98540828a54198dcB3Eaeb5",
-  //     },
-  //   },
-  // },
-  // {
-  //   id: NETWORKS.ZIRCUIT,
-  //   name: "Zircuit Mainnet",
-  //   shortName: "Zircuit",
-  //   chain: PrismaChain.ZIRCUIT,
-  //   sellMarket: "https://element.market",
-  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
-  //   iconUrl: "/img/chainLogos/zircuit.png",
-  //   rpcUrls: {
-  //     default: { http: [rpcs[NETWORKS.ZIRCUIT]] },
-  //   },
-  //   blockExplorers: {
-  //     default: { name: "ETH", url: "https://explorer.zklink.io" },
-  //   },
-  //   contracts: {
-  //     multicall3: {
-  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
   //     },
   //   },
   // },
