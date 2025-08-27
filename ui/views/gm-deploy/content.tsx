@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
+  memo,
 } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import GMDeployFilters from "./filters";
@@ -45,6 +46,10 @@ const getDeploySupportedChains = () => {
   ).map(Number) as NETWORKS[];
   return CHAINS.filter((chain) => supportedChainIds.includes(chain.id));
 };
+
+// Memoized card components to prevent unnecessary re-renders
+const MemoizedGMCard = memo(GMCard);
+const MemoizedDeployCard = memo(DeployCard);
 
 const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -131,39 +136,13 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
     }
   }, [fetchAggregatedDeployData]);
 
-  // Filter chains based on search term (by name or id) and active filter
-  const filteredChains = useMemo(() => {
-    // Start with appropriate chains based on type
-    let filtered =
+  // Get all supported chains based on type (only calculated once)
+  const allSupportedChains = useMemo(() => {
+    const chains =
       type === "gm" ? getGMSupportedChains() : getDeploySupportedChains();
 
-    // Filter by search term (name or id)
-    if (searchTerm.trim()) {
-      filtered = filtered.filter((chain) => {
-        const searchLower = searchTerm.toLowerCase();
-        return (
-          chain.name.toLowerCase().includes(searchLower) ||
-          chain.shortName?.toLowerCase().includes(searchLower) ||
-          chain.id.toString().includes(searchTerm)
-        );
-      });
-    }
-
-    // Apply additional filters
-    if (activeFilter === "favourites") {
-      filtered = filtered.filter((chain) =>
-        favoriteChainIds.includes(chain.id)
-      );
-    } else if (activeFilter === "mainnets") {
-      filtered = filtered.filter((chain) => mainnets.includes(chain.id));
-    } else if (activeFilter === "testnets") {
-      filtered = filtered.filter((chain) => testnets.includes(chain.id));
-    } else if (activeFilter === "hot") {
-      filtered = filtered.filter((chain) => hotChains.includes(chain.id));
-    }
-
     // Sort chains by priority: Hot first (in config order), then New, then others
-    return filtered.sort((a, b) => {
+    return chains.sort((a, b) => {
       const aIsHot = hotChains.includes(a.id);
       const bIsHot = hotChains.includes(b.id);
       const aIsNew = newChains.includes(a.id);
@@ -196,7 +175,41 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
       // If same priority, sort alphabetically by name
       return a.name.localeCompare(b.name);
     });
-  }, [searchTerm, activeFilter, favoriteChainIds, type]);
+  }, [type]);
+
+  // Function to check if a chain should be visible based on filters
+  const isChainVisible = useCallback(
+    (chain: (typeof allSupportedChains)[0]) => {
+      // Filter by search term (name or id)
+      if (searchTerm.trim()) {
+        const searchLower = searchTerm.toLowerCase();
+        const matchesSearch =
+          chain.name.toLowerCase().includes(searchLower) ||
+          chain.shortName?.toLowerCase().includes(searchLower) ||
+          chain.id.toString().includes(searchTerm);
+        if (!matchesSearch) return false;
+      }
+
+      // Apply additional filters
+      if (activeFilter === "favourites") {
+        return favoriteChainIds.includes(chain.id);
+      } else if (activeFilter === "mainnets") {
+        return mainnets.includes(chain.id);
+      } else if (activeFilter === "testnets") {
+        return testnets.includes(chain.id);
+      } else if (activeFilter === "hot") {
+        return hotChains.includes(chain.id);
+      }
+
+      return true;
+    },
+    [searchTerm, activeFilter, favoriteChainIds]
+  );
+
+  // Count visible chains for empty state
+  const visibleChainCount = useMemo(() => {
+    return allSupportedChains.filter(isChainVisible).length;
+  }, [allSupportedChains, isChainVisible]);
 
   const handleSearchChange = (search: string) => {
     setSearchTerm(search);
@@ -262,24 +275,30 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
       </div>
 
       <div className="grid grid-cols-3 desktop:grid-cols-2 laptop:grid-cols-1 gap-5">
-        {filteredChains.map((chain) => {
-          const CardComponent = type === "gm" ? GMCard : DeployCard;
+        {allSupportedChains.map((chain) => {
+          const isVisible = isChainVisible(chain);
+          const CardComponent =
+            type === "gm" ? MemoizedGMCard : MemoizedDeployCard;
           return (
-            <CardComponent
+            <div
               key={chain.id}
-              chainId={chain.id}
-              isHot={isHotChain(chain.id)}
-              isNew={isNewChain(chain.id)}
-              onConnect={() => {}}
-              {...(type === "gm" && { onGMSuccess: handleGMSuccess })}
-              {...(type === "deploy" && {
-                onDeploySuccess: handleDeploySuccess,
-              })}
-            />
+              style={{ display: isVisible ? "block" : "none" }}
+            >
+              <CardComponent
+                chainId={chain.id}
+                isHot={isHotChain(chain.id)}
+                isNew={isNewChain(chain.id)}
+                onConnect={() => {}}
+                {...(type === "gm" && { onGMSuccess: handleGMSuccess })}
+                {...(type === "deploy" && {
+                  onDeploySuccess: handleDeploySuccess,
+                })}
+              />
+            </div>
           );
         })}
       </div>
-      {filteredChains.length === 0 && (
+      {visibleChainCount === 0 && (
         <div className="text-center text-text_body py-8">
           {activeFilter === "favourites" && searchTerm.trim() === ""
             ? "No favorite chains yet. Click the heart icon on any chain to add it to your favorites!"
