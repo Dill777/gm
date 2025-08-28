@@ -29,22 +29,13 @@ const formatLastGM = (lastGM: Date | null): string => {
   if (!lastGM) return "Never";
 
   const now = new Date();
-  const diffInHours = Math.floor(
-    (now.getTime() - lastGM.getTime()) / (1000 * 60 * 60)
+  const diffInDays = Math.floor(
+    (now.getTime() - lastGM.getTime()) / (1000 * 60 * 60 * 24)
   );
 
-  if (diffInHours < 24) {
-    return `${diffInHours}h ago`;
-  }
-
-  const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays === 1) {
-    return "Yesterday";
-  }
-
-  if (diffInDays < 7) {
-    return `${diffInDays} days ago`;
-  }
+  if (diffInDays <= 0) return "Today";
+  if (diffInDays === 1) return "Yesterday";
+  if (diffInDays < 7) return `${diffInDays} days ago`;
 
   return lastGM.toLocaleDateString();
 };
