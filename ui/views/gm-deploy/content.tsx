@@ -24,6 +24,8 @@ import DeployCard from "./deploy-card";
 import { useAppSelector } from "@/lib/store";
 import { useAggregatedGMData } from "@/lib/web3/hooks/read/useAggregatedGMData";
 import { useAggregatedDeployData } from "@/lib/web3/hooks/read/useAggregatedDeployData";
+import { useBatchGMData } from "@/lib/web3/hooks/read/useBatchGMData";
+import { useBatchDeployData } from "@/lib/web3/hooks/read/useBatchDeployData";
 import {
   CONTRACT_DATA_GM,
   CONTRACTS_GM,
@@ -112,6 +114,21 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
     fetchAggregatedDeployData,
   } = useAggregatedDeployData();
 
+  // Get batch data for all chains
+  const {
+    isLoading: isLoadingGMBatch,
+    error: gmBatchError,
+    getGMDataForChain,
+    refreshGMDataForChain,
+  } = useBatchGMData();
+
+  const {
+    isLoading: isLoadingDeployBatch,
+    error: deployBatchError,
+    getDeployDataForChain,
+    refreshDeployDataForChain,
+  } = useBatchDeployData();
+
   // Callback to refresh dashboard data after successful GM
   const handleGMSuccess = useCallback(async () => {
     // Refresh the aggregated GM data in real-time
@@ -177,16 +194,21 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
     });
   }, [type]);
 
+  // Memoize search term processing
+  const processedSearchTerm = useMemo(() => {
+    const trimmed = searchTerm.trim();
+    return trimmed ? trimmed.toLowerCase() : null;
+  }, [searchTerm]);
+
   // Function to check if a chain should be visible based on filters
   const isChainVisible = useCallback(
     (chain: (typeof allSupportedChains)[0]) => {
       // Filter by search term (name or id)
-      if (searchTerm.trim()) {
-        const searchLower = searchTerm.toLowerCase();
+      if (processedSearchTerm) {
         const matchesSearch =
-          chain.name.toLowerCase().includes(searchLower) ||
-          chain.shortName?.toLowerCase().includes(searchLower) ||
-          chain.id.toString().includes(searchTerm);
+          chain.name.toLowerCase().includes(processedSearchTerm) ||
+          chain.shortName?.toLowerCase().includes(processedSearchTerm) ||
+          chain.id.toString().includes(processedSearchTerm);
         if (!matchesSearch) return false;
       }
 
@@ -203,13 +225,17 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
 
       return true;
     },
-    [searchTerm, activeFilter, favoriteChainIds]
+    [processedSearchTerm, activeFilter, favoriteChainIds]
   );
 
-  // Count visible chains for empty state
-  const visibleChainCount = useMemo(() => {
-    return allSupportedChains.filter(isChainVisible).length;
-  }, [allSupportedChains, isChainVisible]);
+  // Filter chains to only show visible ones and pre-compute hot/new status
+  const visibleChains = useMemo(() => {
+    return allSupportedChains.filter(isChainVisible).map((chain) => ({
+      ...chain,
+      isHot: hotChains.includes(chain.id),
+      isNew: !hotChains.includes(chain.id) && newChains.includes(chain.id),
+    }));
+  }, [allSupportedChains, isChainVisible, hotChains, newChains]);
 
   const handleSearchChange = (search: string) => {
     setSearchTerm(search);
@@ -222,13 +248,6 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
     setSearchTerm("");
     updateURL("", filter);
   };
-
-  // Helper function to check if a chain is hot (higher priority)
-  const isHotChain = (chainId: NETWORKS) => hotChains.includes(chainId);
-
-  // Helper function to check if a chain is new (only if not hot)
-  const isNewChain = (chainId: NETWORKS) =>
-    !isHotChain(chainId) && newChains.includes(chainId);
 
   return (
     <div className="w-full gap-8">
@@ -244,7 +263,7 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
         {gmDataError && (
           <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
             <p className="text-red-400 text-sm">
-              Error loading GM data: {gmDataError}
+              Error loading GM Dashboard data: {gmDataError}
             </p>
           </div>
         )}
@@ -252,7 +271,23 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
         {deployDataError && (
           <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
             <p className="text-red-400 text-sm">
-              Error loading Deploy data: {deployDataError}
+              Error loading Deploy Dashboard data: {deployDataError}
+            </p>
+          </div>
+        )}
+
+        {gmBatchError && (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+            <p className="text-red-400 text-sm">
+              Error loading GM batch data: {gmBatchError}
+            </p>
+          </div>
+        )}
+
+        {deployBatchError && (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+            <p className="text-red-400 text-sm">
+              Error loading Deploy batch data: {deployBatchError}
             </p>
           </div>
         )}
@@ -275,30 +310,37 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
       </div>
 
       <div className="grid grid-cols-3 desktop:grid-cols-2 laptop:grid-cols-1 gap-5">
-        {allSupportedChains.map((chain) => {
-          const isVisible = isChainVisible(chain);
-          const CardComponent =
-            type === "gm" ? MemoizedGMCard : MemoizedDeployCard;
-          return (
-            <div
-              key={chain.id}
-              style={{ display: isVisible ? "block" : "none" }}
-            >
-              <CardComponent
+        {visibleChains.map((chain) => {
+          if (type === "gm") {
+            return (
+              <MemoizedGMCard
+                key={chain.id}
                 chainId={chain.id}
-                isHot={isHotChain(chain.id)}
-                isNew={isNewChain(chain.id)}
-                onConnect={() => {}}
-                {...(type === "gm" && { onGMSuccess: handleGMSuccess })}
-                {...(type === "deploy" && {
-                  onDeploySuccess: handleDeploySuccess,
-                })}
+                isHot={chain.isHot}
+                isNew={chain.isNew}
+                onGMSuccess={handleGMSuccess}
+                batchData={getGMDataForChain(chain.id)}
+                refreshData={refreshGMDataForChain}
+                isLoadingBatch={isLoadingGMBatch}
               />
-            </div>
-          );
+            );
+          } else {
+            return (
+              <MemoizedDeployCard
+                key={chain.id}
+                chainId={chain.id}
+                isHot={chain.isHot}
+                isNew={chain.isNew}
+                onDeploySuccess={handleDeploySuccess}
+                batchData={getDeployDataForChain(chain.id)}
+                refreshData={refreshDeployDataForChain}
+                isLoadingBatch={isLoadingDeployBatch}
+              />
+            );
+          }
         })}
       </div>
-      {visibleChainCount === 0 && (
+      {visibleChains.length === 0 && (
         <div className="text-center text-text_body py-8">
           {activeFilter === "favourites" && searchTerm.trim() === ""
             ? "No favorite chains yet. Click the heart icon on any chain to add it to your favorites!"

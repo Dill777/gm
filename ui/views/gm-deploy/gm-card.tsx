@@ -11,50 +11,55 @@ import ShareLinkIcon from "@/ui/components/icon/referral/ShareLinkIcon";
 import { useAccount } from "wagmi";
 import { FlashIcon } from "@/ui/components/icon/FlashIcon";
 import { useGM } from "@/ui/hooks/useGM";
-import { useGMData, GMDataResult } from "@/lib/web3/hooks/read/useGMData";
+import { GMDataResult } from "@/lib/web3/hooks/read/useBatchGMData";
 import BeamWrapper from "@/ui/widget/beam-wrapper";
 import SuccessModal from "@/ui/components/success-modal";
+import useAuth from "@/lib/auth/useAuth";
 
 interface GMCardProps {
   chainId: NETWORKS;
   isHot?: boolean;
   isNew?: boolean;
-  onConnect: () => void;
   onGMSuccess?: () => void; // New prop to notify parent of successful GM
+  batchData?: GMDataResult; // Pre-fetched data from batch hook
+  refreshData?: (chainId: NETWORKS) => Promise<GMDataResult>; // Function to refresh data for this chain
+  isLoadingBatch?: boolean; // Loading state from batch hook
 }
 
 const GMCard: React.FC<GMCardProps> = ({
   chainId,
   isHot = false,
   isNew = false,
-  onConnect,
   onGMSuccess,
+  batchData,
+  refreshData,
+  isLoadingBatch = false,
 }) => {
   const chain = getChainByID(chainId);
   const chainColor = getChainColor(chainId);
   const { isFavorite, onToggleFavorite } = useChainFavorite(chainId);
-  const { address, isConnected } = useAccount();
-  const { fetchGMData } = useGMData(chainId);
+  const { isConnected } = useAccount();
+  const { isAuthorized } = useAuth();
 
-  const [gmData, setGMData] = useState<GMDataResult>({
+  // Use batch data or default data
+  const gmData = batchData || {
     fee: "0",
     lastGM: null,
     lastGMFormatted: "Never",
     todayGMStatus: false,
     gmStreak: 0,
     totalGMs: 0,
-  });
+  };
 
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [countdown, setCountdown] = useState<string>("00:00:00");
 
   // Callback to refresh GM data after successful transaction
   const refreshGMData = useCallback(async () => {
-    if (isConnected && address) {
+    if (isAuthorized && refreshData) {
       setIsLoadingData(true);
       try {
-        const gmResult = await fetchGMData();
-        setGMData(gmResult);
+        await refreshData(chainId);
         // Notify parent component about successful GM
         onGMSuccess?.();
       } catch (error) {
@@ -63,7 +68,7 @@ const GMCard: React.FC<GMCardProps> = ({
         setIsLoadingData(false);
       }
     }
-  }, [isConnected, address, chainId, fetchGMData, onGMSuccess]);
+  }, [isAuthorized, chainId, refreshData, onGMSuccess]);
 
   // Initialize useGM with success callback for real-time updates
   const {
@@ -116,36 +121,6 @@ const GMCard: React.FC<GMCardProps> = ({
     return () => clearInterval(interval);
   }, [calculateCountdown]);
 
-  // Fetch data when component mounts or when wallet connects
-  useEffect(() => {
-    if (isConnected && address) {
-      setIsLoadingData(true);
-
-      const fetchData = async () => {
-        try {
-          const gmResult = await fetchGMData();
-          setGMData(gmResult);
-        } catch (error) {
-          console.error("Error fetching GM data for chain", chainId, error);
-        } finally {
-          setIsLoadingData(false);
-        }
-      };
-
-      fetchData();
-    } else {
-      // Reset data when wallet disconnects
-      setGMData({
-        fee: "0",
-        lastGM: null,
-        lastGMFormatted: "Never",
-        todayGMStatus: false,
-        gmStreak: 0,
-        totalGMs: 0,
-      });
-    }
-  }, [isConnected, address, chainId, fetchGMData]);
-
   // Helper function to convert hex to rgba with opacity
   const hexToRgba = (hex: string, opacity: number) => {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -183,7 +158,7 @@ const GMCard: React.FC<GMCardProps> = ({
     if (isCurrentChain && !isGMSupported) return true;
 
     // For supported chains, check other conditions
-    return isProcessing || !canSendGM || isLoadingData;
+    return isProcessing || !canSendGM || isLoadingData || isLoadingBatch;
   };
 
   const cardContent = (
@@ -254,7 +229,7 @@ const GMCard: React.FC<GMCardProps> = ({
 
       {/* Stats Section */}
       <div className="flex-1 space-y-4 text-sm">
-        {isLoadingData ? (
+        {isLoadingData || isLoadingBatch ? (
           <div className="flex items-center justify-center py-4">
             <div className="text-text2">Loading...</div>
           </div>
@@ -290,7 +265,7 @@ const GMCard: React.FC<GMCardProps> = ({
       {/* Action Button */}
       <div className="mt-6">
         <InteractionButton
-          onClick={isConnected ? onSayGM : onConnect}
+          onClick={onSayGM}
           requiredChain={chainId}
           requiredConnect={true}
           className="w-full h-10 rounded-[10px] gap-1.5 text-white disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-200 disabled:hover:bg-gray-400"

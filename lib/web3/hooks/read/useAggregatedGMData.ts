@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import { useReadGMContract } from "../core/useReadCallGM";
 import { getAllUserGMStats } from "@/lib/api/gm";
+import useAuth from "@/lib/auth/useAuth";
 
 export interface AggregatedGMData {
   todayGMCount: number;
@@ -11,7 +11,7 @@ export interface AggregatedGMData {
 
 export const useAggregatedGMData = () => {
   const { address, isConnected } = useAccount();
-  const { callGMContract } = useReadGMContract();
+  const { isAuthorized } = useAuth();
 
   const [data, setData] = useState<AggregatedGMData>({
     todayGMCount: 0,
@@ -24,7 +24,7 @@ export const useAggregatedGMData = () => {
 
   const fetchAggregatedGMData =
     useCallback(async (): Promise<AggregatedGMData> => {
-      if (!address || !isConnected) {
+      if (!address || !isConnected || !isAuthorized) {
         const emptyData = {
           todayGMCount: 0,
           thisWeekGMCount: 0,
@@ -81,21 +81,21 @@ export const useAggregatedGMData = () => {
       } finally {
         setIsLoading(false);
       }
-    }, [address, isConnected]);
+    }, [address, isConnected, isAuthorized]);
 
-  // Auto-fetch data when user connects or address changes
+  // Auto-fetch data when user becomes authorized
   useEffect(() => {
-    if (isConnected && address) {
+    if (isAuthorized) {
       fetchAggregatedGMData();
     } else {
-      // Reset data when wallet disconnects
+      // Reset data when user is not authorized
       setData({
         todayGMCount: 0,
         thisWeekGMCount: 0,
         totalGMsAllChains: 0,
       });
     }
-  }, [isConnected, address, fetchAggregatedGMData]);
+  }, [isAuthorized, fetchAggregatedGMData]);
 
   return {
     todayGMCount: data.todayGMCount,

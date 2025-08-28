@@ -137,7 +137,7 @@ const DeployDashboard = ({
                 "absolute -translate-y-1/2 top-1/2 right-0 z-10",
                 "w-full",
                 "h-[4px]",
-                "bg-gradient_progress"
+                "bg-[linear-gradient(to_right,_#1C96FD,_#33E360,_#F4C630,_#CB1245,_#AD00FE)]"
               )}
             ></div>
             <div
@@ -191,7 +191,7 @@ const DeployDashboard = ({
                 "absolute -translate-y-1/2 top-1/2 right-0 z-10",
                 "w-full",
                 "h-[4px]",
-                "bg-gradient_progress"
+                "bg-[linear-gradient(to_right,_#1C96FD,_#33E360,_#F4C630,_#CB1245,_#AD00FE)]"
               )}
             ></div>
             <div

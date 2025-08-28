@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import { useReadDeployContract } from "../core/useReadCallDeploy";
 import { getAllUserDeployStats } from "@/lib/api/deploy";
+import useAuth from "@/lib/auth/useAuth";
 
 export interface AggregatedDeployData {
   todayDeployCount: number;
@@ -11,7 +11,7 @@ export interface AggregatedDeployData {
 
 export const useAggregatedDeployData = () => {
   const { address, isConnected } = useAccount();
-  const { callDeployContract } = useReadDeployContract();
+  const { isAuthorized } = useAuth();
 
   const [data, setData] = useState<AggregatedDeployData>({
     todayDeployCount: 0,
@@ -24,7 +24,7 @@ export const useAggregatedDeployData = () => {
 
   const fetchAggregatedDeployData =
     useCallback(async (): Promise<AggregatedDeployData> => {
-      if (!address || !isConnected) {
+      if (!address || !isConnected || !isAuthorized) {
         const emptyData = {
           todayDeployCount: 0,
           thisWeekDeployCount: 0,
@@ -81,21 +81,21 @@ export const useAggregatedDeployData = () => {
       } finally {
         setIsLoading(false);
       }
-    }, [address, isConnected]);
+    }, [address, isConnected, isAuthorized]);
 
-  // Auto-fetch data when user connects or address changes
+  // Auto-fetch data when user becomes authorized
   useEffect(() => {
-    if (isConnected && address) {
+    if (isAuthorized) {
       fetchAggregatedDeployData();
     } else {
-      // Reset data when wallet disconnects
+      // Reset data when user is not authorized
       setData({
         todayDeployCount: 0,
         thisWeekDeployCount: 0,
         totalDeploySCDeployed: 0,
       });
     }
-  }, [isConnected, address, fetchAggregatedDeployData]);
+  }, [isAuthorized, fetchAggregatedDeployData]);
 
   return {
     todayDeployCount: data.todayDeployCount,

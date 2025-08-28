@@ -14,52 +14,54 @@ import useChainFavorite from "@/ui/hooks/useChainFavorite";
 import { useAccount } from "wagmi";
 import { FlashIcon } from "@/ui/components/icon/FlashIcon";
 import { useDeploy } from "@/ui/hooks/useDeploy";
-import {
-  useDeployData,
-  DeployDataResult,
-} from "@/lib/web3/hooks/read/useDeployData";
+import { DeployDataResult } from "@/lib/web3/hooks/read/useBatchDeployData";
 import BeamWrapper from "@/ui/widget/beam-wrapper";
 import SuccessModal from "@/ui/components/success-modal";
+import useAuth from "@/lib/auth/useAuth";
 
 interface DeployCardProps {
   chainId: NETWORKS;
   isHot?: boolean;
   isNew?: boolean;
-  onConnect: () => void;
   onDeploySuccess?: () => void; // New prop to notify parent of successful deployment
+  batchData?: DeployDataResult; // Pre-fetched data from batch hook
+  refreshData?: (chainId: NETWORKS) => Promise<DeployDataResult>; // Function to refresh data for this chain
+  isLoadingBatch?: boolean; // Loading state from batch hook
 }
 
 const DeployCard: React.FC<DeployCardProps> = ({
   chainId,
   isHot = false,
   isNew = false,
-  onConnect,
   onDeploySuccess,
+  batchData,
+  refreshData,
+  isLoadingBatch = false,
 }) => {
   const chain = getChainByID(chainId);
   const chainColor = getChainColor(chainId);
   const { isFavorite, onToggleFavorite } = useChainFavorite(chainId);
-  const { address, isConnected } = useAccount();
-  const { fetchDeployData } = useDeployData(chainId);
+  const { isConnected } = useAccount();
+  const { isAuthorized } = useAuth();
 
-  const [deployData, setDeployData] = useState<DeployDataResult>({
+  // Use batch data or default data
+  const deployData = batchData || {
     fee: "0",
     totalDeployments: 0,
     lastDeploy: null,
     lastDeployFormatted: "Never",
     todayDeployStatus: false,
-  });
+  };
 
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [countdown, setCountdown] = useState<string>("00:00:00");
 
   // Callback to refresh deploy data after successful transaction
   const refreshDeployData = useCallback(async () => {
-    if (isConnected && address) {
+    if (isAuthorized && refreshData) {
       setIsLoadingData(true);
       try {
-        const deployResult = await fetchDeployData();
-        setDeployData(deployResult);
+        await refreshData(chainId);
         // Notify parent component about successful deployment
         onDeploySuccess?.();
       } catch (error) {
@@ -68,7 +70,7 @@ const DeployCard: React.FC<DeployCardProps> = ({
         setIsLoadingData(false);
       }
     }
-  }, [isConnected, address, chainId, fetchDeployData, onDeploySuccess]);
+  }, [isAuthorized, chainId, refreshData, onDeploySuccess]);
 
   // Initialize useDeploy with success callback for real-time updates
   const {
@@ -123,35 +125,6 @@ const DeployCard: React.FC<DeployCardProps> = ({
     return () => clearInterval(interval);
   }, [calculateCountdown]);
 
-  // Fetch data when component mounts or when wallet connects
-  useEffect(() => {
-    if (isConnected && address) {
-      setIsLoadingData(true);
-
-      const fetchData = async () => {
-        try {
-          const deployResult = await fetchDeployData();
-          setDeployData(deployResult);
-        } catch (error) {
-          console.error("Error fetching Deploy data for chain", chainId, error);
-        } finally {
-          setIsLoadingData(false);
-        }
-      };
-
-      fetchData();
-    } else {
-      // Reset data when wallet disconnects
-      setDeployData({
-        fee: "0",
-        totalDeployments: 0,
-        lastDeploy: null,
-        lastDeployFormatted: "Never",
-        todayDeployStatus: false,
-      });
-    }
-  }, [isConnected, address, chainId, fetchDeployData]);
-
   // Helper function to convert hex to rgba with opacity
   const hexToRgba = (hex: string, opacity: number) => {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -189,7 +162,7 @@ const DeployCard: React.FC<DeployCardProps> = ({
     if (isCurrentChain && !isDeploySupported) return true;
 
     // For supported chains, check other conditions
-    return isProcessing || !canDeploy || isLoadingData;
+    return isProcessing || !canDeploy || isLoadingData || isLoadingBatch;
   };
 
   const cardContent = (
@@ -240,7 +213,7 @@ const DeployCard: React.FC<DeployCardProps> = ({
 
       {/* Stats Section */}
       <div className="flex-1 space-y-4 text-sm">
-        {isLoadingData ? (
+        {isLoadingData || isLoadingBatch ? (
           <div className="flex items-center justify-center py-4">
             <div className="text-text_body">Loading...</div>
           </div>
@@ -280,7 +253,7 @@ const DeployCard: React.FC<DeployCardProps> = ({
       {/* Action Button */}
       <div className="mt-6">
         <InteractionButton
-          onClick={isConnected ? onDeploy : onConnect}
+          onClick={onDeploy}
           requiredChain={chainId}
           requiredConnect={true}
           className="w-full h-10 rounded-[10px] gap-1.5 text-white disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-200 disabled:hover:bg-gray-400"

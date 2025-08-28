@@ -149,8 +149,6 @@ const config: Config = {
         gradient_bg_gm: "linear-gradient(90deg, #C5A70B 0%, #ADF25C 100%)",
         gradient_cheap_primary:
           "linear-gradient(90deg, #B1D9FF 0%, #628DBE 35.58%, rgba(161, 164, 100, 0.55) 53.85%, #E2F420 80.29%, #0177E7 96.63%)",
-        gradient_progress:
-          "linear-gradient(90deg, #1C96FD 12.52%, #33E360 38.55%, #F4C630 74.66%, #CB1245 111.02%, #AD00FE 160.23%), #FFF",
         gradient_divider:
           "linear-gradient(90deg, #1B211600 5.21%, #1B21167A 5.22%, #CAFC0126 50%, #1B21167A 91.66%, #1B211600 91.67%)",
       },
