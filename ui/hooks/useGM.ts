@@ -10,10 +10,12 @@ import { useGMData } from "@/lib/web3/hooks/read/useGMData";
 import { parseEther } from "viem";
 import { canUserSendGM, saveGM } from "@/lib/api/gm";
 import { updateGMReferral } from "@/lib/api/referral";
+import useAuth from "@/lib/auth/useAuth";
 
 export const useGM = (successCallback?: () => void) => {
   const { user } = useAppSelector((state) => state.user);
   const { address, chainId } = useAccount();
+  const { isAuthorized } = useAuth();
   const [fee, setFee] = useState<bigint>(BigInt(0));
   const [cooldownInfo, setCooldownInfo] = useState<{
     canSend: boolean;
@@ -50,7 +52,7 @@ export const useGM = (successCallback?: () => void) => {
 
   // Check cooldown status
   const checkCooldown = useCallback(async () => {
-    if (!address || !chainId || !isGMSupported) {
+    if (!address || !chainId || !isGMSupported || !isAuthorized) {
       setCooldownInfo({ canSend: true, timeRemaining: 0 });
       return;
     }
@@ -72,7 +74,7 @@ export const useGM = (successCallback?: () => void) => {
       console.error("Error checking GM cooldown:", error);
       setCooldownInfo({ canSend: true, timeRemaining: 0 });
     }
-  }, [address, chainId, isGMSupported]);
+  }, [address, chainId, isAuthorized]);
 
   // Enhanced transaction status to save to database
   const handleTransactionSuccess = useCallback(async () => {
@@ -95,7 +97,14 @@ export const useGM = (successCallback?: () => void) => {
   // Save to database when transaction is successful
   useEffect(() => {
     const saveGMToDatabase = async () => {
-      if (isSuccess && receipt && address && chainId && isGMSupported) {
+      if (
+        isSuccess &&
+        receipt &&
+        address &&
+        chainId &&
+        isGMSupported &&
+        isAuthorized
+      ) {
         try {
           const result = await saveGM({
             walletAddress: address,
@@ -127,18 +136,7 @@ export const useGM = (successCallback?: () => void) => {
     };
 
     saveGMToDatabase();
-  }, [
-    isSuccess,
-    receipt,
-    address,
-    chainId,
-    successCallback,
-    checkCooldown,
-    isGMSupported,
-    refer,
-    fee,
-    defaultAddressReferral,
-  ]);
+  }, [isSuccess, receipt, address, chainId, isAuthorized]);
 
   useEffect(() => {
     if (isError) {
@@ -149,10 +147,10 @@ export const useGM = (successCallback?: () => void) => {
 
   // Check cooldown when component mounts or dependencies change
   useEffect(() => {
-    if (address && chainId && isGMSupported) {
+    if (address && chainId && isGMSupported && isAuthorized) {
       checkCooldown();
     }
-  }, [address, chainId, checkCooldown, isGMSupported]);
+  }, [address, chainId, isAuthorized]);
 
   const isProcessing = useMemo(
     () => (isLoading && !!hash) || isPending,
@@ -171,6 +169,11 @@ export const useGM = (successCallback?: () => void) => {
   }, [isProcessing, isEnoughBalance, cooldownInfo.canSend, isGMSupported]);
 
   const onSayGM = useCallback(async () => {
+    if (!isAuthorized) {
+      toast.error("Please connect and authorize your wallet first");
+      return;
+    }
+
     if (!canSendGM) {
       if (!isGMSupported) {
         toast.error("GM is not supported on this chain");
@@ -203,6 +206,7 @@ export const useGM = (successCallback?: () => void) => {
       toast.error("Failed to send GM");
     }
   }, [
+    isAuthorized,
     canSendGM,
     cooldownInfo,
     callWriteContractGM,
@@ -231,10 +235,10 @@ export const useGM = (successCallback?: () => void) => {
       }
     };
 
-    if (chainId) {
+    if (chainId && isAuthorized) {
       fetchFee();
     }
-  }, [chainId, fetchGMFee, isGMSupported]);
+  }, [chainId, isAuthorized]);
 
   return {
     isEnoughBalance,

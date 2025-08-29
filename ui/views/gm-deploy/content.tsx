@@ -24,8 +24,8 @@ import DeployCard from "./deploy-card";
 import { useAppSelector } from "@/lib/store";
 import { useAggregatedGMData } from "@/lib/web3/hooks/read/useAggregatedGMData";
 import { useAggregatedDeployData } from "@/lib/web3/hooks/read/useAggregatedDeployData";
-import { useBatchGMData } from "@/lib/web3/hooks/read/useBatchGMData";
-import { useBatchDeployData } from "@/lib/web3/hooks/read/useBatchDeployData";
+import { useSingleChainGMData } from "@/lib/web3/hooks/read/useSingleChainGMData";
+import { useSingleChainDeployData } from "@/lib/web3/hooks/read/useSingleChainDeployData";
 import {
   CONTRACT_DATA_GM,
   CONTRACTS_GM,
@@ -114,20 +114,10 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
     fetchAggregatedDeployData,
   } = useAggregatedDeployData();
 
-  // Get batch data for all chains
-  const {
-    isLoading: isLoadingGMBatch,
-    error: gmBatchError,
-    getGMDataForChain,
-    refreshGMDataForChain,
-  } = useBatchGMData();
+  // Get refresh functions for individual chain data
+  const { fetchGMDataForChain } = useSingleChainGMData();
 
-  const {
-    isLoading: isLoadingDeployBatch,
-    error: deployBatchError,
-    getDeployDataForChain,
-    refreshDeployDataForChain,
-  } = useBatchDeployData();
+  const { fetchDeployDataForChain } = useSingleChainDeployData();
 
   // Callback to refresh dashboard data after successful GM
   const handleGMSuccess = useCallback(async () => {
@@ -276,22 +266,6 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
           </div>
         )}
 
-        {gmBatchError && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-            <p className="text-red-400 text-sm">
-              Error loading GM batch data: {gmBatchError}
-            </p>
-          </div>
-        )}
-
-        {deployBatchError && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-            <p className="text-red-400 text-sm">
-              Error loading Deploy batch data: {deployBatchError}
-            </p>
-          </div>
-        )}
-
         {type === "gm" ? (
           <GMDashboard
             todayGMCount={todayGMCount}
@@ -319,9 +293,7 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
                 isHot={chain.isHot}
                 isNew={chain.isNew}
                 onGMSuccess={handleGMSuccess}
-                batchData={getGMDataForChain(chain.id)}
-                refreshData={refreshGMDataForChain}
-                isLoadingBatch={isLoadingGMBatch}
+                loadData={fetchGMDataForChain}
               />
             );
           } else {
@@ -332,9 +304,7 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
                 isHot={chain.isHot}
                 isNew={chain.isNew}
                 onDeploySuccess={handleDeploySuccess}
-                batchData={getDeployDataForChain(chain.id)}
-                refreshData={refreshDeployDataForChain}
-                isLoadingBatch={isLoadingDeployBatch}
+                loadData={fetchDeployDataForChain}
               />
             );
           }

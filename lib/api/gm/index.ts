@@ -28,29 +28,6 @@ export const saveGM = async (data: GMRecord) => {
   }
 };
 
-export const getUserGMCount = async (
-  walletAddress: string,
-  chainId?: NETWORKS
-) => {
-  try {
-    const whereClause: any = { walletAddress };
-
-    if (chainId) {
-      const chain = getChainByID(chainId).chain;
-      whereClause.chain = chain;
-    }
-
-    const count = await prisma.gM.count({
-      where: whereClause,
-    });
-
-    return { isError: false, error: null, data: count };
-  } catch (e) {
-    console.error("Error fetching GM count:", e);
-    return { isError: true, error: "Failed to fetch GM count", data: 0 };
-  }
-};
-
 // Check if user can send GM (24-hour cooldown)
 export const canUserSendGM = async (
   walletAddress: string,

@@ -10,10 +10,12 @@ import { useDeployData } from "@/lib/web3/hooks/read/useDeployData";
 import { parseEther } from "viem";
 import { canUserDeploy, saveDeploy } from "@/lib/api/deploy";
 import { updateDeployReferral } from "@/lib/api/referral";
+import useAuth from "@/lib/auth/useAuth";
 
 export const useDeploy = (successCallback?: () => void) => {
   const { user } = useAppSelector((state) => state.user);
   const { address, chainId } = useAccount();
+  const { isAuthorized } = useAuth();
   const [fee, setFee] = useState<bigint>(BigInt(0));
   const [cooldownInfo, setCooldownInfo] = useState<{
     canSend: boolean;
@@ -49,7 +51,7 @@ export const useDeploy = (successCallback?: () => void) => {
 
   // Check cooldown status
   const checkCooldown = useCallback(async () => {
-    if (!address || !chainId || !isDeploySupported) {
+    if (!address || !chainId || !isDeploySupported || !isAuthorized) {
       setCooldownInfo({ canSend: true, timeRemaining: 0 });
       return;
     }
@@ -73,7 +75,7 @@ export const useDeploy = (successCallback?: () => void) => {
       console.error("Error checking Deploy cooldown:", error);
       setCooldownInfo({ canSend: true, timeRemaining: 0 });
     }
-  }, [address, chainId, isDeploySupported]);
+  }, [address, chainId, isAuthorized]);
 
   // Enhanced transaction status to save to database
   const handleTransactionSuccess = useCallback(async () => {
@@ -96,7 +98,14 @@ export const useDeploy = (successCallback?: () => void) => {
   // Save to database when transaction is successful
   useEffect(() => {
     const saveDeployToDatabase = async () => {
-      if (isSuccess && receipt && address && chainId && isDeploySupported) {
+      if (
+        isSuccess &&
+        receipt &&
+        address &&
+        chainId &&
+        isDeploySupported &&
+        isAuthorized
+      ) {
         try {
           const result = await saveDeploy({
             walletAddress: address,
@@ -128,18 +137,7 @@ export const useDeploy = (successCallback?: () => void) => {
     };
 
     saveDeployToDatabase();
-  }, [
-    isSuccess,
-    receipt,
-    address,
-    chainId,
-    successCallback,
-    checkCooldown,
-    isDeploySupported,
-    refer,
-    fee,
-    defaultAddressReferral,
-  ]);
+  }, [isSuccess, receipt, address, chainId, isAuthorized]);
 
   useEffect(() => {
     if (isError) {
@@ -150,10 +148,10 @@ export const useDeploy = (successCallback?: () => void) => {
 
   // Check cooldown when component mounts or dependencies change
   useEffect(() => {
-    if (address && chainId && isDeploySupported) {
+    if (address && chainId && isDeploySupported && isAuthorized) {
       checkCooldown();
     }
-  }, [address, chainId, checkCooldown, isDeploySupported]);
+  }, [address, chainId, isAuthorized]);
 
   const isProcessing = useMemo(
     () => (isLoading && !!hash) || isPending,
@@ -175,6 +173,11 @@ export const useDeploy = (successCallback?: () => void) => {
   }, [isProcessing, isEnoughBalance, cooldownInfo.canSend, isDeploySupported]);
 
   const onDeploy = useCallback(async () => {
+    if (!isAuthorized) {
+      toast.error("Please connect and authorize your wallet first");
+      return;
+    }
+
     if (!canDeploy) {
       if (!isDeploySupported) {
         toast.error("Deploy is not supported on this chain");
@@ -207,6 +210,7 @@ export const useDeploy = (successCallback?: () => void) => {
       toast.error("Failed to deploy contract");
     }
   }, [
+    isAuthorized,
     canDeploy,
     cooldownInfo,
     callWriteContractDeploy,
@@ -226,7 +230,7 @@ export const useDeploy = (successCallback?: () => void) => {
           const feeInWei = parseEther(feeString);
           setFee(feeInWei);
         } else {
-          setFee(parseEther("0")); // Set to 0 for unsupported chains
+          setFee(parseEther("0")); // Set to 0 for unsupported chains or unauthorized users
         }
       } catch (error) {
         console.error("Error fetching deploy fee:", error);
@@ -235,10 +239,10 @@ export const useDeploy = (successCallback?: () => void) => {
       }
     };
 
-    if (chainId) {
+    if (chainId && isAuthorized) {
       fetchFee();
     }
-  }, [chainId, fetchDeployFee, isDeploySupported]);
+  }, [chainId, isAuthorized]);
 
   return {
     isEnoughBalance,

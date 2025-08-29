@@ -95,7 +95,7 @@ export const useAggregatedGMData = () => {
         totalGMsAllChains: 0,
       });
     }
-  }, [isAuthorized, fetchAggregatedGMData]);
+  }, [isAuthorized]);
 
   return {
     todayGMCount: data.todayGMCount,

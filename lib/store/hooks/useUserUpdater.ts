@@ -33,7 +33,7 @@ const useUserUpdater = () => {
             return domainInfo;
           }
         } catch (error) {
-          console.error("Error fetching user primary domain data:", error);
+          // console.error("Error fetching user primary domain data:", error);
           return null;
         }
       }

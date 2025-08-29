@@ -11,19 +11,18 @@ import ShareLinkIcon from "@/ui/components/icon/referral/ShareLinkIcon";
 import { useAccount } from "wagmi";
 import { FlashIcon } from "@/ui/components/icon/FlashIcon";
 import { useGM } from "@/ui/hooks/useGM";
-import { GMDataResult } from "@/lib/web3/hooks/read/useBatchGMData";
+import { GMDataResult } from "@/lib/web3/hooks/read/useSingleChainGMData";
 import BeamWrapper from "@/ui/widget/beam-wrapper";
 import SuccessModal from "@/ui/components/success-modal";
 import useAuth from "@/lib/auth/useAuth";
+import { Button } from "@/ui/components/button";
 
 interface GMCardProps {
   chainId: NETWORKS;
   isHot?: boolean;
   isNew?: boolean;
   onGMSuccess?: () => void; // New prop to notify parent of successful GM
-  batchData?: GMDataResult; // Pre-fetched data from batch hook
-  refreshData?: (chainId: NETWORKS) => Promise<GMDataResult>; // Function to refresh data for this chain
-  isLoadingBatch?: boolean; // Loading state from batch hook
+  loadData?: (chainId: NETWORKS) => Promise<GMDataResult>; // Function to refresh data for this chain
 }
 
 const GMCard: React.FC<GMCardProps> = ({
@@ -31,9 +30,7 @@ const GMCard: React.FC<GMCardProps> = ({
   isHot = false,
   isNew = false,
   onGMSuccess,
-  batchData,
-  refreshData,
-  isLoadingBatch = false,
+  loadData,
 }) => {
   const chain = getChainByID(chainId);
   const chainColor = getChainColor(chainId);
@@ -41,34 +38,52 @@ const GMCard: React.FC<GMCardProps> = ({
   const { isConnected } = useAccount();
   const { isAuthorized } = useAuth();
 
-  // Use batch data or default data
-  const gmData = batchData || {
+  // Track whether data has been fetched for this chain
+  const [hasFetchedData, setHasFetchedData] = useState(false);
+
+  // Local state for GM data
+  const [gmData, setGmData] = useState<GMDataResult>({
     fee: "0",
     lastGM: null,
     lastGMFormatted: "Never",
     todayGMStatus: false,
     gmStreak: 0,
     totalGMs: 0,
-  };
+  });
 
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [countdown, setCountdown] = useState<string>("00:00:00");
 
-  // Callback to refresh GM data after successful transaction
-  const refreshGMData = useCallback(async () => {
-    if (isAuthorized && refreshData) {
+  // Function to fetch data for this chain
+  const fetchChainData = useCallback(async () => {
+    if (isAuthorized && loadData) {
       setIsLoadingData(true);
       try {
-        await refreshData(chainId);
-        // Notify parent component about successful GM
-        onGMSuccess?.();
+        const result = await loadData(chainId);
+        setGmData(result);
+        setHasFetchedData(true);
       } catch (error) {
-        console.error("Error refreshing GM data for chain", chainId, error);
+        console.error("Error fetching GM data for chain", chainId, error);
       } finally {
         setIsLoadingData(false);
       }
     }
-  }, [isAuthorized, chainId, refreshData, onGMSuccess]);
+  }, [isAuthorized, chainId]);
+
+  // Callback to refresh GM data after successful transaction
+  const refreshGMData = useCallback(async () => {
+    if (isAuthorized) {
+      try {
+        // Fetch fresh data and update local state
+        await fetchChainData();
+        setHasFetchedData(true);
+        // Notify parent component about successful GM
+        onGMSuccess?.();
+      } catch (error) {
+        console.error("Error refreshing GM data for chain", chainId, error);
+      }
+    }
+  }, [isAuthorized]);
 
   // Initialize useGM with success callback for real-time updates
   const {
@@ -158,7 +173,7 @@ const GMCard: React.FC<GMCardProps> = ({
     if (isCurrentChain && !isGMSupported) return true;
 
     // For supported chains, check other conditions
-    return isProcessing || !canSendGM || isLoadingData || isLoadingBatch;
+    return isProcessing || !canSendGM || isLoadingData;
   };
 
   const cardContent = (
@@ -228,13 +243,24 @@ const GMCard: React.FC<GMCardProps> = ({
       </div>
 
       {/* Stats Section */}
-      <div className="flex-1 space-y-4 text-sm">
-        {isLoadingData || isLoadingBatch ? (
-          <div className="flex items-center justify-center py-4">
-            <div className="text-text2">Loading...</div>
+      <div className="flex-1 flex items-center justify-center text-sm min-h-[107px]">
+        {!hasFetchedData ? (
+          <div className="flex items-center justify-center w-full">
+            <Button
+              onClick={fetchChainData}
+              disabled={isLoadingData}
+              title={isLoadingData ? "Loading..." : "Fetch chain data"}
+              className="px-4 py-2 h-8 bg-primary/20 text-primary w-24"
+            >
+              {isLoadingData ? (
+                <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              ) : (
+                "Load Info"
+              )}
+            </Button>
           </div>
         ) : (
-          <>
+          <div className="space-y-4 w-full">
             <div className="flex items-center justify-between">
               <span className="text-text2">Today&apos;s GM Status</span>
               <span
@@ -258,23 +284,21 @@ const GMCard: React.FC<GMCardProps> = ({
               <span className="text-text2">Total your GMs</span>
               <span className="text-black">{gmData.totalGMs} GMs</span>
             </div>
-          </>
+          </div>
         )}
       </div>
 
       {/* Action Button */}
-      <div className="mt-6">
-        <InteractionButton
-          onClick={onSayGM}
-          requiredChain={chainId}
-          requiredConnect={true}
-          className="w-full h-10 rounded-[10px] gap-1.5 text-white disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-200 disabled:hover:bg-gray-400"
-          disabled={getButtonDisabled()}
-        >
-          {!isConnected && <FlashIcon className="w-4 h-4" />}
-          {getButtonText()}
-        </InteractionButton>
-      </div>
+      <InteractionButton
+        onClick={onSayGM}
+        requiredChain={chainId}
+        requiredConnect={true}
+        className="w-full h-10 rounded-[10px] gap-1.5 text-white disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-200 disabled:hover:bg-gray-400 mt-6 whitespace-nowrap"
+        disabled={getButtonDisabled()}
+      >
+        {!isConnected && <FlashIcon className="w-4 h-4" />}
+        {getButtonText()}
+      </InteractionButton>
 
       {/* Success Modal */}
       <SuccessModal

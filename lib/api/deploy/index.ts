@@ -28,29 +28,6 @@ export const saveDeploy = async (data: DeployRecord) => {
   }
 };
 
-export const getUserDeployCount = async (
-  walletAddress: string,
-  chainId?: NETWORKS
-) => {
-  try {
-    const whereClause: any = { walletAddress };
-
-    if (chainId) {
-      const chain = getChainByID(chainId).chain;
-      whereClause.chain = chain;
-    }
-
-    const count = await prisma.deploy.count({
-      where: whereClause,
-    });
-
-    return { isError: false, error: null, data: count };
-  } catch (e) {
-    console.error("Error fetching Deploy count:", e);
-    return { isError: true, error: "Failed to fetch Deploy count", data: 0 };
-  }
-};
-
 // Check if user can deploy (24-hour cooldown)
 export const canUserDeploy = async (
   walletAddress: string,

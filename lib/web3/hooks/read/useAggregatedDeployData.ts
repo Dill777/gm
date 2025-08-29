@@ -95,7 +95,7 @@ export const useAggregatedDeployData = () => {
         totalDeploySCDeployed: 0,
       });
     }
-  }, [isAuthorized, fetchAggregatedDeployData]);
+  }, [isAuthorized]);
 
   return {
     todayDeployCount: data.todayDeployCount,
