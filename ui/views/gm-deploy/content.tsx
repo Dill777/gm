@@ -147,41 +147,7 @@ const GMDeployContent = ({ type }: { type: "gm" | "deploy" }) => {
   const allSupportedChains = useMemo(() => {
     const chains =
       type === "gm" ? getGMSupportedChains() : getDeploySupportedChains();
-
-    // Sort chains by priority: Hot first (in config order), then New, then others
-    return chains.sort((a, b) => {
-      const aIsHot = hotChains.includes(a.id);
-      const bIsHot = hotChains.includes(b.id);
-      const aIsNew = newChains.includes(a.id);
-      const bIsNew = newChains.includes(b.id);
-
-      // Hot chains get highest priority
-      if (aIsHot && !bIsHot) return -1;
-      if (!aIsHot && bIsHot) return 1;
-
-      // If both are hot, preserve the order from hotChains array
-      if (aIsHot && bIsHot) {
-        const aHotIndex = hotChains.indexOf(a.id);
-        const bHotIndex = hotChains.indexOf(b.id);
-        return aHotIndex - bHotIndex;
-      }
-
-      // If both are not hot, check for new chains
-      if (!aIsHot && !bIsHot) {
-        if (aIsNew && !bIsNew) return -1;
-        if (!aIsNew && bIsNew) return 1;
-
-        // If both are new, preserve the order from newChains array
-        if (aIsNew && bIsNew) {
-          const aNewIndex = newChains.indexOf(a.id);
-          const bNewIndex = newChains.indexOf(b.id);
-          return aNewIndex - bNewIndex;
-        }
-      }
-
-      // If same priority, sort alphabetically by name
-      return a.name.localeCompare(b.name);
-    });
+    return chains;
   }, [type]);
 
   // Memoize search term processing
