@@ -18,7 +18,6 @@ import { DeployDataResult } from "@/lib/web3/hooks/read/useSingleChainDeployData
 import BeamWrapper from "@/ui/widget/beam-wrapper";
 import SuccessModal from "@/ui/components/success-modal";
 import useAuth from "@/lib/auth/useAuth";
-import { Button } from "@/ui/components/button";
 
 interface DeployCardProps {
   chainId: NETWORKS;
@@ -177,7 +176,7 @@ const DeployCard: React.FC<DeployCardProps> = ({
     if (isCurrentChain && !isDeploySupported) return true;
 
     // For supported chains, check other conditions
-    return isProcessing || !canDeploy || isLoadingData;
+    return isProcessing || !canDeploy;
   };
 
   const cardContent = (
@@ -230,18 +229,19 @@ const DeployCard: React.FC<DeployCardProps> = ({
       <div className="flex-1 flex items-center justify-center text-sm min-h-[107px]">
         {!hasFetchedData ? (
           <div className="flex items-center justify-center w-full">
-            <Button
+            <InteractionButton
               onClick={fetchChainData}
               disabled={isLoadingData}
               title={isLoadingData ? "Loading..." : "Fetch chain data"}
               className="px-4 py-2 h-8 bg-primary/20 text-primary w-24"
+              requiredConnect={true}
             >
               {isLoadingData ? (
                 <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               ) : (
                 "Load Info"
               )}
-            </Button>
+            </InteractionButton>
           </div>
         ) : (
           <div className="space-y-4 w-full">
