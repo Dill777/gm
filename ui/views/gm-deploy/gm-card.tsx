@@ -67,7 +67,7 @@ const GMCard: React.FC<GMCardProps> = ({
         setIsLoadingData(false);
       }
     }
-  }, [isAuthorized, chainId]);
+  }, [isAuthorized, loadData, chainId]);
 
   // Callback to refresh GM data after successful transaction
   const refreshGMData = useCallback(async () => {
@@ -82,7 +82,7 @@ const GMCard: React.FC<GMCardProps> = ({
         console.error("Error refreshing GM data for chain", chainId, error);
       }
     }
-  }, [isAuthorized]);
+  }, [isAuthorized, fetchChainData]);
 
   // Initialize useGM with success callback for real-time updates
   const {
@@ -95,6 +95,13 @@ const GMCard: React.FC<GMCardProps> = ({
     showSuccessModal,
     setShowSuccessModal,
   } = useGM(refreshGMData);
+
+  const handleSayGM = useCallback(async () => {
+    if (!hasFetchedData) {
+      fetchChainData();
+    }
+    await onSayGM();
+  }, [onSayGM, fetchChainData, hasFetchedData]);
 
   // Check if this is the currently connected chain
   const { chainId: connectedChainId } = useAccount();
@@ -290,7 +297,7 @@ const GMCard: React.FC<GMCardProps> = ({
 
       {/* Action Button */}
       <InteractionButton
-        onClick={onSayGM}
+        onClick={handleSayGM}
         requiredChain={chainId}
         requiredConnect={true}
         className="w-full h-10 rounded-[10px] gap-1.5 text-white disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-200 disabled:hover:bg-gray-400 mt-6 whitespace-nowrap"

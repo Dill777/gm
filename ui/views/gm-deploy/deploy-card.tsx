@@ -69,7 +69,7 @@ const DeployCard: React.FC<DeployCardProps> = ({
         setIsLoadingData(false);
       }
     }
-  }, [isAuthorized, chainId]);
+  }, [isAuthorized, loadData, chainId]);
 
   // Callback to refresh deploy data after successful transaction
   const refreshDeployData = useCallback(async () => {
@@ -84,7 +84,7 @@ const DeployCard: React.FC<DeployCardProps> = ({
         console.error("Error refreshing Deploy data for chain", chainId, error);
       }
     }
-  }, [isAuthorized]);
+  }, [isAuthorized, fetchChainData]);
 
   // Initialize useDeploy with success callback for real-time updates
   const {
@@ -97,6 +97,13 @@ const DeployCard: React.FC<DeployCardProps> = ({
     showSuccessModal,
     setShowSuccessModal,
   } = useDeploy(refreshDeployData);
+
+  const handleDeploy = useCallback(async () => {
+    if (!hasFetchedData) {
+      fetchChainData();
+    }
+    await onDeploy();
+  }, [onDeploy, fetchChainData, hasFetchedData]);
 
   // Check if this is the currently connected chain
   const { chainId: connectedChainId } = useAccount();
@@ -278,7 +285,7 @@ const DeployCard: React.FC<DeployCardProps> = ({
 
       {/* Action Button */}
       <InteractionButton
-        onClick={onDeploy}
+        onClick={handleDeploy}
         requiredChain={chainId}
         requiredConnect={true}
         className="w-full h-10 rounded-[10px] gap-1.5 text-white disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-200 disabled:hover:bg-gray-400 mt-6 whitespace-nowrap"
