@@ -70,6 +70,7 @@ export enum NETWORKS {
   TABI_V2 = 9788,
   ATHENE = 281123,
   SAHARA = 313313,
+  RISE = 11155931,
 }
 
 export const rpcs: { [key in NETWORKS]: string } = {
@@ -145,6 +146,7 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.KITE]: process.env.NEXT_PUBLIC_RPC_KITE!,
   [NETWORKS.ZENCHAIN]: process.env.NEXT_PUBLIC_RPC_ZENCHAIN!,
   [NETWORKS.HELIOS]: process.env.NEXT_PUBLIC_RPC_HELIOS!,
+  [NETWORKS.RISE]: process.env.NEXT_PUBLIC_RPC_RISE!,
   // [NETWORKS.ZKLINK]: process.env.NEXT_PUBLIC_RPC_ZKLINK!,
   // [NETWORKS.ARTHERA]: process.env.NEXT_PUBLIC_RPC_ARTHERA!,
   // [NETWORKS.NEOX]: process.env.NEXT_PUBLIC_RPC_NEOX!,
@@ -233,6 +235,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.KITE]: "#00C853",
   [NETWORKS.ZENCHAIN]: "#bbf14b",
   [NETWORKS.HELIOS]: "#002DCB",
+  [NETWORKS.RISE]: "#7968e5",
   // [NETWORKS.ZKLINK]: "#04D693",
   // [NETWORKS.ARTHERA]: "#B10C90",
   // [NETWORKS.NEOX]: "#00E599",
@@ -1988,6 +1991,25 @@ export const CHAINS: NETWORK_TYPE[] = [
       default: {
         name: "SAHARA",
         url: "https://testnet-explorer.saharalabs.ai/",
+      },
+    },
+    testnet: true,
+  },
+  {
+    id: NETWORKS.RISE,
+    name: "RISE Testnet",
+    shortName: "RISE",
+    chain: PrismaChain.RISE,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/rise.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.RISE]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "RISE Textnet Explorer",
+        url: "https://explorer.testnet.riselabs.xyz/",
       },
     },
     testnet: true,

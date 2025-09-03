@@ -256,4 +256,5 @@ enum Chain {
   PERENNIAL
   ONCHAINPOINTS
   RONIN
+  RISE
 }

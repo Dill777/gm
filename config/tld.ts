@@ -43,6 +43,7 @@ export const tlds: TLD[] = [
   // { chainId: NETWORKS.XRP, label: "xrp", tld: "xrp" },
   // { chainId: NETWORKS.XRPL, label: "xrpl", tld: "xrpl" },
   { chainId: NETWORKS.SAHARA, label: "sahara", tld: "sahara" },
+  { chainId: NETWORKS.RISE, label: "rise", tld: "rise" },
   // { chainId: NETWORKS.BOBA, label: "boba", tld: "boba" },
   // { chainId: NETWORKS.ARTHERA, label: "arthera", tld: "arthera" },
   // { chainId: NETWORKS.NEOX, label: "neox", tld: "neox" },
