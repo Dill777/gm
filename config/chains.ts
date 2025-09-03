@@ -19,6 +19,7 @@ export enum NETWORKS {
   KATANA = 747474,
   BOB = 60808,
   LINEA = 59144,
+  MANTAPACIFIC = 169,
   ABSTRACTMAINNET = 2741,
   HEMI = 43111,
   BERA = 80094,
@@ -59,6 +60,18 @@ export enum NETWORKS {
   PERENNIAL = 1424,
   ONCHAINPOINTS = 17071,
   RONIN = 2020,
+  XAI = 660279,
+  CYBER = 7560,
+  CORN = 21000000,
+  PROOFOFPLAY = 70700,
+  CAMP = 484,
+  MORPH = 2818,
+  MODE = 34443,
+  MINT = 185,
+  FUNKI = 33979,
+  FORMA = 984122,
+  FLOW = 747,
+  LENS = 232,
   /* testnets */
   CREATOR_CHAIN = 66665,
   MONAD = 10143,
@@ -90,7 +103,6 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.SCROLL]: process.env.NEXT_PUBLIC_RPC_SCROLL!,
   [NETWORKS.BLAST]: process.env.NEXT_PUBLIC_RPC_BLAST!,
   [NETWORKS.TAIKO]: process.env.NEXT_PUBLIC_RPC_TAIKO!,
-  // [NETWORKS.MORPH]: process.env.NEXT_PUBLIC_RPC_MORPH!,
   [NETWORKS.POLY]: process.env.NEXT_PUBLIC_RPC_POLY!,
   [NETWORKS.UNICHAIN]: process.env.NEXT_PUBLIC_RPC_UNICHAIN!,
   [NETWORKS.COTI]: process.env.NEXT_PUBLIC_RPC_COTI!,
@@ -130,6 +142,19 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.ONCHAINPOINTS]: process.env.NEXT_PUBLIC_RPC_ONCHAINPOINTS!,
   [NETWORKS.RONIN]: process.env.NEXT_PUBLIC_RPC_RONIN!,
   [NETWORKS.SOMNIAMAINNET]: process.env.NEXT_PUBLIC_RPC_SOMNIAMAINNET!,
+  [NETWORKS.XAI]: process.env.NEXT_PUBLIC_RPC_XAI!,
+  [NETWORKS.CYBER]: process.env.NEXT_PUBLIC_RPC_CYBER!,
+  [NETWORKS.CORN]: process.env.NEXT_PUBLIC_RPC_CORN!,
+  [NETWORKS.PROOFOFPLAY]: process.env.NEXT_PUBLIC_RPC_PROOFOFPLAY!,
+  [NETWORKS.CAMP]: process.env.NEXT_PUBLIC_RPC_CAMP!,
+  [NETWORKS.MORPH]: process.env.NEXT_PUBLIC_RPC_MORPH!,
+  [NETWORKS.MODE]: process.env.NEXT_PUBLIC_RPC_MODE!,
+  [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
+  [NETWORKS.FUNKI]: process.env.NEXT_PUBLIC_RPC_FUNKI!,
+  [NETWORKS.FORMA]: process.env.NEXT_PUBLIC_RPC_FORMA!,
+  [NETWORKS.FLOW]: process.env.NEXT_PUBLIC_RPC_FLOW!,
+  [NETWORKS.LENS]: process.env.NEXT_PUBLIC_RPC_LENS!,
+  [NETWORKS.MANTAPACIFIC]: process.env.NEXT_PUBLIC_RPC_MANTAPACIFIC!,
   // [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
   // [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
   [NETWORKS.CREATOR_CHAIN]: process.env.NEXT_PUBLIC_RPC_CREATOR_CHAIN!,
@@ -180,7 +205,6 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.SCROLL]: "#FFDBB3",
   [NETWORKS.BLAST]: "#F4F53A",
   [NETWORKS.TAIKO]: "#E81899",
-  // [NETWORKS.MORPH]: "#fff",
   [NETWORKS.POLY]: "#8247E5",
   [NETWORKS.UNICHAIN]: "#f60cb2",
   [NETWORKS.COTI]: "#207ec3",
@@ -220,7 +244,19 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.PERENNIAL]: "#3224a5",
   [NETWORKS.ONCHAINPOINTS]: "#000000",
   [NETWORKS.RONIN]: "#000000",
-  // [NETWORKS.MINT]: "#30BF54",
+  [NETWORKS.XAI]: "#ff0030",
+  [NETWORKS.CYBER]: "#079c01",
+  [NETWORKS.CORN]: "#000000",
+  [NETWORKS.PROOFOFPLAY]: "#000000",
+  [NETWORKS.CAMP]: "#000000",
+  [NETWORKS.MORPH]: "#11a801",
+  [NETWORKS.MODE]: "#dffe00",
+  [NETWORKS.MINT]: "#30bf55",
+  [NETWORKS.FUNKI]: "#ac9fd5",
+  [NETWORKS.FORMA]: "#000000",
+  [NETWORKS.FLOW]: "#06ef8a",
+  [NETWORKS.LENS]: "#000000",
+  [NETWORKS.MANTAPACIFIC]: "#3589f1",
   // [NETWORKS.XLAYER]: "#fff",
   [NETWORKS.CREATOR_CHAIN]: "#F4F53A",
   [NETWORKS.MONAD]: "#826df9",
@@ -606,6 +642,32 @@ export const CHAINS: NETWORK_TYPE[] = [
       default: {
         name: "Linea Explorer",
         url: "https://explorer.linea.build/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.MANTAPACIFIC,
+    name: "Manta Pacific Mainnet",
+    shortName: "Manta Pacific",
+    chain: PrismaChain.MANTAPACIFIC,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/mantapacific.jpg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.MANTAPACIFIC]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Manta Pacific Explorer",
+        url: "https://manta.socialscan.io/",
       },
     },
     contracts: {
@@ -1558,29 +1620,288 @@ export const CHAINS: NETWORK_TYPE[] = [
     },
     gmOnly: true,
   },
-  // {
-  //   id: NETWORKS.MINT,
-  //   name: "Mint Mainnet",
-  //   shortName: "Mint",
-  //   chain: PrismaChain.MINT,
-  //   sellMarket: "https://element.market",
-  //   iconUrl: "/img/chainLogos/mintchain.png",
-  //   nativeCurrency: { name: "Mint", symbol: "ETH", decimals: 18 },
-  //   rpcUrls: {
-  //     default: {
-  //       http: [rpcs[NETWORKS.MINT]],
-  //     },
-  //   },
-  //   blockExplorers: {
-  //     default: { name: "Mint", url: "https://explorer.mintchain.io/" },
-  //   },
-  //   contracts: {
-  //     multicall3: {
-  //       address: "0xf8ac4BEB2F75d2cFFb588c63251347fdD629B92c",
-  //       blockCreated: 467880,
-  //     },
-  //   },
-  // },
+  {
+    id: NETWORKS.XAI,
+    name: "XAI Mainnet",
+    shortName: "XAI",
+    chain: PrismaChain.XAI,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "XAI", symbol: "XAI", decimals: 18 },
+    iconUrl: "/img/chainLogos/xai.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.XAI]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "XAI Mainnet Explorer",
+        url: "https://explorer.xai-chain.net/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.CYBER,
+    name: "Cyber Mainnet",
+    shortName: "Cyber",
+    chain: PrismaChain.CYBER,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/cyber.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.CYBER]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Cyber Explorer",
+        url: "https://cyber.socialscan.io/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.CORN,
+    name: "Corn Mainnet",
+    shortName: "Corn",
+    chain: PrismaChain.CORN,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "BTCN", symbol: "BTCN", decimals: 18 },
+    iconUrl: "/img/chainLogos/corn.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.CORN]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Corn Explorer",
+        url: "https://cornscan.io/",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.PROOFOFPLAY,
+    name: "Proof of Play - Apex",
+    shortName: "Proof of Play",
+    chain: PrismaChain.PROOFOFPLAY,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/proofofplay.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.PROOFOFPLAY]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Proof of Play Apex Explorer",
+        url: "https://explorer-proofofplay-apex-mainnet-0.t.conduit.xyz/",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.CAMP,
+    name: "Camp",
+    shortName: "Camp",
+    chain: PrismaChain.CAMP,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/camp.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.CAMP]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Camp Explorer",
+        url: "https://camp.cloud.blockscout.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.MORPH,
+    name: "Morhph Mainnet",
+    shortName: "Morph",
+    chain: PrismaChain.MORPH,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/morph.jpg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.MORPH]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Morph Explorer",
+        url: "https://explorer.morphl2.io/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0x35f965903A85e7528437C3Ce0b4bdfbc4E5Fc27c",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.MODE,
+    name: "Mode",
+    shortName: "Mode",
+    chain: PrismaChain.MODE,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/mode.jpg",
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.MODE]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Mode Explorer",
+        url: "https://explorer.mode.network/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.MINT,
+    name: "Mint Mainnet",
+    shortName: "Mint",
+    chain: PrismaChain.MINT,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/mint.jpg",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.MINT]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Mint Mainnet Explorer",
+        url: "https://explorer.mintchain.io/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.FUNKI,
+    name: "Funki Mainnet",
+    shortName: "Funki",
+    chain: PrismaChain.FUNKI,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/funki.jpg",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.FUNKI]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Funki Mainnet Explorer",
+        url: "https://explorer.funkichain.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.FORMA,
+    name: "Forma",
+    shortName: "Forma",
+    chain: PrismaChain.FORMA,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/forma.png",
+    nativeCurrency: { name: "TIA", symbol: "TIA", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.FORMA]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Forma Explorer",
+        url: "https://explorer.forma.art",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.FLOW,
+    name: "Flow EVM Mainnet",
+    shortName: "Flow",
+    chain: PrismaChain.FLOW,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/flow.jpg",
+    nativeCurrency: { name: "FLOW", symbol: "FLOW", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.FLOW]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Flow EVM Mainnet Explorer",
+        url: "https://flowscan.io/evm",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.LENS,
+    name: "Lens",
+    shortName: "Lens",
+    chain: PrismaChain.LENS,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/lens.jpg",
+    nativeCurrency: { name: "GHO", symbol: "GHO", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.LENS]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Lens Explorer",
+        url: "https://explorer.lens.xyz",
+      },
+    },
+    gmOnly: true,
+  },
   // {
   //   id: NETWORKS.XLAYER,
   //   name: "X Layer",
@@ -1669,31 +1990,6 @@ export const CHAINS: NETWORK_TYPE[] = [
   //   contracts: {
   //     multicall3: {
   //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
-  //     },
-  //   },
-  // },
-  // {
-  //   id: NETWORKS.MORPH,
-  //   name: "Morhph Mainnet",
-  //   shortName: "Morph",
-  //   chain: PrismaChain.MORPH,
-  //   sellMarket: "https://element.market",
-  //   nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
-  //   iconUrl: "/img/chainLogos/morph.png",
-  //   rpcUrls: {
-  //     default: {
-  //       http: [rpcs[NETWORKS.MORPH]],
-  //     },
-  //   },
-  //   blockExplorers: {
-  //     default: {
-  //       name: "ETH",
-  //       url: "https://explorer.morphl2.io/",
-  //     },
-  //   },
-  //   contracts: {
-  //     multicall3: {
-  //       address: "0x35f965903A85e7528437C3Ce0b4bdfbc4E5Fc27c",
   //     },
   //   },
   // },
