@@ -12,6 +12,7 @@ export enum NETWORKS {
   HYPE = 999,
   BASE = 8453,
   OPTIMISM = 10,
+  SOMNIAMAINNET = 5031,
   MEZO = 31612,
   BOTANIX = 3637,
   CZ = 56,
@@ -127,6 +128,7 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.PERENNIAL]: process.env.NEXT_PUBLIC_RPC_PERENNIAL!,
   [NETWORKS.ONCHAINPOINTS]: process.env.NEXT_PUBLIC_RPC_ONCHAINPOINTS!,
   [NETWORKS.RONIN]: process.env.NEXT_PUBLIC_RPC_RONIN!,
+  [NETWORKS.SOMNIAMAINNET]: process.env.NEXT_PUBLIC_RPC_SOMNIAMAINNET!,
   // [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
   // [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
   [NETWORKS.CREATOR_CHAIN]: process.env.NEXT_PUBLIC_RPC_CREATOR_CHAIN!,
@@ -186,6 +188,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.CONFLUX]: "#17B38A",
   [NETWORKS.CRONOS]: "#000000",
   [NETWORKS.OPTIMISM]: "#ff0420",
+  [NETWORKS.SOMNIAMAINNET]: "#db045a",
   [NETWORKS.KATANA]: "#1a1a1a",
   [NETWORKS.LINEA]: "#61dfff",
   [NETWORKS.RARI]: "#B16EFF",
@@ -425,6 +428,25 @@ export const CHAINS: NETWORK_TYPE[] = [
     contracts: {
       multicall3: {
         address: "0xca11bde05977b3631167028862be2a173976ca11",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.SOMNIAMAINNET,
+    name: "Somnia Mainnet",
+    shortName: "Somnia",
+    chain: PrismaChain.SOMNIAMAINNET,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "SOMI", symbol: "SOMI", decimals: 18 },
+    iconUrl: "/img/chainLogos/somnia.png",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.SOMNIAMAINNET]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Somnia Mainnet Explorer",
+        url: "https://explorer.somnia.network/",
       },
     },
     gmOnly: true,
