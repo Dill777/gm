@@ -30,7 +30,7 @@ export const tlds: TLD[] = [
   { chainId: NETWORKS.CREATOR_CHAIN, label: "ceo", tld: "ceo" },
   { chainId: NETWORKS.MONAD, label: "mnd", tld: "mnd" },
   { chainId: NETWORKS.NEXUS, label: "nexus", tld: "nexus" },
-  { chainId: NETWORKS.SOMNIA, label: "somnia", tld: "somnia" },
+  { chainId: NETWORKS.SOMNIAMAINNET, label: "somnia", tld: "somnia" },
   { chainId: NETWORKS.KAIA, label: "kaia", tld: "kaia" },
   { chainId: NETWORKS.KITE, label: "kite", tld: "kite" },
   { chainId: NETWORKS.ZENCHAIN, label: "ztc", tld: "ztc" },
