@@ -2329,6 +2329,7 @@ export const CHAINS: NETWORK_TYPE[] = [
         url: "https://testnet.pharosscan.xyz/",
       },
     },
+    testnet: true,
     gmOnly: true,
   },
   // {
