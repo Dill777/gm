@@ -84,6 +84,7 @@ export enum NETWORKS {
   ATHENE = 281123,
   SAHARA = 313313,
   RISE = 11155931,
+  PHAROS = 688688,
 }
 
 export const rpcs: { [key in NETWORKS]: string } = {
@@ -172,6 +173,7 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.ZENCHAIN]: process.env.NEXT_PUBLIC_RPC_ZENCHAIN!,
   [NETWORKS.HELIOS]: process.env.NEXT_PUBLIC_RPC_HELIOS!,
   [NETWORKS.RISE]: process.env.NEXT_PUBLIC_RPC_RISE!,
+  [NETWORKS.PHAROS]: process.env.NEXT_PUBLIC_RPC_PHAROS!,
   // [NETWORKS.ZKLINK]: process.env.NEXT_PUBLIC_RPC_ZKLINK!,
   // [NETWORKS.ARTHERA]: process.env.NEXT_PUBLIC_RPC_ARTHERA!,
   // [NETWORKS.NEOX]: process.env.NEXT_PUBLIC_RPC_NEOX!,
@@ -272,6 +274,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.ZENCHAIN]: "#bbf14b",
   [NETWORKS.HELIOS]: "#002DCB",
   [NETWORKS.RISE]: "#7968e5",
+  [NETWORKS.PHAROS]: "#0905b9",
   // [NETWORKS.ZKLINK]: "#04D693",
   // [NETWORKS.ARTHERA]: "#B10C90",
   // [NETWORKS.NEOX]: "#00E599",
@@ -2308,6 +2311,25 @@ export const CHAINS: NETWORK_TYPE[] = [
       },
     },
     testnet: true,
+  },
+  {
+    id: NETWORKS.PHAROS,
+    name: "Pharos Testnet",
+    shortName: "Pharos",
+    chain: PrismaChain.PHAROS,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "PHRS", symbol: "PHRS", decimals: 18 },
+    iconUrl: "/img/chainLogos/pharos.jpg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.PHAROS]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Pharos Textnet Explorer",
+        url: "https://testnet.pharosscan.xyz/",
+      },
+    },
+    gmOnly: true,
   },
   // {
   //   id: NETWORKS.NEOX,
