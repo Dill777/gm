@@ -2105,6 +2105,7 @@ export const CHAINS: NETWORK_TYPE[] = [
       default: { name: "ZTC", url: "https://zentrace.io/" },
     },
     testnet: true,
+    gmOnly: true,
   },
   {
     id: NETWORKS.HELIOS,
