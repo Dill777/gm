@@ -72,6 +72,7 @@ export enum NETWORKS {
   FORMA = 984122,
   FLOW = 747,
   LENS = 232,
+  CORE = 1116,
   /* testnets */
   CREATOR_CHAIN = 66665,
   MONAD = 10143,
@@ -156,6 +157,7 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.FLOW]: process.env.NEXT_PUBLIC_RPC_FLOW!,
   [NETWORKS.LENS]: process.env.NEXT_PUBLIC_RPC_LENS!,
   [NETWORKS.MANTAPACIFIC]: process.env.NEXT_PUBLIC_RPC_MANTAPACIFIC!,
+  [NETWORKS.CORE]: process.env.NEXT_PUBLIC_RPC_CORE!,
   // [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
   // [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
   [NETWORKS.CREATOR_CHAIN]: process.env.NEXT_PUBLIC_RPC_CREATOR_CHAIN!,
@@ -259,6 +261,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.FLOW]: "#06ef8a",
   [NETWORKS.LENS]: "#000000",
   [NETWORKS.MANTAPACIFIC]: "#3589f1",
+  [NETWORKS.CORE]: "#ff9212",
   // [NETWORKS.XLAYER]: "#fff",
   [NETWORKS.CREATOR_CHAIN]: "#F4F53A",
   [NETWORKS.MONAD]: "#826df9",
@@ -1900,6 +1903,27 @@ export const CHAINS: NETWORK_TYPE[] = [
       default: {
         name: "Lens Explorer",
         url: "https://explorer.lens.xyz",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.CORE,
+    name: "Core Blockchain Mainnet",
+    shortName: "Core",
+    chain: PrismaChain.CORE,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/core.jpg",
+    nativeCurrency: { name: "CORE", symbol: "CORE", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.CORE]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Core Explorer",
+        url: "https://scan.coredao.org",
       },
     },
     gmOnly: true,
