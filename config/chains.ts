@@ -189,6 +189,7 @@ export interface NETWORK_TYPE extends Chain {
   sellMarket?: string;
   iconUrl?: string;
   gmOnly?: boolean;
+  gmSupport?: boolean;
   hidden?: boolean;
 }
 
@@ -2129,7 +2130,7 @@ export const CHAINS: NETWORK_TYPE[] = [
       default: { name: "ZTC", url: "https://zentrace.io/" },
     },
     testnet: true,
-    gmOnly: true,
+    gmSupport: true,
   },
   {
     id: NETWORKS.HELIOS,
@@ -2520,9 +2521,9 @@ export const chains = CHAINS as unknown as [NETWORK_TYPE, ...NETWORK_TYPE[]];
 
 export const CHAIN_IDS = chains.map((c) => c.id);
 
-export const CHAIN_IDS_REGISTER = chains
-  .filter((c) => !c.gmOnly)
-  .map((c) => c.id);
+export const CHAIN_IDS_REGISTER = chains.filter(
+  (c) => (!c.gmOnly || c.gmSupport) && !c.hidden
+);
 
 export const mainnets = chains.filter((c) => !c.testnet).map((c) => c.id);
 export const testnets = chains.filter((c) => c.testnet).map((c) => c.id);
