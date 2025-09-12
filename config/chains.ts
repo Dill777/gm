@@ -73,6 +73,7 @@ export enum NETWORKS {
   FLOW = 747,
   LENS = 232,
   CORE = 1116,
+  XLAYER = 196,
   /* testnets */
   CREATOR_CHAIN = 66665,
   MONAD = 10143,
@@ -159,7 +160,7 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.MANTAPACIFIC]: process.env.NEXT_PUBLIC_RPC_MANTAPACIFIC!,
   [NETWORKS.CORE]: process.env.NEXT_PUBLIC_RPC_CORE!,
   // [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
-  // [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
+  [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
   [NETWORKS.CREATOR_CHAIN]: process.env.NEXT_PUBLIC_RPC_CREATOR_CHAIN!,
   [NETWORKS.MONAD]: process.env.NEXT_PUBLIC_RPC_MONAD!,
   [NETWORKS.NEXUS]: process.env.NEXT_PUBLIC_RPC_NEXUS!,
@@ -263,7 +264,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.LENS]: "#000000",
   [NETWORKS.MANTAPACIFIC]: "#3589f1",
   [NETWORKS.CORE]: "#ff9212",
-  // [NETWORKS.XLAYER]: "#fff",
+  [NETWORKS.XLAYER]: "#a7a7a7",
   [NETWORKS.CREATOR_CHAIN]: "#F4F53A",
   [NETWORKS.MONAD]: "#826df9",
   [NETWORKS.NEXUS]: "#5c5c5e",
@@ -1929,29 +1930,32 @@ export const CHAINS: NETWORK_TYPE[] = [
     },
     gmOnly: true,
   },
-  // {
-  //   id: NETWORKS.XLAYER,
-  //   name: "X Layer",
-  //   shortName: "XLayer",
-  //   chain: PrismaChain.XLAYER,
-  //   sellMarket: "https://element.market",
-  //   iconUrl: "/img/chainLogos/xLayer.webp",
-  //   nativeCurrency: { name: "xLayer", symbol: "OKB", decimals: 18 },
-  //   rpcUrls: {
-  //     default: {
-  //       http: [rpcs[NETWORKS.XLAYER]],
-  //     },
-  //   },
-  //   blockExplorers: {
-  //     default: { name: "xLayer", url: "https://www.oklink.com/xlayer" },
-  //   },
-  //   contracts: {
-  //     multicall3: {
-  //       address: "0xcA11bde05977b3631167028862bE2a173976CA11",
-  //       blockCreated: 47416,
-  //     },
-  //   },
-  // },
+  {
+    id: NETWORKS.XLAYER,
+    name: "X Layer",
+    shortName: "X Layer",
+    chain: PrismaChain.XLAYER,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/xLayer.jpg",
+    nativeCurrency: { name: "OKB", symbol: "OKB", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.XLAYER]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "X Layer Explorer",
+        url: "https://www.oklink.com/x-layer",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+        blockCreated: 47416,
+      },
+    },
+  },
   // {
   //   id: NETWORKS.ARTHERA,
   //   name: "Arthera Mainnet",
