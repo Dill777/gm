@@ -1936,7 +1936,7 @@ export const CHAINS: NETWORK_TYPE[] = [
     shortName: "X Layer",
     chain: PrismaChain.XLAYER,
     sellMarket: "https://element.market",
-    iconUrl: "/img/chainLogos/xLayer.jpg",
+    iconUrl: "/img/chainLogos/xlayer.jpg",
     nativeCurrency: { name: "OKB", symbol: "OKB", decimals: 18 },
     rpcUrls: {
       default: {
@@ -1955,6 +1955,7 @@ export const CHAINS: NETWORK_TYPE[] = [
         blockCreated: 47416,
       },
     },
+    gmSupport: true,
   },
   // {
   //   id: NETWORKS.ARTHERA,
