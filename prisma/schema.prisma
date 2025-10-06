@@ -270,6 +270,10 @@ enum Chain {
   LENS
   PHAROS
   CORE
+  PLASMA
+  GATELAYER
+  SYNDICATE
+  GIWA
 }
 
 model UserSpin {
