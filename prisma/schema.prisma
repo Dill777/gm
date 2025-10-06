@@ -271,3 +271,88 @@ enum Chain {
   PHAROS
   CORE
 }
+
+model UserSpin {
+  walletAddress  String          @id @db.VarChar(42)
+  createdAt      DateTime        @default(now())
+  roles          String[]        @default([])
+  participations Participation[]
+  winners        Winner[]
+  nonces         Nonce[]
+
+  @@map("users")
+}
+
+model Round {
+  id             Int             @id @default(autoincrement())
+  roundId        Int             @unique
+  chainId        Int
+  questName      String?         @db.VarChar(100)
+  questType      String?         @default("BRONZE") @db.VarChar(50)
+  startedAt      DateTime
+  endedAt        DateTime?
+  poolWei        String          @db.VarChar(78)
+  status         String          @db.VarChar(10) // OPEN, SEALED, CLOSED
+  isSealed       Boolean         @default(false)
+  participations Participation[]
+  winners        Winner[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([status])
+  @@index([roundId])
+  @@index([questType])
+  @@index([chainId])
+  @@map("rounds")
+}
+
+model Participation {
+  id          Int      @id @default(autoincrement())
+  userId      String   @db.VarChar(42)
+  roundId     Int
+  txHash      String   @unique @db.VarChar(66)
+  grossWei    String   @db.VarChar(78)
+  netWei      String   @db.VarChar(78)
+  feeWei      String   @db.VarChar(78)
+  createdAt   DateTime @default(now())
+
+  user        UserSpin @relation(fields: [userId], references: [walletAddress])
+  round       Round    @relation(fields: [roundId], references: [id])
+
+  @@unique([userId, roundId])
+  @@index([userId])
+  @@index([roundId])
+  @@index([txHash])
+  @@map("participations")
+}
+
+model Winner {
+  id        Int      @id @default(autoincrement())
+  roundId   Int
+  userId    String   @db.VarChar(42)
+  prizeWei  String   @db.VarChar(78)
+  rank      Int      @db.SmallInt
+  questType String?  @db.VarChar(50)
+  createdAt DateTime @default(now())
+
+  round     Round    @relation(fields: [roundId], references: [id])
+  user      UserSpin @relation(fields: [userId], references: [walletAddress])
+
+  @@index([roundId])
+  @@index([userId])
+  @@index([questType])
+  @@index([userId, questType])
+  @@map("winners")
+}
+
+model Nonce {
+  walletAddress String   @id @db.VarChar(42)
+  nonce         String   @db.VarChar(64)
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+
+  user          UserSpin @relation(fields: [walletAddress], references: [walletAddress])
+
+  @@index([expiresAt])
+  @@map("nonces")
+}
