@@ -14,9 +14,9 @@ model User {
   dateJoined    DateTime   @default(now())
   email         String?    @default("")
   verified      Boolean    @default(false)
-  refer         String?
-  referralCode  String?    @unique
   badges        Badges[]
+  referralCode  String?    @unique
+  refer         String?
   Referral      Referral[]
 }
 
@@ -29,62 +29,61 @@ model HIP {
   position         String? @default("")
   totalEarnings    Float
   totalPoints      Float
-  referralPoints   Float   @default(0)
+  discordVerified  Boolean @default(false)
+  discord          String? @default("") @map("discord_url")
+  linkedinVerified Boolean @default(false)
+  linkedin         String? @default("") @map("linkedin_url")
+  telegramVerified Boolean @default(false)
+  telegram         String? @default("") @map("telegram_url")
+  twitterVerified  Boolean @default(false)
+  twitter          String? @default("") @map("twitter_url")
+  wrapcastVerified Boolean @default(false)
+  wrapcast         String? @default("") @map("wrapcast_url")
   domainPoints     Float   @default(0)
   nftPoints        Float   @default(0)
-  twitter          String? @default("") @map(name: "twitter_url")
-  telegram         String? @default("") @map(name: "telegram_url")
-  linkedin         String? @default("") @map(name: "linkedin_url")
-  discord          String? @default("") @map(name: "discord_url")
-  wrapcast         String? @default("") @map(name: "wrapcast_url")
-  twitterVerified  Boolean @default(false)
-  telegramVerified Boolean @default(false)
-  linkedinVerified Boolean @default(false)
-  discordVerified  Boolean @default(false)
-  wrapcastVerified Boolean @default(false)
+  referralPoints   Float   @default(0)
 }
 
 model Domain {
-  id         String   @unique @default(uuid())
-  chain      Chain
-  domainName String
-  dId        String   @default("")
-  mainImgUrl String?  @default("")
-  bannerURL  String?  @default("")
-  location   String?
-  bio        String?  @default("")
-  name       String?
-  category   Category @default(DigitalCreator)
-  createdAt  DateTime @default(now())
-
-  twitter             String?  @default("") @map(name: "twitter_url")
-  telegram            String?  @default("") @map(name: "telegram_url")
-  linkedin            String?  @default("") @map(name: "linkedin_url")
-  discord             String?  @default("") @map(name: "discord_url")
-  website             String?  @default("") @map(name: "website_url")
-  application         String?  @default("") @map(name: "application_url")
-  medium              String?  @default("") @map(name: "medium_url")
-  mirror              String?  @default("") @map(name: "mirror_url")
-  youtube             String?  @default("") @map(name: "youtube_url")
-  wrapcast            String?  @default("") @map(name: "wrapcast_url")
-  link1               String?  @default("")
-  linkTitle1          String?  @default("")
-  link2               String?  @default("")
-  linkTitle2          String?  @default("")
+  id                  String   @unique @default(uuid())
+  chain               Chain
+  domainName          String
+  mainImgUrl          String?  @default("")
+  bannerURL           String?  @default("")
+  location            String?
+  bio                 String?  @default("")
+  name                String?
+  category            Category @default(DigitalCreator)
+  createdAt           DateTime @default(now())
+  website             String?  @default("") @map("website_url")
+  discord             String?  @default("") @map("discord_url")
+  youtube             String?  @default("") @map("youtube_url")
+  twitter             String?  @default("") @map("twitter_url")
+  telegram            String?  @default("") @map("telegram_url")
+  linkedin            String?  @default("") @map("linkedin_url")
+  websiteVerified     Boolean  @default(false)
+  discordVerified     Boolean  @default(false)
+  youtubeVerified     Boolean  @default(false)
   twitterVerified     Boolean  @default(false)
   telegramVerified    Boolean  @default(false)
   linkedinVerified    Boolean  @default(false)
-  discordVerified     Boolean  @default(false)
-  websiteVerified     Boolean  @default(false)
-  applicationVerified Boolean  @default(false)
-  mediumVerified      Boolean  @default(false)
-  mirrorVerified      Boolean  @default(false)
-  youtubeVerified     Boolean  @default(false)
+  dId                 String   @default("")
+  hasBurned           Boolean  @default(false)
   wrapcastVerified    Boolean  @default(false)
+  wrapcast            String?  @default("") @map("wrapcast_url")
+  link1               String?  @default("")
+  link2               String?  @default("")
+  linkTitle1          String?  @default("")
+  linkTitle2          String?  @default("")
   spaceVerified       Boolean  @default(false)
+  applicationVerified Boolean  @default(false)
+  application         String?  @default("") @map("application_url")
+  mediumVerified      Boolean  @default(false)
+  medium              String?  @default("") @map("medium_url")
+  mirrorVerified      Boolean  @default(false)
+  mirror              String?  @default("") @map("mirror_url")
   following           Follow[] @relation("from")
   followers           Follow[] @relation("to")
-  hasBurned           Boolean  @default(false)
 }
 
 model DomainCategory {
@@ -95,10 +94,10 @@ model DomainCategory {
 
 model Follow {
   id     Int    @id @default(autoincrement())
-  from   Domain @relation("from", fields: [fromId], references: [id])
-  to     Domain @relation("to", fields: [toId], references: [id])
   fromId String
   toId   String
+  from   Domain @relation("from", fields: [fromId], references: [id])
+  to     Domain @relation("to", fields: [toId], references: [id])
 }
 
 model Referral {
@@ -137,6 +136,88 @@ model Deploy {
   createdAt     DateTime @default(now())
 }
 
+model UserSpin {
+  walletAddress  String          @id @db.VarChar(42)
+  createdAt      DateTime        @default(now())
+  roles          String[]        @default([])
+  nonces         Nonce?
+  participations Participation[]
+  winners        Winner[]
+
+  @@map("users")
+}
+
+model Round {
+  id             Int             @id @default(autoincrement())
+  roundId        Int             @unique
+  chainId        Int
+  questName      String?         @db.VarChar(100)
+  questType      String?         @default("BRONZE") @db.VarChar(50)
+  startedAt      DateTime
+  endedAt        DateTime?
+  poolWei        String          @db.VarChar(78)
+  status         String          @db.VarChar(10)
+  isSealed       Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  participations Participation[]
+  winners        Winner[]
+
+  @@index([status])
+  @@index([roundId])
+  @@index([questType])
+  @@index([chainId])
+  @@map("rounds")
+}
+
+model Participation {
+  id        Int      @id @default(autoincrement())
+  userId    String   @db.VarChar(42)
+  roundId   Int
+  txHash    String   @unique @db.VarChar(66)
+  grossWei  String   @db.VarChar(78)
+  netWei    String   @db.VarChar(78)
+  feeWei    String   @db.VarChar(78)
+  createdAt DateTime @default(now())
+  round     Round    @relation(fields: [roundId], references: [id])
+  user      UserSpin @relation(fields: [userId], references: [walletAddress])
+
+  @@unique([userId, roundId])
+  @@index([userId])
+  @@index([roundId])
+  @@index([txHash])
+  @@map("participations")
+}
+
+model Winner {
+  id        Int      @id @default(autoincrement())
+  roundId   Int
+  userId    String   @db.VarChar(42)
+  prizeWei  String   @db.VarChar(78)
+  rank      Int      @db.SmallInt
+  questType String?  @db.VarChar(50)
+  createdAt DateTime @default(now())
+  round     Round    @relation(fields: [roundId], references: [id])
+  user      UserSpin @relation(fields: [userId], references: [walletAddress])
+
+  @@index([roundId])
+  @@index([userId])
+  @@index([questType])
+  @@index([userId, questType])
+  @@map("winners")
+}
+
+model Nonce {
+  walletAddress String   @id @db.VarChar(42)
+  nonce         String   @db.VarChar(64)
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+  user          UserSpin @relation(fields: [walletAddress], references: [walletAddress])
+
+  @@index([expiresAt])
+  @@map("nonces")
+}
+
 enum Category {
   DigitalCreator
   BlockchainEnthusiast
@@ -168,7 +249,6 @@ enum Badges {
 enum Chain {
   ZETA
   BERA
-  BERAMAINNET
   BASE
   POLY
   MINT
@@ -178,12 +258,12 @@ enum Chain {
   XLAYER
   NFT
   TABI
-  TABI_V2
   TAIKO
   FIRE
   SCROLL
   CANDY
   ARTHERA
+  MORPH
   NEOX
   BLAST
   BOBA
@@ -191,23 +271,24 @@ enum Chain {
   GOLD
   ZKLINK
   ZIRCUIT
-  ZORA
-  PLUME
-  PLUMEMAINNET
-  SONEIUM
-  SONEIUMMAINNET
-  SONICMAINNET
-  SONIC
-  ATHENE
-  MORPH
-  STORY
-  INKMAINNET
-  INK
   CREATOR_CHAIN
+  PLUME
+  SONEIUM
+  SONIC
+  ZORA
+  ATHENE
+  TABI_V2
+  STORY
+  INK
+  INKMAINNET
   FORM
+  SONICMAINNET
   ABSTRACT
+  SONEIUMMAINNET
+  PLUMEMAINNET
   ABSTRACTMAINNET
   SAHARA
+  BERAMAINNET
   UNICHAIN
   MONAD
   APE
@@ -216,13 +297,12 @@ enum Chain {
   MEGAETH
   COTI
   XRPL
-  XRPLMAINNET
   SOMNIA
-  SOMNIAMAINNET
   KITE
   UNIT0
   KAIA
   HYPE
+  XRPLMAINNET
   ZENCHAIN
   HELIOS
   CONFLUX
@@ -256,6 +336,7 @@ enum Chain {
   PERENNIAL
   ONCHAINPOINTS
   RONIN
+  SOMNIAMAINNET
   RISE
   XAI
   CYBER
@@ -274,89 +355,4 @@ enum Chain {
   GATELAYER
   SYNDICATE
   GIWA
-}
-
-model UserSpin {
-  walletAddress  String          @id @db.VarChar(42)
-  createdAt      DateTime        @default(now())
-  roles          String[]        @default([])
-  participations Participation[]
-  winners        Winner[]
-  nonces         Nonce[]
-
-  @@map("users")
-}
-
-model Round {
-  id             Int             @id @default(autoincrement())
-  roundId        Int             @unique
-  chainId        Int
-  questName      String?         @db.VarChar(100)
-  questType      String?         @default("BRONZE") @db.VarChar(50)
-  startedAt      DateTime
-  endedAt        DateTime?
-  poolWei        String          @db.VarChar(78)
-  status         String          @db.VarChar(10) // OPEN, SEALED, CLOSED
-  isSealed       Boolean         @default(false)
-  participations Participation[]
-  winners        Winner[]
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-
-  @@index([status])
-  @@index([roundId])
-  @@index([questType])
-  @@index([chainId])
-  @@map("rounds")
-}
-
-model Participation {
-  id          Int      @id @default(autoincrement())
-  userId      String   @db.VarChar(42)
-  roundId     Int
-  txHash      String   @unique @db.VarChar(66)
-  grossWei    String   @db.VarChar(78)
-  netWei      String   @db.VarChar(78)
-  feeWei      String   @db.VarChar(78)
-  createdAt   DateTime @default(now())
-
-  user        UserSpin @relation(fields: [userId], references: [walletAddress])
-  round       Round    @relation(fields: [roundId], references: [id])
-
-  @@unique([userId, roundId])
-  @@index([userId])
-  @@index([roundId])
-  @@index([txHash])
-  @@map("participations")
-}
-
-model Winner {
-  id        Int      @id @default(autoincrement())
-  roundId   Int
-  userId    String   @db.VarChar(42)
-  prizeWei  String   @db.VarChar(78)
-  rank      Int      @db.SmallInt
-  questType String?  @db.VarChar(50)
-  createdAt DateTime @default(now())
-
-  round     Round    @relation(fields: [roundId], references: [id])
-  user      UserSpin @relation(fields: [userId], references: [walletAddress])
-
-  @@index([roundId])
-  @@index([userId])
-  @@index([questType])
-  @@index([userId, questType])
-  @@map("winners")
-}
-
-model Nonce {
-  walletAddress String   @id @db.VarChar(42)
-  nonce         String   @db.VarChar(64)
-  expiresAt     DateTime
-  createdAt     DateTime @default(now())
-
-  user          UserSpin @relation(fields: [walletAddress], references: [walletAddress])
-
-  @@index([expiresAt])
-  @@map("nonces")
 }
