@@ -2014,7 +2014,7 @@ export const CHAINS: NETWORK_TYPE[] = [
     chain: PrismaChain.GATELAYER,
     sellMarket: "https://element.market",
     iconUrl: "/img/chainLogos/gatelayer.jpg",
-    nativeCurrency: { name: "CT", symbol: "CT", decimals: 18 },
+    nativeCurrency: { name: "GT", symbol: "GT", decimals: 18 },
     rpcUrls: {
       default: {
         http: [rpcs[NETWORKS.GATELAYER]],
