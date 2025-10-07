@@ -74,6 +74,13 @@ export enum NETWORKS {
   LENS = 232,
   CORE = 1116,
   XLAYER = 196,
+  PLASMA = 9745,
+  GATELAYER = 10088,
+  SYNDICATE = 510003,
+  OG = 16661,
+  ZERO = 543210,
+  XDC = 50,
+  ZETA = 7000,
   /* testnets */
   CREATOR_CHAIN = 66665,
   MONAD = 10143,
@@ -87,6 +94,7 @@ export enum NETWORKS {
   SAHARA = 313313,
   RISE = 11155931,
   PHAROS = 688688,
+  GIWA = 91342,
 }
 
 export const rpcs: { [key in NETWORKS]: string } = {
@@ -161,6 +169,13 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.CORE]: process.env.NEXT_PUBLIC_RPC_CORE!,
   // [NETWORKS.MINT]: process.env.NEXT_PUBLIC_RPC_MINT!,
   [NETWORKS.XLAYER]: process.env.NEXT_PUBLIC_RPC_XLAYER!,
+  [NETWORKS.PLASMA]: process.env.NEXT_PUBLIC_RPC_PLASMA!,
+  [NETWORKS.GATELAYER]: process.env.NEXT_PUBLIC_RPC_GATELAYER!,
+  [NETWORKS.SYNDICATE]: process.env.NEXT_PUBLIC_RPC_SYNDICATE!,
+  [NETWORKS.OG]: process.env.NEXT_PUBLIC_RPC_OG!,
+  [NETWORKS.ZERO]: process.env.NEXT_PUBLIC_RPC_ZERO!,
+  [NETWORKS.XDC]: process.env.NEXT_PUBLIC_RPC_XDC!,
+  [NETWORKS.ZETA]: process.env.NEXT_PUBLIC_RPC_ZETA!,
   [NETWORKS.CREATOR_CHAIN]: process.env.NEXT_PUBLIC_RPC_CREATOR_CHAIN!,
   [NETWORKS.MONAD]: process.env.NEXT_PUBLIC_RPC_MONAD!,
   [NETWORKS.NEXUS]: process.env.NEXT_PUBLIC_RPC_NEXUS!,
@@ -177,6 +192,7 @@ export const rpcs: { [key in NETWORKS]: string } = {
   [NETWORKS.HELIOS]: process.env.NEXT_PUBLIC_RPC_HELIOS!,
   [NETWORKS.RISE]: process.env.NEXT_PUBLIC_RPC_RISE!,
   [NETWORKS.PHAROS]: process.env.NEXT_PUBLIC_RPC_PHAROS!,
+  [NETWORKS.GIWA]: process.env.NEXT_PUBLIC_RPC_GIWA!,
   // [NETWORKS.ZKLINK]: process.env.NEXT_PUBLIC_RPC_ZKLINK!,
   // [NETWORKS.ARTHERA]: process.env.NEXT_PUBLIC_RPC_ARTHERA!,
   // [NETWORKS.NEOX]: process.env.NEXT_PUBLIC_RPC_NEOX!,
@@ -265,6 +281,13 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.MANTAPACIFIC]: "#3589f1",
   [NETWORKS.CORE]: "#ff9212",
   [NETWORKS.XLAYER]: "#a7a7a7",
+  [NETWORKS.PLASMA]: "#163029",
+  [NETWORKS.GATELAYER]: "#0168ff",
+  [NETWORKS.SYNDICATE]: "#000000",
+  [NETWORKS.OG]: "#b75fff",
+  [NETWORKS.ZERO]: "#000000",
+  [NETWORKS.XDC]: "#254a81",
+  [NETWORKS.ZETA]: "#035742",
   [NETWORKS.CREATOR_CHAIN]: "#F4F53A",
   [NETWORKS.MONAD]: "#826df9",
   [NETWORKS.NEXUS]: "#5c5c5e",
@@ -280,6 +303,7 @@ export const CHAIN_COLOR: { [key in NETWORKS]: string } = {
   [NETWORKS.HELIOS]: "#002DCB",
   [NETWORKS.RISE]: "#7968e5",
   [NETWORKS.PHAROS]: "#0905b9",
+  [NETWORKS.GIWA]: "#DA0000",
   // [NETWORKS.ZKLINK]: "#04D693",
   // [NETWORKS.ARTHERA]: "#B10C90",
   // [NETWORKS.NEOX]: "#00E599",
@@ -1957,6 +1981,173 @@ export const CHAINS: NETWORK_TYPE[] = [
     },
     gmSupport: true,
   },
+  {
+    id: NETWORKS.PLASMA,
+    name: "Plasma",
+    shortName: "Plasma",
+    chain: PrismaChain.PLASMA,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/plasma.jpg",
+    nativeCurrency: { name: "XPL", symbol: "XPL", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.PLASMA]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Plasma Explorer",
+        url: "https://plasmascan.to",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmSupport: true,
+  },
+  {
+    id: NETWORKS.GATELAYER,
+    name: "Gate Layer",
+    shortName: "Gate Layer",
+    chain: PrismaChain.GATELAYER,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/gatelayer.jpg",
+    nativeCurrency: { name: "CT", symbol: "CT", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.GATELAYER]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Gate Layer Explorer",
+        url: "https://gatescan.org",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmSupport: true,
+  },
+  {
+    id: NETWORKS.SYNDICATE,
+    name: "Syndicate",
+    shortName: "Syndicate",
+    chain: PrismaChain.SYNDICATE,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/syndicate.jpg",
+    nativeCurrency: { name: "SYND", symbol: "SYND", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.SYNDICATE]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "Syndicate Explorer",
+        url: "https://commons.explorer.syndicate.io",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.OG,
+    name: "0G Mainnet",
+    shortName: "0G",
+    chain: PrismaChain.OG,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/0g.png",
+    nativeCurrency: { name: "0G", symbol: "0G", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.OG]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "0G Explorer",
+        url: "https://chainscan.0g.ai/",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.ZERO,
+    name: "ZERϴ",
+    shortName: "ZERϴ",
+    chain: PrismaChain.ZERO,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/zero.jpg",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.ZERO]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "ZERϴ Explorer",
+        url: "https://zero-network.calderaexplorer.xyz/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0x0307F341a18f1FC1f63a7Ceeac970245A08C5a80",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.XDC,
+    name: "XDC Network",
+    shortName: "XDC",
+    chain: PrismaChain.XDC,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/xdc.png",
+    nativeCurrency: { name: "XDC", symbol: "XDC", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.XDC]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "XDC Explorer",
+        url: "https://xdcscan.com",
+      },
+    },
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.ZETA,
+    name: "ZetaChain Mainnet",
+    shortName: "ZetaChain",
+    chain: PrismaChain.ZETA,
+    sellMarket: "https://element.market",
+    iconUrl: "/img/chainLogos/zeta.jpg",
+    nativeCurrency: { name: "ZETA", symbol: "ZETA", decimals: 18 },
+    rpcUrls: {
+      default: {
+        http: [rpcs[NETWORKS.ZETA]],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: "ZetaChain Mainnet Explorer",
+        url: "https://zetascan.com/",
+      },
+    },
+    contracts: {
+      multicall3: {
+        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      },
+    },
+    gmOnly: true,
+  },
   // {
   //   id: NETWORKS.ARTHERA,
   //   name: "Arthera Mainnet",
@@ -2358,6 +2549,26 @@ export const CHAINS: NETWORK_TYPE[] = [
       default: {
         name: "Pharos Textnet Explorer",
         url: "https://testnet.pharosscan.xyz/",
+      },
+    },
+    testnet: true,
+    gmOnly: true,
+  },
+  {
+    id: NETWORKS.GIWA,
+    name: "Giwa Sepolia Testnet",
+    shortName: "Giwa",
+    chain: PrismaChain.GIWA,
+    sellMarket: "https://element.market",
+    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+    iconUrl: "/img/chainLogos/giwa.svg",
+    rpcUrls: {
+      default: { http: [rpcs[NETWORKS.GIWA]] },
+    },
+    blockExplorers: {
+      default: {
+        name: "Giwa Sepolia Explorer",
+        url: "https://sepolia-explorer.giwa.io/",
       },
     },
     testnet: true,

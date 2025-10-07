@@ -27,6 +27,8 @@ export const tlds: TLD[] = [
   { chainId: NETWORKS.UNIT0, label: "unit", tld: "unit" },
   // { chainId: NETWORKS.MINT, label: "nft", tld: "nft" },
   { chainId: NETWORKS.XLAYER, label: "xlayer", tld: "xlayer" },
+  { chainId: NETWORKS.PLASMA, label: "plasma", tld: "plasma" },
+  { chainId: NETWORKS.GATELAYER, label: "gate", tld: "gate" },
   { chainId: NETWORKS.CREATOR_CHAIN, label: "ceo", tld: "ceo" },
   { chainId: NETWORKS.MONAD, label: "mnd", tld: "mnd" },
   { chainId: NETWORKS.NEXUS, label: "nexus", tld: "nexus" },
